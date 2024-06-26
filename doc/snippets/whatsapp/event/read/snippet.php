@@ -1,0 +1,22 @@
+<?php
+
+$url = 'https://api.smsbox.pro/waba/json/<WABAID>/event/<PHONEID>';
+$headers = [
+    'Authorization: App <APIKEY>',
+    'Content-Type: application/json'
+];
+$data = [
+    'message_id' => "wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    'status' => 'read'
+];
+
+$ch = curl_init($url);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+$response = curl_exec($ch);
+curl_close($ch);
+
+echo $response;

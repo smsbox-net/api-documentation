@@ -1,0 +1,141 @@
+InteractiveButtonContentMessage:
+  properties:
+    type:
+      type: string
+      const: interactive
+    interactive:
+      type: object
+      properties:
+        type:
+          type: string
+          const: button
+        header:
+          type: object
+          properties:
+            type:
+              type: string
+              example: image
+              enum:
+                - document
+                - image
+                - text
+                - video
+          oneOf:
+            - type: object
+              properties:
+                document:
+                  $ref: "./schemas/media.yaml#/Media"
+                image:
+                  $ref: "./schemas/media.yaml#/Media"
+                text:
+                  type: string
+                video:
+                  $ref: "./schemas/media.yaml#/Media"
+        body:
+          type: object
+          properties:
+            type:
+              type: string
+              example: text
+            text:
+              type: string
+              maxLength: 1024
+        footer:
+          type: object
+          properties:
+            type:
+              type: string
+              example: text
+            text:
+              type: string
+              maxLength: 60
+        action:
+          type: object
+          properties:
+            buttons:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    example: reply
+                  reply:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        maxLength: 256
+                      title:
+                        type: string
+                        maxLength: 20
+      required:
+        - action
+  required:
+    - type
+
+InteractiveListContentMessage:
+  type: object
+  properties:
+    type:
+      type: string
+      const: interactive
+    interactive:
+      type: object
+      properties:
+        type:
+          type: string
+          const: list
+        header:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - text
+            text:
+              type: string
+        body:
+          type: object
+          properties:
+            text:
+              type: string
+        footer:
+          type: object
+          properties:
+            text:
+              type: string
+        action:
+          type: object
+          properties:
+            button:
+              type: string
+            sections:
+              type: array
+              minItems: 1
+              maxItems: 10
+              items:
+                type: object
+                properties:
+                  title:
+                    type: string
+                  rows:
+                    type: array
+                    minItems: 1
+                    maxItems: 10
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          maxLength: 200
+                        title:
+                          type: string
+                          maxLength: 24
+                        description:
+                          type: string
+                          maxLength: 72
+      required:
+        - action
+  required:
+    - type

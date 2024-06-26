@@ -1,0 +1,101 @@
+Text:
+  type: object
+  properties:
+    type:
+      type: string
+      const: text
+    text:
+      type: object
+      properties:
+        body:
+          type: string
+          maxLength: 4096
+        preview_url:
+          type: boolean
+      required:
+        - body
+  required:
+    - type
+    - text
+  example:
+    {
+      "type": "text",
+      "text": { "body": "Message sent via my WhatsApp Business agent." },
+    }
+
+Media:
+  properties:
+    type:
+      type: string
+      enum:
+        - audio
+        - document
+        - image
+        - sticker
+        - video
+      description: >
+        "Supported MIME types : 
+          - Audio : audio/aac - audio/amr - audio/mpeg - audio/mp4 - audio/ogg (OPUS codecs only; base audio/ogg not supported.) `max size : 16MB`
+          - Document : text/plain - application/vnd.ms-excel - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet - application/msword - application/vnd - openxmlformats-officedocument.wordprocessingml.document - application/vnd.ms-powerpoint - application/vnd.openxmlformats-officedocument.presentationml.presentation - application/pdf `max size : 100MB`
+          - Image : image/jpeg - image/png  `max size : 5MB`
+          - Sticker : image/webp - image/webp  `max size : 500KB`
+          - Video : video/3gp - video/mp4"  `max size : 16MB`
+  oneOf:
+    - type: object
+      properties:
+        audio:
+          $ref: "./doc/schemas/media.yaml#/Media"
+        document:
+          $ref: "./doc/schemas/media.yaml#/Media"
+        image:
+          $ref: "./doc/schemas/media.yaml#/Media"
+        sticker:
+          $ref: "./doc/schemas/media.yaml#/Media"
+        video:
+          $ref: "./doc/schemas/media.yaml#/Media"
+  required:
+    - type
+  example:
+    {
+      "type": "document",
+      "document":
+        {
+          "link": "https://www.example.com/fr/file.pdf",
+          "filename": "file.pdf",
+        },
+    }
+
+Location:
+  type: object
+  properties:
+    type:
+      type: string
+      const: location
+    location:
+      type: object
+      properties:
+        longitude:
+          type: number
+        latitude:
+          type: number
+        name:
+          type: string
+        address:
+          type: string
+      required:
+        - longitude
+        - latitude
+  required:
+    - type
+    - location
+  example:
+    {
+      "type": "location",
+      "location":
+        {
+          "longitude": 6.075501230687077,
+          "latitude": 43.08811078662267,
+          "name": "SMSBOX",
+          "address": "20 Av. Élie Gautier, 83320 Carqueiranne",
+        },
+    }
