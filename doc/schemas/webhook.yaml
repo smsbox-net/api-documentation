@@ -69,6 +69,8 @@ Document:
               type: string
               description: ID of the file
               example: "1234567890"
+            caption:
+              type: string
 
 Image:
   type: object
@@ -107,6 +109,8 @@ Image:
               type: string
               description: ID of the file
               example: "1234567890"
+            caption:
+              type: string
 
 Video:
   type: object
@@ -135,7 +139,6 @@ Video:
           properties:
             caption:
               type: string
-              example: "Ok"
             mime_type:
               type: string
               description: >
