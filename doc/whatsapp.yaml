@@ -14,8 +14,10 @@ servers:
   - url: http://api.smsbox.pro
 
 tags:
-  - name: whatsapp-text-and-media-messages
+  - name: whatsapp-outbound-messages
     x-displayName: Message
+  - name: whatsapp-interactive
+    x-displayName: Interactive
   - name: whatsapp-templates-messages
     x-displayName: Template
   - name: whatsapp-event-messages
@@ -27,7 +29,8 @@ tags:
 x-tagGroups:
   - name: WhatsApp
     tags:
-      - whatsapp-text-and-media-messages
+      - whatsapp-outbound-messages
+      - whatsapp-interactive
       - whatsapp-templates-messages
       - whatsapp-event-messages
       - whatsapp-file-messages
@@ -35,13 +38,13 @@ x-tagGroups:
 
 paths:
   /waba/json/{wabaId}/message/{phoneID} (text message):
-    description: Send message
+    description: Send text message
     post:
       tags:
-        - whatsapp-text-and-media-messages
+        - whatsapp-outbound-messages
       security:
         - ApiKey: []
-      summary: Send message
+      summary: Send text message
       parameters:
         - name: wabaId
           in: path
@@ -70,10 +73,7 @@ paths:
                   example:
                     - +336XXXXXXXX
                 contentMessage:
-                  oneOf:
-                    - $ref: "./schemas/message.yaml#/Text"
-                    - $ref: "./schemas/message.yaml#/Media"
-                    - $ref: "./schemas/message.yaml#/Location"
+                  $ref: "./schemas/message.yaml#/Text"
       responses:
         "202":
           description: Request successfully queued.
@@ -127,6 +127,900 @@ paths:
         - lang: PHP
           source:
             $ref: snippets/whatsapp/message/text/snippet.php
+
+  # Media Audio
+  /waba/json/{wabaId}/message/{phoneID} (Audio message):
+    description: Send audio message
+    post:
+      tags:
+        - whatsapp-outbound-messages
+      security:
+        - ApiKey: []
+      summary: Send audio message
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneID
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipients:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 5000
+                  example:
+                    - +336XXXXXXXX
+                contentMessage:
+                  $ref: "./schemas/message.yaml#/Audio"
+      responses:
+        "202":
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse202"
+        "400":
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse400"
+        "403":
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse403"
+        "404":
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse404"
+
+        "413":
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse413"
+
+        "503":
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse503"
+
+      x-codeSamples:
+        - lang: cURL
+          source:
+            $ref: snippets/whatsapp/message/media/audio/snippet.sh
+        - lang: Python
+          source:
+            $ref: snippets/whatsapp/message/media/audio/snippet.py
+        - lang: JavaScript
+          source:
+            $ref: snippets/whatsapp/message/media/audio/snippet.js
+        - lang: PHP
+          source:
+            $ref: snippets/whatsapp/message/media/audio/snippet.php
+
+  # Media Document
+  /waba/json/{wabaId}/message/{phoneID} (Document message):
+    description: Send document message
+    post:
+      tags:
+        - whatsapp-outbound-messages
+      security:
+        - ApiKey: []
+      summary: Send document message
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneID
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipients:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 5000
+                  example:
+                    - +336XXXXXXXX
+                contentMessage:
+                  $ref: "./schemas/message.yaml#/Document"
+      responses:
+        "202":
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse202"
+        "400":
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse400"
+        "403":
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse403"
+        "404":
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse404"
+
+        "413":
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse413"
+
+        "503":
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse503"
+
+      x-codeSamples:
+        - lang: cURL
+          source:
+            $ref: snippets/whatsapp/message/media/document/snippet.sh
+        - lang: Python
+          source:
+            $ref: snippets/whatsapp/message/media/document/snippet.py
+        - lang: JavaScript
+          source:
+            $ref: snippets/whatsapp/message/media/document/snippet.js
+        - lang: PHP
+          source:
+            $ref: snippets/whatsapp/message/media/document/snippet.php
+
+  # Media Image
+  /waba/json/{wabaId}/message/{phoneID} (Image message):
+    description: Send image message
+    post:
+      tags:
+        - whatsapp-outbound-messages
+      security:
+        - ApiKey: []
+      summary: Send image message
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneID
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipients:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 5000
+                  example:
+                    - +336XXXXXXXX
+                contentMessage:
+                  $ref: "./schemas/message.yaml#/Image"
+      responses:
+        "202":
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse202"
+        "400":
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse400"
+        "403":
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse403"
+        "404":
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse404"
+
+        "413":
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse413"
+
+        "503":
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse503"
+
+      x-codeSamples:
+        - lang: cURL
+          source:
+            $ref: snippets/whatsapp/message/media/image/snippet.sh
+        - lang: Python
+          source:
+            $ref: snippets/whatsapp/message/media/image/snippet.py
+        - lang: JavaScript
+          source:
+            $ref: snippets/whatsapp/message/media/image/snippet.js
+        - lang: PHP
+          source:
+            $ref: snippets/whatsapp/message/media/image/snippet.php
+
+  # Media Sticker
+  /waba/json/{wabaId}/message/{phoneID} (Sticker message):
+    description: Send sticker message
+    post:
+      tags:
+        - whatsapp-outbound-messages
+      security:
+        - ApiKey: []
+      summary: Send sticker message
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneID
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipients:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 5000
+                  example:
+                    - +336XXXXXXXX
+                contentMessage:
+                  $ref: "./schemas/message.yaml#/Sticker"
+      responses:
+        "202":
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse202"
+        "400":
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse400"
+        "403":
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse403"
+        "404":
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse404"
+
+        "413":
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse413"
+
+        "503":
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse503"
+
+      x-codeSamples:
+        - lang: cURL
+          source:
+            $ref: snippets/whatsapp/message/media/sticker/snippet.sh
+        - lang: Python
+          source:
+            $ref: snippets/whatsapp/message/media/sticker/snippet.py
+        - lang: JavaScript
+          source:
+            $ref: snippets/whatsapp/message/media/sticker/snippet.js
+        - lang: PHP
+          source:
+            $ref: snippets/whatsapp/message/media/sticker/snippet.php
+
+  # Media Video
+  /waba/json/{wabaId}/message/{phoneID} (Video message):
+    description: Send video message
+    post:
+      tags:
+        - whatsapp-outbound-messages
+      security:
+        - ApiKey: []
+      summary: Send video message
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneID
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipients:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 5000
+                  example:
+                    - +336XXXXXXXX
+                contentMessage:
+                  $ref: "./schemas/message.yaml#/Video"
+      responses:
+        "202":
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse202"
+        "400":
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse400"
+        "403":
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse403"
+        "404":
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse404"
+
+        "413":
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse413"
+
+        "503":
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse503"
+
+      x-codeSamples:
+        - lang: cURL
+          source:
+            $ref: snippets/whatsapp/message/media/video/snippet.sh
+        - lang: Python
+          source:
+            $ref: snippets/whatsapp/message/media/video/snippet.py
+        - lang: JavaScript
+          source:
+            $ref: snippets/whatsapp/message/media/video/snippet.js
+        - lang: PHP
+          source:
+            $ref: snippets/whatsapp/message/media/video/snippet.php
+
+  /waba/json/{wabaId}/message/{phoneID} (location message):
+    description: Send location message
+    post:
+      tags:
+        - whatsapp-outbound-messages
+      security:
+        - ApiKey: []
+      summary: Send location message
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneID
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipients:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 5000
+                  example:
+                    - +336XXXXXXXX
+                contentMessage:
+                  $ref: "./schemas/message.yaml#/Location"
+      responses:
+        "202":
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse202"
+        "400":
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse400"
+        "403":
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse403"
+        "404":
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse404"
+
+        "413":
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse413"
+
+        "503":
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse503"
+
+      x-codeSamples:
+        - lang: cURL
+          source:
+            $ref: snippets/whatsapp/message/media/location/snippet.sh
+        - lang: Python
+          source:
+            $ref: snippets/whatsapp/message/media/location/snippet.py
+        - lang: JavaScript
+          source:
+            $ref: snippets/whatsapp/message/media/location/snippet.js
+        - lang: PHP
+          source:
+            $ref: snippets/whatsapp/message/media/location/snippet.php
+
+  # Reply text
+  /waba/json/{wabaId}/message/{phoneID} (ReplyText message):
+    description: Send reply Text message
+    post:
+      tags:
+        - whatsapp-outbound-messages
+      security:
+        - ApiKey: []
+      summary: Send reply text message
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneID
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipients:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 5000
+                  example:
+                    - +336XXXXXXXX
+                contentMessage:
+                  $ref: "./schemas/message.yaml#/ReplyText"
+      responses:
+        "202":
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse202"
+        "400":
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse400"
+        "403":
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse403"
+        "404":
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse404"
+
+        "413":
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse413"
+
+        "503":
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse503"
+
+      x-codeSamples:
+        - lang: cURL
+          source:
+            $ref: snippets/whatsapp/message/reply/snippet.sh
+        - lang: Python
+          source:
+            $ref: snippets/whatsapp/message/reply/snippet.py
+        - lang: JavaScript
+          source:
+            $ref: snippets/whatsapp/message/reply/snippet.js
+        - lang: PHP
+          source:
+            $ref: snippets/whatsapp/message/reply/snippet.php
+
+  /waba/json/{wabaId}/message/{phoneID} (reaction message):
+    description: Send reaction message
+    post:
+      tags:
+        - whatsapp-outbound-messages
+      security:
+        - ApiKey: []
+      summary: Send reaction message
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneID
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipients:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 5000
+                  example:
+                    - +336XXXXXXXX
+                contentMessage:
+                  $ref: "./schemas/reaction.yaml#/ReplyReaction"
+      responses:
+        "202":
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse202"
+        "400":
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse400"
+        "403":
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse403"
+        "404":
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse404"
+
+        "413":
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse413"
+
+        "503":
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse503"
+
+      x-codeSamples:
+        - lang: cURL
+          source:
+            $ref: snippets/whatsapp/message/reaction/snippet.sh
+        - lang: Python
+          source:
+            $ref: snippets/whatsapp/message/reaction/snippet.py
+        - lang: JavaScript
+          source:
+            $ref: snippets/whatsapp/message/reaction/snippet.js
+        - lang: PHP
+          source:
+            $ref: snippets/whatsapp/message/reaction/snippet.php
+
+  /waba/json/{wabaId}/interactive-buttons/{phoneID}:
+    description: Send interactive button message
+    post:
+      tags:
+        - whatsapp-interactive
+      security:
+        - ApiKey: []
+      summary: Send interactive button message
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneID
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schemas/interactive.yaml#/InteractiveButtonContentMessage"
+      responses:
+        "202":
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse202"
+        "400":
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse400"
+        "403":
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse403"
+        "404":
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse404"
+
+        "413":
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse413"
+
+        "503":
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse503"
+
+      x-codeSamples:
+        - lang: cURL
+          source:
+            $ref: snippets/whatsapp/interactive/button/snippet.sh
+        - lang: Python
+          source:
+            $ref: snippets/whatsapp/interactive/button/snippet.py
+        - lang: JavaScript
+          source:
+            $ref: snippets/whatsapp/interactive/button/snippet.js
+        - lang: PHP
+          source:
+            $ref: snippets/whatsapp/interactive/button/snippet.php
+
+  /waba/json/{wabaId}/interactive-lists/{phoneID}:
+    description: Send interactive list message
+    post:
+      tags:
+        - whatsapp-interactive
+      security:
+        - ApiKey: []
+      summary: Send interactive list message
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneID
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./schemas/interactive.yaml#/InteractiveListContentMessage"
+      responses:
+        "202":
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse202"
+        "400":
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse400"
+        "403":
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse403"
+        "404":
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse404"
+        "413":
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse413"
+        "503":
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageContentResponse503"
+
+      x-codeSamples:
+        - lang: cURL
+          source:
+            $ref: snippets/whatsapp/interactive/list/snippet.sh
+        - lang: Python
+          source:
+            $ref: snippets/whatsapp/interactive/list/snippet.py
+        - lang: JavaScript
+          source:
+            $ref: snippets/whatsapp/interactive/list/snippet.js
+        - lang: PHP
+          source:
+            $ref: snippets/whatsapp/interactive/list/snippet.php
 
   /waba/json/{wabaId}/message/{phoneID} (otp template message):
     post:
@@ -368,6 +1262,8 @@ paths:
                       file_size:
                         type: string
                         description: Size in bytes
+                      caption:
+                        type: string
                       raw:
                         type: string
                         description: Base64 encoded file content
