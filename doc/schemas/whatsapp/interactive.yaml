@@ -11,10 +11,14 @@ InteractiveButtonContentMessage:
           const: button
         header:
           oneOf:
-            - $ref: "./doc/schemas/message.yaml#/Text"
-            - $ref: "./doc/schemas/message.yaml#/Document"
-            - $ref: "./doc/schemas/message.yaml#/Image"
-            - $ref: "./doc/schemas/message.yaml#/Video"
+            - $ref: "./message.yaml#/Text"
+            - $ref: "./message.yaml#/Document"
+            - $ref: "./message.yaml#/Image"
+            - $ref: "./message.yaml#/Video"
+            #- $ref: "./doc/schemas/whatsapp/message.yaml#/Text"
+            #- $ref: "./doc/schemas/whatsapp/message.yaml#/Document"
+            #- $ref: "./doc/schemas/whatsapp/message.yaml#/Image"
+            #- $ref: "./doc/schemas/whatsapp/message.yaml#/Video"
         body:
           type: object
           properties:

@@ -1,0 +1,17 @@
+Revoke:
+  type: object
+  properties:
+    recipients:
+      type: array of string(s)
+      const: +336xxxxxxxx
+    reference:
+      type: string
+      const: "XXXXXXXXXXXX"
+  required:
+    - recipients
+    - reference
+example:
+  {
+    "recipients": "+336xxxxxxxx",
+    "reference": "XXXXXXXXXXXX"
+  }

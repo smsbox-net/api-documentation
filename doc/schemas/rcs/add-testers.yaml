@@ -1,0 +1,12 @@
+add-testers:
+  type: object
+  properties:
+    recipients:
+      type: string
+      const: "+336xxxxxxxx"
+  required:
+    - recipients
+example:
+  {
+    "recipients": "+336xxxxxxxx"
+  }
