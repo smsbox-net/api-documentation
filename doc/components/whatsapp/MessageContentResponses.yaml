@@ -1,0 +1,95 @@
+MessageContentResponse202:
+  type: object
+  properties:
+    response:
+      type: object
+      properties:
+        response_code:
+          type: string
+          example: "202"
+        response_desc:
+          type: string
+          example: "Request successfully queued."
+    details:
+      type: string
+      example: Request accepted for processing.
+
+MessageContentResponse400:
+  type: object
+  properties:
+    response:
+      type: object
+      properties:
+        response_code:
+          type: string
+          example: "400"
+        response_desc:
+          type: string
+          example: "Wrong query syntax or missing mandatory field."
+    error:
+      type: string
+      example: "Missing mandatory phone ID."
+
+MessageContentResponse403:
+  type: object
+  properties:
+    response:
+      type: object
+      properties:
+        response_code:
+          type: string
+          example: "403"
+        response_desc:
+          type: string
+          example: "Access to the requested resource has been denied."
+    error:
+      type: string
+      example: "API Key not allowed or account discontinued."
+
+MessageContentResponse404:
+  type: object
+  properties:
+    response:
+      type: object
+      properties:
+        response_code:
+          type: string
+          example: "404"
+        response_desc:
+          type: string
+          example: "The requested resource was not found."
+    error:
+      type: string
+      example: "Invalid wabaId value (not found)."
+
+MessageContentResponse413:
+  type: object
+  properties:
+    response:
+      type: object
+      properties:
+        response_code:
+          type: string
+          example: "413"
+        response_desc:
+          type: string
+          example: "The request payload exceeds the maximum allowed size."
+    error:
+      type: string
+      example: "Too many recipients (max.: ....)."
+
+MessageContentResponse503:
+  type: object
+  properties:
+    response:
+      type: object
+      properties:
+        response_code:
+          type: string
+          example: "503"
+        response_desc:
+          type: string
+          example: "Service temporarily unavailable."
+    error:
+      type: string
+      example: "Authentication failed for unknown reason."

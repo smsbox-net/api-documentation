@@ -1,0 +1,12 @@
+capabilities:
+  type: object
+  properties:
+    recipients:
+      type: array of string(s)
+      const: ["+336xxxxxxxx"]
+  required:
+    - recipients
+example:
+  {
+    "recipients": "+336xxxxxxxx"
+  }

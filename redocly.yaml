@@ -1,6 +1,6 @@
 apis:
   public:
-    root: ./whatsapp.yaml
+    root: ./tmp/combined.yaml
 extends:
   - recommended
 rules:

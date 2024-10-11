@@ -1,0 +1,445 @@
+openapi: 3.1.0
+info:
+  title: SMSBOX - API Documentation
+  version: 2.0.0
+  contact:
+    url: https://www.smsbox.net
+  x-logo:
+    url: "./doc/logo-en.png"
+    backgroundColor: "#FFFFFF"
+    altText: "SMSBOX logo"
+    href: https://www.smsbox.net
+
+servers:
+  - url: https://api.smsbox.pro
+
+tags:
+  - name: rcs-message
+    x-displayName: Message
+  - name: rcs-revoke
+    x-displayName: Revoke
+  - name: rcs-add-testers
+    x-displayName: Tester
+  - name: rcs-capabilities
+    x-displayName: Capabilities
+  - name: rcs-event
+    x-displayName: Event
+
+x-tagGroups:
+  - name: RCS
+    tags:
+      - rcs-message
+      - rcs-revoke
+      - rcs-add-testers
+      - rcs-capabilities
+      - rcs-event
+
+paths:
+  /rcs/json/{agentId}/message:
+    description: Send RCS Text
+    post:
+      tags:
+        - rcs-message
+      security:
+        - ApiKey: []
+      summary: Send text message
+      parameters:
+        - name: agentId
+          in: path
+          description: RBM Agent ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/rcs/message.yaml#/RCS"
+      responses:
+        "202":
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse202RCS"
+        "400":
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse400RCS"
+        "403":
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse403"
+        "404":
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse404RCS"
+        "405":
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse405"
+        "503":
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse503RCS"
+        "509":
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse509"
+
+      x-codeSamples:
+        - lang: cURL
+          source:
+            $ref: ../snippets/rcs/message/snippet.sh
+        - lang: Python
+          source:
+            $ref: ../snippets/rcs/message/snippet.py
+        - lang: JavaScript
+          source:
+            $ref: ../snippets/rcs/message/snippet.js
+        - lang: PHP
+          source:
+            $ref: ../snippets/rcs/message/snippet.php
+
+  /rcs/json/{agentId}/revoke:
+    description: Revoke a RCS Message
+    post:
+      tags:
+        - rcs-revoke
+      security:
+        - ApiKey: [ ]
+      summary: Revoke a message
+      parameters:
+        - name: agentId
+          in: path
+          description: RBM Agent ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/rcs/revoke.yaml#/Revoke"
+      responses:
+        "202":
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse202RCS"
+        "400":
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse400RCS"
+        "403":
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse403"
+        "404":
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse404RCS"
+        "405":
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse405"
+
+        "509":
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse509"
+
+        "503":
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse503RCS"
+
+      x-codeSamples:
+        - lang: cURL
+          source:
+            $ref: ../snippets/rcs/revoke/snippet.sh
+        - lang: Python
+          source:
+            $ref: ../snippets/rcs/revoke/snippet.py
+        - lang: JavaScript
+          source:
+            $ref: ../snippets/rcs/revoke/snippet.js
+        - lang: PHP
+          source:
+            $ref: ../snippets/rcs/revoke/snippet.php
+
+  /rcs/json/{agentId}/add-testers:
+    description: Add RCS Tester
+    post:
+      tags:
+        - rcs-add-testers
+      security:
+        - ApiKey: [ ]
+      summary: Add Tester
+      parameters:
+        - name: agentId
+          in: path
+          description: RBM Agent ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/rcs/add-testers.yaml#/add-testers"
+      responses:
+        "200":
+          description: Request successfully processed.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse200AddTesters"
+
+        "400":
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse400RCS"
+        "403":
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse403"
+        "404":
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse404RCS"
+
+        "405":
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse405"
+
+        "509":
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse509"
+
+        "503":
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse503RCS"
+
+      x-codeSamples:
+        - lang: cURL
+          source:
+            $ref: ../snippets/rcs/add-testers/snippet.sh
+        - lang: Python
+          source:
+            $ref: ../snippets/rcs/add-testers/snippet.py
+        - lang: JavaScript
+          source:
+            $ref: ../snippets/rcs/add-testers/snippet.js
+        - lang: PHP
+          source:
+            $ref: ../snippets/rcs/add-testers/snippet.php
+
+  /rcs/json/{agentId}/capabilities:
+    description: Capabilities Test
+    post:
+      tags:
+        - rcs-capabilities
+      security:
+        - ApiKey: [ ]
+      summary: Perform a check
+      parameters:
+        - name: agentId
+          in: path
+          description: RBM Agent ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/rcs/capabilities.yaml#/capabilities"
+      responses:
+        "200":
+          description: Request successfully processed.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse200Capabilities"
+        "400":
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse400RCS"
+        "403":
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse403"
+        "404":
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse404RCS"
+
+        "405":
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse405"
+
+        "509":
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse509"
+
+        "503":
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse503RCS"
+
+      x-codeSamples:
+        - lang: cURL
+          source:
+            $ref: "../snippets/rcs/capabilities/snippet.sh"
+        - lang: Python
+          source:
+            $ref: ../snippets/rcs/capabilities/snippet.py
+        - lang: JavaScript
+          source:
+            $ref: ../snippets/rcs/capabilities/snippet.js
+        - lang: PHP
+          source:
+            $ref: ../snippets/rcs/capabilities/snippet.php
+
+  /rcs/json/{agentId}/event:
+    description: Send Event
+    post:
+      tags:
+        - rcs-event
+      security:
+        - ApiKey: [ ]
+      summary: Send read event
+      parameters:
+        - name: agentId
+          in: path
+          description: RBM Agent ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/rcs/event.yaml#/event"
+      responses:
+        "202":
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse202RCS"
+        "400":
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse400RCS"
+        "404":
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse404RCS"
+        "405":
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse405"
+
+        "509":
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse509"
+
+        "503":
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse503RCS"
+
+      x-codeSamples:
+        - lang: cURL
+          source:
+            $ref: ../snippets/rcs/event/snippet.sh
+        - lang: Python
+          source:
+            $ref: ../snippets/rcs/event/snippet.py
+        - lang: JavaScript
+          source:
+            $ref: ../snippets/rcs/event/snippet.js
+        - lang: PHP
+          source:
+            $ref: ../snippets/rcs/event/snippet.php
+components:
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: >
+        Example: `Authorization: App YOUR_API_KEY`
+
