@@ -26,8 +26,13 @@ Text:
               example: "Hello 🙂"
         type:
           type: string
-          description: "Type message"
-          example: "text"
+          const: "text"
+        is_error:
+          type: string
+          description: "This property will be present if an error occurs when a user submits a document, image, or other file. In this case, a text type webhook will be triggered, and the `text` property will contain a string representing a JSON object with the error details. If no error occurs, this property will not be included"
+          enum:
+            - yes
+          nullable: true
 
 Document:
   type: object

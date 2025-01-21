@@ -26,6 +26,11 @@ tags:
     x-displayName: File
   - name: whatsapp-webhooks
     x-displayName: WebHooks
+    description: |
+      **Important:**<br><br>
+      When a client or user submits an image, video, or other file that does not comply with the WhatsApp Business limitations, the WhatsApp agent is notified via a `text` type webhook with the details of the encountered error.<br><br>
+      For example: `Failed to download incoming media due to internal error.` Because a client attempted to submit a document larger than 100 MB.<br><br>
+      It is recommended to monitor this type of webhook.
 x-tagGroups:
   - name: WhatsApp
     tags:
@@ -1417,4 +1422,3 @@ components:
       name: Authorization
       description: >
         Example: `Authorization: App YOUR_API_KEY`
-    
