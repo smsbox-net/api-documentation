@@ -5,7 +5,7 @@ info:
   contact:
     url: https://www.smsbox.net
   x-logo:
-    url: "logo-en.png"
+    url: "../logo-en.png"
     backgroundColor: "#FFFFFF"
     altText: "SMSBOX logo"
     href: https://www.smsbox.net
@@ -867,7 +867,7 @@ paths:
           source:
             $ref: ../snippets/whatsapp/message/reaction/snippet.php
 
-  /waba/1.1/json/{wabaId}/interactive-buttons/{phoneID}:
+  /waba/1.1/json/{wabaId}/message/{phoneID} (interactive button message):
     description: Send interactive button message
     post:
       tags:
@@ -948,7 +948,7 @@ paths:
           source:
             $ref: ../snippets/whatsapp/interactive/button/snippet.php
 
-  /waba/1.1/json/{wabaId}/interactive-lists/{phoneID}:
+  /waba/1.1/json/{wabaId}/message/{phoneID} (interactive list message):
     description: Send interactive list message
     post:
       tags:

@@ -5,7 +5,7 @@ info:
   contact:
     url: https://www.smsbox.net
   x-logo:
-    url: "logo-en.png"
+    url: "../logo-en.png"
     backgroundColor: "#FFFFFF"
     altText: "SMSBOX logo"
     href: https://www.smsbox.net

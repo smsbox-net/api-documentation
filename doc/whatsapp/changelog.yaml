@@ -1,11 +1,11 @@
 openapi: 3.1.0
 info:
   title: SMSBOX - WhatsApp API Documentation
-  version: 2.0.2
+  version: 2.2.0
   contact:
     url: https://www.smsbox.net
   x-logo:
-    url: "logo-en.png"
+    url: "../logo-en.png"
     backgroundColor: "#FFFFFF"
     altText: "SMSBOX logo"
     href: https://www.smsbox.net
@@ -19,6 +19,6 @@ info:
     
     | 2.2.0 | 01/31/2025 | 📌 Add ``reference`` and ``recipients`` attributes in the response of the ``message`` resource and add URL versioning (``waba/1.1/json``) |
 
-    | 2.1.0 | 10/03/2024 | 👩🏻‍💻 Add ``interactive-lists`` route for Whatsapp API.                                                                |
+    | 2.1.0 | 10/03/2024 | 👩🏻‍💻 Add interactive list and interactive button group for Whatsapp API.                                                                |
 
     | 2.0.0 | 06/28/2024 | 📞 Start of the SMSBOX Documentation on github with our ``Whatsapp API documentation``.                                  |

@@ -1,5 +1,5 @@
 curl --request POST \
-    --url https://api.smsbox.pro/waba/json/<WABAID>/interactive-list/<PHONEID> \
+    --url https://api.smsbox.pro/waba/json/<WABAID>/message/<PHONEID> \
     --header 'Authorization: App <APIKEY>' \
     --header 'Content-Type: application/json' \
     --data '{

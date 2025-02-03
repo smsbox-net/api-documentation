@@ -4,7 +4,7 @@ info:
   contact:
     url: https://www.smsbox.net
   x-logo:
-    url: "public/logo-en.png"
+    url: "logo-en.png"
     backgroundColor: "#FFFFFF"
     altText: "SMSBOX logo"
     href: https://www.smsbox.net
@@ -14,8 +14,8 @@ tags:
   - name: rcs
     x-displayName: RCS
     description: > 
-      [Consultez notre documentation RCS](public/rcs.html)
+      [Consultez notre documentation RCS](rcs/index.html)
   - name: whatsapp
     x-displayName: WhatsApp
     description: >
-      [Consultez notre documentation Whatsapp](public/whatsapp.html)
+      [Consultez notre documentation Whatsapp](whatsapp/index.html)
