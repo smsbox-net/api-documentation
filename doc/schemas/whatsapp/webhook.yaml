@@ -1,0 +1,487 @@
+Text:
+  type: object
+  properties:
+    $ref: "#/components/schemas/MessageHeader"
+    data:
+      type: object
+      properties:
+        from:
+          type: string
+          description: Customer's phone number
+          example: "33XXXXXXXXX"
+        id:
+          type: string
+          description: "ID message"
+          example: "wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        timestamp:
+          type: string
+          description: Unix timestamp of message receipt by WhatsApp server
+          example: "1719576000"
+        text:
+          type: object
+          properties:
+            body:
+              type: string
+              description: "Text message"
+              example: "Hello 🙂"
+        type:
+          type: string
+          const: "text"
+        is_error:
+          type: string
+          description: "This property will be present if an error occurs when a user submits a document, image, or other file. In this case, a text type webhook will be triggered, and the `text` property will contain a string representing a JSON object with the error details. If no error occurs, this property will not be included"
+          enum:
+            - yes
+          nullable: true
+
+Document:
+  type: object
+  properties:
+    $ref: "#/components/schemas/MessageHeader"
+    data:
+      type: object
+      properties:
+        from:
+          type: string
+          description: Customer's phone number
+          example: "33XXXXXXXXX"
+        id:
+          type: string
+          description: "ID message"
+          example: "wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        timestamp:
+          type: string
+          description: Unix timestamp of message receipt by WhatsApp server
+          example: "1719576000"
+        type:
+          type: string
+          const: document
+        document:
+          type: object
+          properties:
+            filename:
+              type: string
+              example: "filename.pdf"
+            mime_type:
+              type: string
+              description: >
+                text/plain - application/vnd.ms-excel - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet - application/msword - application/vnd - openxmlformats-officedocument.wordprocessingml.document - application/vnd.ms-powerpoint - application/vnd.openxmlformats-officedocument.presentationml.presentation - application/pdf <br>`max size : 100MB`
+              example: "application/pdf"
+            sha256:
+              type: string
+              description: SHA-256 file hash
+            id:
+              type: string
+              description: ID of the file
+              example: "1234567890"
+            caption:
+              type: string
+
+Image:
+  type: object
+  properties:
+    $ref: "#/components/schemas/MessageHeader"
+    data:
+      type: object
+      properties:
+        from:
+          type: string
+          description: Customer's phone number
+          example: "33XXXXXXXXX"
+        id:
+          type: string
+          description: "ID message"
+          example: "wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        timestamp:
+          type: string
+          description: Unix timestamp of message receipt by WhatsApp server
+          example: "1719576000"
+        type:
+          type: string
+          const: "image"
+        image:
+          type: object
+          properties:
+            mime_type:
+              type: string
+              description: >
+                image/jpeg - image/png <br>`max size : 5MB`
+              example: "image/jpeg"
+            sha256:
+              type: string
+              description: SHA-256 file hash
+            id:
+              type: string
+              description: ID of the file
+              example: "1234567890"
+            caption:
+              type: string
+
+Video:
+  type: object
+  properties:
+    $ref: "#/components/schemas/MessageHeader"
+    data:
+      type: object
+      properties:
+        from:
+          type: string
+          description: Customer's phone number
+          example: "33XXXXXXXXX"
+        id:
+          type: string
+          description: "ID message"
+          example: "wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        timestamp:
+          type: string
+          description: Unix timestamp of message receipt by WhatsApp server
+          example: "1719576000"
+        type:
+          type: string
+          const: "video"
+        video:
+          type: object
+          properties:
+            caption:
+              type: string
+            mime_type:
+              type: string
+              description: >
+                video/3gp - video/mp4"<br>`max size : 16MB`
+              example: "video/mp4"
+            sha256:
+              type: string
+              description: SHA-256 file hash
+            id:
+              type: string
+              description: ID of the file
+              example: "1234567890"
+
+Reaction:
+  type: object
+  properties:
+    $ref: "#/components/schemas/MessageHeader"
+    data:
+      type: object
+      properties:
+        from:
+          type: string
+          description: Customer's phone number
+          example: "33XXXXXXXXX"
+        id:
+          type: string
+          description: "ID message"
+          example: "wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        timestamp:
+          type: string
+          description: Unix timestamp of message receipt by WhatsApp server
+          example: "1719576000"
+        type:
+          type: string
+          const: "reaction"
+        reaction:
+          type: object
+          properties:
+            message_id:
+              type: string
+              description: ID of the message sent and to which the client reacted
+              example: "wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+            emoji:
+              type: string
+              example: "👍"
+
+ReplyList:
+  type: object
+  properties:
+    $ref: "#/components/schemas/MessageHeader"
+    data:
+      type: object
+      properties:
+        context:
+          type: object
+          properties:
+            from:
+              type: string
+              example: "33422140056"
+            id:
+              type: string
+              example: "wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        from:
+          type: string
+          description: Customer's phone number
+          example: "33XXXXXXXXX"
+        id:
+          type: string
+          example: "wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        timestamp:
+          type: string
+          description: Unix timestamp of message receipt by WhatsApp server
+          example: "1719576000"
+        type:
+          type: string
+          const: "interactive"
+        interactive:
+          type: object
+          properties:
+            type:
+              type: string
+              const: "list_reply"
+            list_reply:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: "xxxxxx"
+                title:
+                  type: string
+                  example: "Selected list item title"
+                description:
+                  type: string
+                  example: "Selected list item description"
+
+ReplyButton:
+  type: object
+  properties:
+    $ref: "#/components/schemas/MessageHeader"
+    data:
+      type: object
+      properties:
+        context:
+          type: object
+          properties:
+            from:
+              type: string
+              example: "33XXXXXXXXX"
+            id:
+              type: string
+              example: "wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        from:
+          type: string
+          description: Customer's phone number
+          example: "33XXXXXXXXX"
+        id:
+          type: string
+          example: "wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        timestamp:
+          type: string
+          description: Unix timestamp of message receipt by WhatsApp server
+          example: "1719576000"
+        type:
+          type: string
+          const: "interactive"
+        interactive:
+          type: object
+          properties:
+            type:
+              type: string
+              const: "button_reply"
+            button_reply:
+              type: object
+              properties:
+                id:
+                  type: string
+                title:
+                  type: string
+
+Location:
+  description: WhatsApp use Facebook Places, Google Maps, and Foursquare for map and location data
+  type: object
+  properties:
+    $ref: "#/components/schemas/MessageHeader"
+    data:
+      type: object
+      properties:
+        from:
+          type: string
+          description: Customer's phone number
+          example: "33XXXXXXXXX"
+        id:
+          type: string
+          example: "wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        timestamp:
+          type: string
+          description: Unix timestamp of message receipt by WhatsApp server
+          example: "1719576000"
+        type:
+          type: string
+          const: "location"
+        location:
+          type: object
+          properties:
+            address:
+              type: string
+              example: "20 Av. Élie Gautier, 83320 Carqueiranne"
+            latitude:
+              type: number
+              format: float
+              example: 43.0875153
+            longitude:
+              type: number
+              format: float
+              example: 6.0754154
+            name:
+              type: string
+              example: "SMSBOX"
+            url:
+              type: string
+              description: If a URL corresponding to the location is identified, this property will be populated
+              example: "https://foursquare.com/xxxxx"
+
+MessageStatus:
+  required:
+    - data
+    - wabaId
+    - phoneId
+    - phoneNumber
+    - clientId
+    - reference
+    - requestProd
+    - requestDate
+    - requestUUID
+    - requestType
+    - id
+  type: object
+  properties:
+    $ref: "#/components/schemas/StatusHeader"
+    data:
+      required:
+        - id
+        - status
+        - timestamp
+        - recipient_id
+      type: object
+      properties:
+        id:
+          type: string
+          example: "wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        status:
+          type: string
+          enum:
+            - failed
+            - ack
+            - sent
+            - delivered
+            - read
+          description: >
+      
+            * `ack` - Request forwarded to Meta API.
+            
+            * `sent` - Delivery in progress. Following ``ack`` status.
+            
+            * `delivered` - Delivered to recipient. Following ``sent`` status. May not be supplied when ``read`` status happen quickly.
+            
+            * `read` - Read by recipient. Following ``sent`` or ``delivered`` status. May not be supplied according to privacy settings from end-user.
+            
+            * `failed` - Unable to deliver, see ``errors`` parameter for description. Following ``ack`` status.
+
+        timestamp:
+          type: string
+          description: Unix timestamp of message receipt by WhatsApp server
+          example: "1719576000"
+        recipient_id:
+          type: string
+          description: Customer's phone number
+          example: "33XXXXXXXXX"
+        errors:
+          type: array
+          description: Data of the error. Only present if the status is ``failed``
+          items:
+            type: object
+            properties:
+              code:
+                type: int
+                example: 131047
+                description: Error code.
+              title:
+                type: string
+                example: "Title of the error."
+                description: Title of the error.
+              message:
+                type: string
+                example: "Error message."
+                description: Error message.
+              error_data:
+                type: object
+                properties:
+                  details:
+                    type: string
+                    description: Details of the error.
+                    example: "Detaiils of the error."
+                  href:
+                    type: string
+                    description: Link to Whatsapp error-codes documentation
+                    example: "https:\/\/developers.facebook.com\/docs\/whatsapp\/cloud-api\/support\/error-codes\/"
+components:
+  schemas:
+    MessageHeader:
+      wabaId:
+        type: string
+        description: WhatsApp Business Agent ID
+        example: "xxxxxx"
+      phoneId:
+        type: string
+        description: WhatsApp Business Agent's Phone Number ID
+        example: "xxxxxx"
+      phoneNumber:
+        type: string
+        description: WhatsApp Business Agent's Phone Number
+        example: "xxxxxx"
+      clientId:
+        type: integer
+        description: SMSBOX user account ID
+        example: 123456
+      requestProd:
+        type: string
+        description: Channel
+        const: WABA
+        example: "WABA"
+      requestDate:
+        type: string
+        description: Datetime of the sent message
+        format: date-time
+        example: "2024-06-01T14:00:00+02:00"
+      requestUUID:
+        type: string
+        format: uuid
+        example: "xxxxxx"
+      requestType:
+        type: string
+        const: "incoming_message"
+
+    StatusHeader:
+      wabaId:
+        type: string
+        description: WhatsApp Business Agent ID
+        example: "xxxxxx"
+      phoneId:
+        type: string
+        description: WhatsApp Business Agent's Phone Number ID
+        example: "xxxxxx"
+      phoneNumber:
+        type: string
+        description: WhatsApp Business Agent's Phone Number
+        example: "xxxxxx"
+      clientId:
+        type: integer
+        description: SMSBOX user account ID
+        example: 123456
+      reference:
+        type: integer
+        description: Internal ID of the sent message
+        example: 1234567890
+      requestProd:
+        type: string
+        description: Channel
+        example: "WABA"
+      requestDate:
+        type: string
+        description: Datetime of the sent message
+        format: date-time
+        example: "2024-06-01T14:00:00+02:00"
+      requestUUID:
+        type: string
+        format: uuid
+        example: "xxxxxx"
+      requestType:
+        type: string
+        const: "status_update"

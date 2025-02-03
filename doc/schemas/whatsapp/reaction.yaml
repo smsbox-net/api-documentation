@@ -1,0 +1,30 @@
+ReplyReaction:
+  properties:
+    type:
+      type: string
+      const: reaction
+    reaction:
+      type: object
+      properties:
+        message_id:
+          type: string
+          description: Received message ID
+          example: "wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        emoji:
+          type: string
+          const: "😀"
+      required:
+        - message_id
+        - emoji
+  required:
+    - type
+    - reaction
+  example:
+    {
+      "type": "reaction",
+      "reaction":
+        {
+          "message_id": "wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "emoji": "😀",
+        },
+    }

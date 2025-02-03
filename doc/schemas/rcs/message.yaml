@@ -1,0 +1,23 @@
+RCS:
+  type: object
+  properties:
+    recipients:
+      type: array
+      items:
+        type: string
+        example: "+336XXXXXXXX"
+      maxItems: 5000
+    contentMessage:
+      type: object
+      description: >
+        [Here a documentation for build the contentMessage object](https://developers.google.com/business-communications/rcs-business-messaging/reference/rest/v1/phones.agentMessages?hl=fr#AgentContentMessage)
+    validity:
+      type: int
+      example: 720
+      description: >
+        Number of minutes you want your message to remain valid \
+        
+        Max ``10080`` minutes (7 days), min: ``1`` minute
+  required:
+    - recipients
+    - contentMessage

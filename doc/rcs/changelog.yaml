@@ -1,0 +1,22 @@
+openapi: 3.1.0
+info:
+  title: SMSBOX - RCS API Documentation
+  version: 2.0.1
+  contact:
+    url: https://www.smsbox.net
+  x-logo:
+    url: "logo-en.png"
+    backgroundColor: "#FFFFFF"
+    altText: "SMSBOX logo"
+    href: https://www.smsbox.net
+  description: >
+    
+    ### Changelog
+    
+    | Version | Date | Changes                                                                                                                    |
+    
+    | ------- | ----- |---------------------------------------------------------------------------------------------------------------------------|    
+    
+    | 2.1.0 | 01/24/2025 | ⚓ Change syntax for ``recipients`` parameter, add the ``validity`` parameter and ``webhook`` documentation for RCS API. |
+    
+    | 2.0.0 | 10/22/2024 | 📲 Add the SMSBOX Documentation for the ``RCS`` product.                                                                  |                                 |

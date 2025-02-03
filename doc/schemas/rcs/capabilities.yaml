@@ -1,0 +1,10 @@
+capabilities:
+  type: object
+  properties:
+    recipients:
+      type: array
+      items:
+        type: string
+      maxItems: 500
+  required:
+    - recipients

@@ -1,0 +1,10 @@
+add-testers:
+  type: object
+  properties:
+    recipients:
+      type: array
+      items:
+        type: string
+      maxItems: 10
+  required:
+    - recipients

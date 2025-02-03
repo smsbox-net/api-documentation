@@ -1,0 +1,21 @@
+openapi: 3.1.0
+info:
+  title: SMSBOX - API Documentation
+  contact:
+    url: https://www.smsbox.net
+  x-logo:
+    url: "public/logo-en.png"
+    backgroundColor: "#FFFFFF"
+    altText: "SMSBOX logo"
+    href: https://www.smsbox.net
+servers:
+  - url: https://api.smsbox.pro
+tags:
+  - name: rcs
+    x-displayName: RCS
+    description: > 
+      [Consultez notre documentation RCS](public/rcs.html)
+  - name: whatsapp
+    x-displayName: WhatsApp
+    description: >
+      [Consultez notre documentation Whatsapp](public/whatsapp.html)

@@ -1,0 +1,11 @@
+Media:
+  type: object
+  properties:
+    link:
+      type: string
+      format: uri
+    filename:
+      type: string
+  required:
+    - link
+    - filename

@@ -1,0 +1,86 @@
+OTPTemplateMessage:
+  type: object
+  properties:
+    type:
+      type: string
+      enum:
+        - template
+    template:
+      type: object
+      properties:
+        name:
+          type: string
+          example: otp
+        language:
+          type: object
+          properties:
+            code:
+              type: string
+              example: en-US
+          required:
+            - code
+        components:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum:
+                  - body
+                  - button
+              sub_type:
+                type: string
+                enum:
+                  - url
+              index:
+                type: string
+                enum:
+                  - 0
+              parameters:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      enum:
+                        - text
+                    text:
+                      type: string
+                      example: 123456
+                  required:
+                    - type
+                    - text
+            required:
+              - type
+              - parameters
+      required:
+        - name
+        - language
+        - components
+  required:
+    - type
+    - template
+  example:
+    {
+      "type": "template",
+      "template":
+        {
+          "name": "otp",
+          "language": { "code": "en" },
+          "components":
+            [
+              {
+                "type": "body",
+                "parameters": [{ "type": "text", "text": "123456" }],
+              },
+              {
+                "type": "button",
+                "sub_type": "url",
+                "index": "0",
+                "parameters": [{ "type": "text", "text": "123456" }],
+              },
+            ],
+        },
+    }

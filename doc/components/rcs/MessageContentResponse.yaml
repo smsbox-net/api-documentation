@@ -1,0 +1,216 @@
+MessageContentResponse200Capabilities:
+  type: object
+  properties:
+    response:
+      type: object
+      properties:
+        response_code:
+          type: string
+          example: "200"
+        response_desc:
+          type: string
+          example: "Request successfully processed."
+    recipients:
+      type: array
+      items:
+        type: object
+        properties:
+          submitted:
+            type: string
+            example: "+33xxxxxxxxx"
+          rewrited:
+            type: string
+            example: "33xxxxxxxxx"
+          state:
+            type: string
+            example: 'SUCCESS'
+          reason_code:
+            type: string
+            example: 'REACHABLE'
+          capabilities:
+            type: array
+            items:
+              type: strings
+            example: ["chatBotCommunication", "RICHCARD_STANDALONE"]
+
+
+MessageContentResponse200AddTesters:
+  type: object
+  properties:
+    response:
+      type: object
+      properties:
+        response_code:
+          type: string
+          example: "200"
+        response_desc:
+          type: string
+          example: "Request successfully processed."
+    details:
+      type: string
+      example: "Request processed but no recipient to add."
+    recipients:
+      type: array
+      items:
+        type: object
+        properties:
+          submitted:
+            type: string
+            example: "+33xxxxxxxxx"
+          rewrited:
+            type: string
+            example: "33xxxxxxxxx"
+          state:
+            type: string
+            example: 'DELETED'
+          reason_code:
+            type: string
+            example: 'ALREADY_ADDED'
+
+MessageContentResponse202RCS:
+  type: object
+  properties:
+    response:
+      type: object
+      properties:
+        response_code:
+          type: string
+          example: "202"
+        response_desc:
+          type: string
+          example: "Request successfully queued."
+    details:
+      type: string
+      example: Request accepted for processing.
+    reference:
+      type: string
+      example: 'XXXXXXXXXXXXXX'
+    recipients:
+      type: array
+      items:
+        type: object
+        properties:
+          submitted:
+            type: string
+            example: "+33xxxxxxxxx"
+          rewrited:
+            type: string
+            example: "33xxxxxxxxx"
+          state:
+            type: string
+            example: 'ACCEPTED'
+          reason_code:
+            type: string
+            example: 'PROCESSING'
+
+MessageContentResponse202AddTesters:
+  type: object
+  properties:
+    response:
+      type: object
+      properties:
+        response_code:
+          type: string
+          example: "202"
+        response_desc:
+          type: string
+          example: "Request successfully processed."
+    details:
+      type: string
+      example: Request processed.
+
+MessageContentResponse400RCS:
+  type: object
+  properties:
+    response:
+      type: object
+      properties:
+        response_code:
+          type: string
+          example: "400"
+        response_desc:
+          type: string
+          example: "Wrong query syntax or missing mandatory field."
+    error:
+      type: string
+      example: "No valid recipient found."
+
+MessageContentResponse403:
+  type: object
+  properties:
+    response:
+      type: object
+      properties:
+        response_code:
+          type: string
+          example: "403"
+        response_desc:
+          type: string
+          example: "Access to the requested resource has been denied."
+    error:
+      type: string
+      example: "API Key not allowed or account discontinued."
+
+MessageContentResponse404RCS:
+  type: object
+  properties:
+    response:
+      type: object
+      properties:
+        response_code:
+          type: string
+          example: "404"
+        response_desc:
+          type: string
+          example: "The requested resource was not found."
+    error:
+      type: string
+      example: "Invalid RCSagentId value (not found)."
+
+MessageContentResponse405:
+  type: object
+  properties:
+    response:
+      type: object
+      properties:
+        response_code:
+          type: string
+          example: "405"
+        response_desc:
+          type: string
+          example: "The requested method is not supported for the requested resource."
+    error:
+      type: string
+      example: "Invalid HTTP method."
+
+MessageContentResponse509:
+  type: object
+  properties:
+    response:
+      type: object
+      properties:
+        response_code:
+          type: string
+          example: "509"
+        response_desc:
+          type: string
+          example: "The request payload exceeds the maximum allowed size."
+    error:
+      type: string
+      example: "Too many recipients (max.: ....)."
+
+MessageContentResponse503RCS:
+  type: object
+  properties:
+    response:
+      type: object
+      properties:
+        response_code:
+          type: string
+          example: "503"
+        response_desc:
+          type: string
+          example: "Service temporarily unavailable."
+    error:
+      type: string
+      example: "Request failed."

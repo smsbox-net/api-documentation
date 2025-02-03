@@ -1,0 +1,13 @@
+ReadEventMessage:
+  message_id:
+    type: string
+    description: Received message ID
+    example: "wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  status:
+    type: string
+    const: read
+required:
+  - message_id
+  - status
+example:
+  { "message_id": "wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx", "status": "read" }

@@ -1,0 +1,14 @@
+Revoke:
+  type: object
+  properties:
+    recipients:
+      type: array
+      items:
+        type: string
+      maxItems: 5000
+    reference:
+      type: string
+      const: "XXXXXXXXXXXX"
+  required:
+    - recipients
+    - reference

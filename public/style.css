@@ -1,0 +1,15 @@
+[data-item-id^="group/"]>label {
+    font-size: 18px;
+    background-color: #7b3b95;
+    color: #fff;
+    padding: 5px 10px;
+    line-height: 18px;
+    font-weight: bold;
+}
+
+[data-item-id^="tag/"]>label {
+    font-size: 20px;
+    padding: 10px;
+    line-height: 20px;
+    font-weight: bold;
+}
