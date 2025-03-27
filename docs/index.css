@@ -1,0 +1,6 @@
+[data-item-id^="tag/"]>label {
+    font-size: 20px;
+    padding: 10px;
+    line-height: 20px;
+    font-weight: bold;
+}

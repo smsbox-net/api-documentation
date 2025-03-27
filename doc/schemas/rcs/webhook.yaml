@@ -5,14 +5,18 @@ WebhookText:
     data:
       type: object
       properties:
-          type:
-            type: string
-            const: text
-            example: 'text'
-          text:
-            type: string
-            description: Text content of the message
-            example: "hello smsbox!"
+        type:
+          type: string
+          const: text
+          example: 'text'
+        text:
+          type: string
+          description: Text content of the message
+          example: "hello smsbox!"
+        timestamp:
+          type: string
+          description: Unix timestamp of message receipt by RBM provider
+          example: "1719576000"
     requestType:
       type: string
       description: Type of the request
@@ -36,6 +40,10 @@ WebhookEvent:
             - IS_TYPING
           description: Type of the event
           example: 'IS_TYPING'
+        timestamp:
+          type: string
+          description: Unix timestamp of message receipt by RBM provider
+          example: "1719576000"
     requestType:
       type: string
       description: Type of the request
@@ -76,6 +84,10 @@ WebhookStatusUpdate:
             
             * `EXPIRED` - The delivery attempt has expired.
           example: 'READ'
+        timestamp:
+          type: string
+          description: Unix timestamp of message receipt by RBM provider
+          example: "1719576000"
     reference:
       type: string
       description: Message identifier
@@ -105,6 +117,10 @@ WebhookReply:
           type: string
           description: postbackData of the chosen reply
           example: 'example-of-posbackData'
+        timestamp:
+          type: string
+          description: Unix timestamp of message receipt by RBM provider
+          example: "1719576000"
     requestType:
       type: string
       description: Type of the request
@@ -130,6 +146,10 @@ WebhookAction:
           type: string
           description: postbackData of the chosen action
           example: "data_url_link-1"
+        timestamp:
+          type: string
+          description: Unix timestamp of message receipt by RBM provider
+          example: "1719576000"
     requestType:
       type: string
       description: Type of the request
@@ -166,6 +186,10 @@ WebhookDocument:
             fileUri:
               type: string
               example: 'url_of_the_file'
+        timestamp:
+          type: string
+          description: Unix timestamp of message receipt by RBM provider
+          example: "1719576000"
     requestType:
       type: string
       description: Type of the request
@@ -191,6 +215,10 @@ WebhookLocation:
           type: float
           description: Longitude coordinate
           example: 6.0755356
+        timestamp:
+          type: string
+          description: Unix timestamp of message receipt by RBM provider
+          example: "1719576000"
     requestType:
       type: string
       description: Type of the request

@@ -14,8 +14,8 @@ tags:
   - name: rcs
     x-displayName: RCS
     description: > 
-      [Consultez notre documentation RCS](rcs/index.html)
+      [Consultez notre documentation RCS](rcs/)
   - name: whatsapp
     x-displayName: WhatsApp
     description: >
-      [Consultez notre documentation Whatsapp](whatsapp/index.html)
+      [Consultez notre documentation Whatsapp](whatsapp/)
