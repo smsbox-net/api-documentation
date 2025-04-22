@@ -1,5 +1,5 @@
 curl --request POST \
-	--url https://api.smsbox.pro/rcs/json/<AGENTID>/capabilities \
+	--url https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/capabilities \
 	--header 'Authorization: App <APIKEY>' \
 	--header 'Content-Type: application/json' \
 	--data '{

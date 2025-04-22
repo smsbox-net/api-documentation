@@ -1,4 +1,4 @@
-const url = 'https://api.smsbox.pro/rcs/json/<AGENTID>/revoke>';
+const url = 'https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/revoke>';
 const headers = {
     'Authorization': 'App <APIKEY>',
     'Content-Type': 'application/json'

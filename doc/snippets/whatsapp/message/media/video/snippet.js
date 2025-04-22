@@ -1,4 +1,4 @@
-const url = 'https://api.smsbox.pro/waba/json/<WABAID>/message/<PHONEID>';
+const url = 'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
 const headers = {
     'Authorization': 'App <APIKEY>',
     'Content-Type': 'application/json'

@@ -423,7 +423,19 @@ paths:
             application/json:
               schema:
                 $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse503RCS"
-
+      x-codeSamples:
+        - lang: cURL
+          source:
+            $ref: "../snippets/rcs/event/snippet.sh"
+        - lang: Python
+          source:
+            $ref: ../snippets/rcs/event/snippet.py
+        - lang: JavaScript
+          source:
+            $ref: ../snippets/rcs/event/snippet.js
+        - lang: PHP
+          source:
+            $ref: ../snippets/rcs/event/snippet.php
 webhooks:
   WebhookText:
     post:

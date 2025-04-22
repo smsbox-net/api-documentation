@@ -1,6 +1,6 @@
 <?php
 
-$url = 'https://api.smsbox.pro/waba/json/<WABAID>/reaction/<PHONEID>';
+$url = 'https://api.wababox.net/waba/1.1/json/<WABAID>/reaction/<PHONEID>';
 $headers = [
     'Authorization: App <APIKEY>',
     'Content-Type: application/json'

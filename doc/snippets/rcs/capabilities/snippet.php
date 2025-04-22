@@ -1,6 +1,6 @@
 <?php
 
-$url = 'https://api.smsbox.pro/rcs/json/<AGENTID>/capabilities';
+$url = 'https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/capabilities';
 $headers = [
     'Authorization: App <APIKEY>',
     'Content-Type: application/json'
