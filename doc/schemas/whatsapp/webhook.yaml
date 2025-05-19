@@ -27,12 +27,6 @@ Text:
         type:
           type: string
           const: "text"
-        is_error:
-          type: string
-          description: "This property will be present if an error occurs when a user submits a document, image, or other file. In this case, a text type webhook will be triggered, and the `text` property will contain a string representing a JSON object with the error details. If no error occurs, this property will not be included"
-          enum:
-            - yes
-          nullable: true
 
 Document:
   type: object
@@ -411,6 +405,83 @@ MessageStatus:
                     type: string
                     description: Link to Whatsapp error-codes documentation
                     example: "https:\/\/developers.facebook.com\/docs\/whatsapp\/cloud-api\/support\/error-codes\/"
+
+IncomingError:
+  type: object
+  properties:
+    wabaId:
+      type: string
+      description: WhatsApp Business Agent ID
+      example: "xxxxxx"
+    phoneId:
+      type: string
+      description: WhatsApp Business Agent's Phone Number ID
+      example: "xxxxxx"
+    phoneNumber:
+      type: string
+      description: WhatsApp Business Agent's Phone Number
+      example: "xxxxxx"
+    clientId:
+      type: integer
+      description: SMSBOX user account ID
+      example: 123456
+    requestProd:
+      type: string
+      description: Channel
+      const: WABA
+      example: "WABA"
+    requestDate:
+      type: string
+      description: Datetime of the sent message
+      format: date-time
+      example: "2024-06-01T14:00:00+02:00"
+    requestUUID:
+      type: string
+      format: uuid
+      example: "xxxxxx"
+    requestType:
+      type: string
+      const: "incoming_error"
+    data:
+      type: object
+      properties:
+        from:
+          type: string
+          description: Customer's phone number
+          example: "33XXXXXXXXX"
+        id:
+          type: string
+          description: "ID message"
+          example: "wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        timestamp:
+          type: string
+          description: Unix timestamp of message receipt by WhatsApp server
+          example: "1719576000"
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: number
+                description: Meta api error code
+                example: 123456
+              title:
+                type: string
+                description: Title of the error
+                example: Message type unknown
+              message:
+                type: string
+                description: Message of the error
+                example: Message type unknown
+              error_data:
+                type: object
+                properties:
+                  details:
+                    type: string
+                    description: Details of the error
+                    example: Message type is currently not supported.
+
 components:
   schemas:
     MessageHeader:
@@ -485,3 +556,4 @@ components:
       requestType:
         type: string
         const: "status_update"
+

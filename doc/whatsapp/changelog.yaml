@@ -17,6 +17,8 @@ info:
     
     | ------- | ----- |---------------------------------------------------------------------------------------------------------------------------|
     
+    | 2.3.0 | 05/16/2025 | 🆕 New Templates List resource and ``Error Incoming`` webhook added. You can now view IPs sending webhooks in the webhook section.     |
+    
     | 2.2.0 | 01/31/2025 | 📌 Add ``reference`` and ``recipients`` attributes in the response of the ``message`` resource and add URL versioning (``waba/1.1/json``) |
 
     | 2.1.0 | 10/03/2024 | 👩🏻‍💻 Add interactive list and interactive button group for Whatsapp API.                                                                |

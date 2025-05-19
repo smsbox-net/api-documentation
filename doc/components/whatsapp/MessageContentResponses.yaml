@@ -113,3 +113,51 @@ MessageContentResponse503:
     error:
       type: string
       example: "Authentication failed for unknown reason."
+
+MessageContentResponse200Template:
+  type: object
+  properties:
+    response:
+      type: object
+      properties:
+        response_code:
+          type: string
+          example: "200"
+        response_desc:
+          type: string
+          example: "Request successfully processed."
+    details:
+      type: string
+      example: List of the agent's templates
+    data:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+            example: myTemplate
+          language:
+            type: string
+            example: en_US
+          components:
+            type: array
+            items:
+              type: object
+              properties:
+                type:
+                  type: string
+                  example: BODY
+                parameters:
+                  type: null
+                  example: null
+          status:
+            type: string
+            example: APPROUVED
+          category:
+            type: string
+            example: UTILITY
+          id:
+            type: string
+            example: xxxxxxxxxxxxxxxx
+

@@ -28,9 +28,15 @@ tags:
     x-displayName: Webhooks
     description: |
       **Important:**<br><br>
-      When a client or user submits an image, video, or other file that does not comply with the WhatsApp Business limitations, the WhatsApp agent is notified via a `text` type webhook with the details of the encountered error.<br><br>
-      For example: `Failed to download incoming media due to internal error.` Because a client attempted to submit a document larger than 100 MB.<br><br>
-      It is recommended to monitor this type of webhook.
+      You should pay close attention to the ``requestType`` properties in your webhook payload.<br>
+      If you are using a firewall, make sure to allow this IPv4 address (**this is the address that emits the webhooks**):
+       - 37.59.198.135
+       - 178.33.185.51
+       - 54.36.93.79
+       - 54.36.93.80
+       - 62.4.31.47
+       - 62.4.31.48
+
 x-tagGroups:
   - name: WhatsApp
     tags:
@@ -1027,6 +1033,79 @@ paths:
           source:
             $ref: ../snippets/whatsapp/interactive/list/snippet.php
 
+  /waba/1.1/json/{wabaId}/template/{phoneId}:
+    get:
+      tags:
+        - whatsapp-templates-messages
+      security:
+        - ApiKey: [ ]
+      summary: Get all templates
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneId
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Request successfully processed.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse200Template"
+        "400":
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse400"
+        "403":
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse403"
+        "404":
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse404"
+        "413":
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse413"
+
+        "503":
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse503"
+
+      x-codeSamples:
+        - lang: cURL
+          source:
+            $ref: ../snippets/whatsapp/template/template/snippet.sh
+        - lang: Python
+          source:
+            $ref: ../snippets/whatsapp/template/template/snippet.py
+        - lang: JavaScript
+          source:
+            $ref: ../snippets/whatsapp/template/template/snippet.js
+        - lang: PHP
+          source:
+            $ref: ../snippets/whatsapp/template/template/snippet.php
+
   /waba/1.1/json/{wabaId}/message/{phoneID} (otp template message):
     post:
       tags:
@@ -1410,6 +1489,21 @@ webhooks:
           application/json:
             schema:
               $ref: "../schemas/whatsapp/webhook.yaml#/MessageStatus"
+      responses:
+        "200":
+          description: Return an HTTP 200 status and the word "OK" only to indicate that the data was received successfully
+
+  Error:
+    post:
+      summary: Incoming error
+      description: "This webhook will be present if an error occurs when a user submits a document, image, or other file. In this case, a Error incoming type webhook will be triggered, and the `errors` property will contain a JSON object with the error details."
+      tags:
+        - whatsapp-webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/whatsapp/webhook.yaml#/IncomingError"
       responses:
         "200":
           description: Return an HTTP 200 status and the word "OK" only to indicate that the data was received successfully

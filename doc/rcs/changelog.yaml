@@ -15,8 +15,10 @@ info:
     
     | Version | Date | Changes                                                                                                                    |
     
-    | ------- | ----- |---------------------------------------------------------------------------------------------------------------------------|    
+    | ------- | ----- |---------------------------------------------------------------------------------------------------------------------------|
     
+    | 2.2.0 | 05/16/2025 | 📶 The list of IP addresses sending the webhook is now available in the webhook section description.                      |                                 
+
     | 2.1.0 | 01/24/2025 | ⚓ Change syntax for ``recipients`` parameter, add the ``validity`` parameter and ``webhook`` documentation for RCS API. |
     
-    | 2.0.0 | 10/22/2024 | 📲 Add the SMSBOX Documentation for the ``RCS`` product.                                                                  |                                 |
+    | 2.0.0 | 10/22/2024 | 📲 Add the SMSBOX Documentation for the ``RCS`` product.                                                                  |                                 
