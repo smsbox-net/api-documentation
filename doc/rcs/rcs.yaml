@@ -82,6 +82,12 @@ paths:
             application/json:
               schema:
                 $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse400RCS"
+        "402":
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse402RCS"
         "403":
           description: Access to the requested resource has been denied.
           content:
@@ -100,18 +106,18 @@ paths:
             application/json:
               schema:
                 $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse405"
+        "413":
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse413"
         "503":
           description: Service temporarily unavailable.
           content:
             application/json:
               schema:
                 $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse503RCS"
-        "509":
-          description: The request payload exceeds the maximum allowed size.
-          content:
-            application/json:
-              schema:
-                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse509"
 
       x-codeSamples:
         - lang: cURL
@@ -180,12 +186,12 @@ paths:
               schema:
                 $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse405"
 
-        "509":
+        "413":
           description: The request payload exceeds the maximum allowed size.
           content:
             application/json:
               schema:
-                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse509"
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse413"
 
         "503":
           description: Service temporarily unavailable.
@@ -263,12 +269,12 @@ paths:
               schema:
                 $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse405"
 
-        "509":
+        "413":
           description: The request payload exceeds the maximum allowed size.
           content:
             application/json:
               schema:
-                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse509"
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse413"
 
         "503":
           description: Service temporarily unavailable.
@@ -345,12 +351,12 @@ paths:
               schema:
                 $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse405"
 
-        "509":
+        "413":
           description: The request payload exceeds the maximum allowed size.
           content:
             application/json:
               schema:
-                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse509"
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse413"
 
         "503":
           description: Service temporarily unavailable.
@@ -420,12 +426,12 @@ paths:
               schema:
                 $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse405"
 
-        "509":
+        "413":
           description: The request payload exceeds the maximum allowed size.
           content:
             application/json:
               schema:
-                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse509"
+                $ref: "../components/rcs/MessageContentResponse.yaml#/MessageContentResponse413"
 
         "503":
           description: Service temporarily unavailable.

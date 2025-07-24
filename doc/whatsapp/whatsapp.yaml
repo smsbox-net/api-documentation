@@ -98,6 +98,14 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse400"
+
+        "402":
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse402"
+
         "403":
           description: Access to the requested resource has been denied.
           content:
@@ -110,7 +118,12 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse404"
-
+        "405":
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse405"
         "413":
           description: The request payload exceeds the maximum allowed size.
           content:
@@ -190,6 +203,14 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse400"
+
+        "402":
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse402"
+
         "403":
           description: Access to the requested resource has been denied.
           content:
@@ -202,6 +223,13 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse404"
+
+        "405":
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse405"
 
         "413":
           description: The request payload exceeds the maximum allowed size.
@@ -282,6 +310,14 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse400"
+
+        "402":
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse402"
+
         "403":
           description: Access to the requested resource has been denied.
           content:
@@ -294,6 +330,13 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse404"
+
+        "405":
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse405"
 
         "413":
           description: The request payload exceeds the maximum allowed size.
@@ -374,6 +417,14 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse400"
+
+        "402":
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse402"
+
         "403":
           description: Access to the requested resource has been denied.
           content:
@@ -386,6 +437,13 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse404"
+
+        "405":
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse405"
 
         "413":
           description: The request payload exceeds the maximum allowed size.
@@ -466,6 +524,14 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse400"
+
+        "402":
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse402"
+
         "403":
           description: Access to the requested resource has been denied.
           content:
@@ -478,6 +544,13 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse404"
+
+        "405":
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse405"
 
         "413":
           description: The request payload exceeds the maximum allowed size.
@@ -558,6 +631,14 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse400"
+
+        "402":
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse402"
+
         "403":
           description: Access to the requested resource has been denied.
           content:
@@ -570,6 +651,13 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse404"
+
+        "405":
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse405"
 
         "413":
           description: The request payload exceeds the maximum allowed size.
@@ -649,6 +737,14 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse400"
+
+        "402":
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse402"
+
         "403":
           description: Access to the requested resource has been denied.
           content:
@@ -661,6 +757,13 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse404"
+
+        "405":
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse405"
 
         "413":
           description: The request payload exceeds the maximum allowed size.
@@ -741,6 +844,14 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse400"
+
+        "402":
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse402"
+
         "403":
           description: Access to the requested resource has been denied.
           content:
@@ -753,6 +864,13 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse404"
+
+        "405":
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse405"
 
         "413":
           description: The request payload exceeds the maximum allowed size.
@@ -832,6 +950,14 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse400"
+
+        "402":
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse402"
+
         "403":
           description: Access to the requested resource has been denied.
           content:
@@ -844,6 +970,13 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse404"
+
+        "405":
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse405"
 
         "413":
           description: The request payload exceeds the maximum allowed size.
@@ -913,6 +1046,14 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse400"
+
+        "402":
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse402"
+
         "403":
           description: Access to the requested resource has been denied.
           content:
@@ -925,6 +1066,13 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse404"
+
+        "405":
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse405"
 
         "413":
           description: The request payload exceeds the maximum allowed size.
@@ -994,6 +1142,14 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse400"
+
+        "402":
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse402"
+
         "403":
           description: Access to the requested resource has been denied.
           content:
@@ -1006,6 +1162,14 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse404"
+
+        "405":
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse405"
+
         "413":
           description: The request payload exceeds the maximum allowed size.
           content:
@@ -1078,12 +1242,13 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse404"
-        "413":
-          description: The request payload exceeds the maximum allowed size.
+
+        "405":
+          description: The requested method is not supported for the requested resource.
           content:
             application/json:
               schema:
-                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse413"
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse405"
 
         "503":
           description: Service temporarily unavailable.
@@ -1155,6 +1320,14 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse400"
+
+        "402":
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse402"
+
         "403":
           description: Access to the requested resource has been denied.
           content:
@@ -1167,6 +1340,13 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse404"
+
+        "405":
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse405"
 
         "413":
           description: The request payload exceeds the maximum allowed size.
@@ -1250,14 +1430,12 @@ paths:
             application/json:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse404"
-
-        "413":
-          description: The request payload exceeds the maximum allowed size.
+        "405":
+          description: Invalid request.
           content:
             application/json:
               schema:
-                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse413"
-
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse405"
         "503":
           description: Service temporarily unavailable.
           content:
@@ -1344,10 +1522,9 @@ paths:
                         type: string
                         description: SHA-256 file hash
                       file_size:
-                        type: string
+                        type: int
                         description: Size in bytes
-                      caption:
-                        type: string
+                        example: 1048576
                       raw:
                         type: string
                         description: Base64 encoded file content
@@ -1371,12 +1548,12 @@ paths:
               schema:
                 $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse404"
 
-        "413":
-          description: The request payload exceeds the maximum allowed size.
+        "405":
+          description: The requested method is not supported for the requested resource.
           content:
             application/json:
               schema:
-                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse413"
+                $ref: "../components/whatsapp/MessageContentResponses.yaml#/MessageContentResponse405"
 
         "503":
           description: Service temporarily unavailable.

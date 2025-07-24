@@ -10,11 +10,7 @@ curl --request POST \
 		"type": "reaction",
 		"reaction": {
 			"message_id": 'wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-<<<<<<< HEAD
-			"emoji": "\uD83D\uDE00"
-=======
 			"emoji": "😀"
->>>>>>> b193644 (Split messages types)
 		}
 	}
 }'

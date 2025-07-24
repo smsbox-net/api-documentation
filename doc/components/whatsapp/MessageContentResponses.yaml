@@ -161,3 +161,34 @@ MessageContentResponse200Template:
             type: string
             example: xxxxxxxxxxxxxxxx
 
+MessageContentResponse405:
+  type: object
+  properties:
+    response:
+      type: object
+      properties:
+        response_code:
+          type: string
+          example: "405"
+        response_desc:
+          type: string
+          example: "The requested method is not supported for the requested resource."
+    error:
+      type: string
+      example: "Invalid HTTP method."
+
+MessageContentResponse402:
+  type: object
+  properties:
+    response:
+      type: object
+      properties:
+        response_code:
+          type: string
+          example: "402"
+        response_desc:
+          type: string
+          example: "Insufficient balance to process the request."
+    error:
+      type: string
+      example: "No credit or insufficient."

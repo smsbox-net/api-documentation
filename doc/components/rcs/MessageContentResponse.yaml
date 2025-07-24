@@ -183,7 +183,7 @@ MessageContentResponse405:
       type: string
       example: "Invalid HTTP method."
 
-MessageContentResponse509:
+MessageContentResponse413:
   type: object
   properties:
     response:
@@ -191,7 +191,7 @@ MessageContentResponse509:
       properties:
         response_code:
           type: string
-          example: "509"
+          example: "413"
         response_desc:
           type: string
           example: "The request payload exceeds the maximum allowed size."
@@ -214,3 +214,19 @@ MessageContentResponse503RCS:
     error:
       type: string
       example: "Request failed."
+
+MessageContentResponse402RCS:
+  type: object
+  properties:
+    response:
+      type: object
+      properties:
+        response_code:
+          type: string
+          example: "402"
+        response_desc:
+          type: string
+          example: "Insufficient balance to process the request."
+    error:
+      type: string
+      example: "No credit or insufficient."
