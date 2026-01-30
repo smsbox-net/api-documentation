@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="x-xss-protection" content="0" />
+    <meta http-equiv="content-security-policy" content="frame-ancestors 'none'; object-src 'none';" />
+    <meta http-equiv="x-content-type-options" content="nosniff" />
+    <meta http-equiv="strict-transport-security" content="max-age=31536000; includeSubDomains" />
+    <link rel="canonical" href="https://docs.smsbox.dev/account/" />
+    <link rel="icon" type="image/png" href="../favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="../global.css" />
+    <link rel="stylesheet" href="./account.css" />
+  <meta charset="utf8" />
+  <title>SMSBOX - Account API Documentation</title>
+  <!-- needed for adaptive design -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+    }
+  </style>
+  <script src="https://cdn.redocly.com/redoc/v2.5.0/bundles/redoc.standalone.js" integrity="sha384-4vOjrBu7SuDWXcAw1qFznVLA/sKL+0l4nn+J1HY8w7cpa6twQEYuh4b0Cwuo7CyX" crossorigin="anonymous"></script><style data-styled="true" data-styled-version="6.1.17">.hJuoxX{width:calc(100% - 40%);padding:0 40px;}/*!sc*/
+@media print,screen and (max-width: 75rem){.hJuoxX{width:100%;padding:40px 40px;}}/*!sc*/
+.tJLWz{width:calc(100% - 40%);padding:0 40px;}/*!sc*/
+@media print,screen and (max-width: 75rem){.tJLWz{width:100%;padding:0px 40px;}}/*!sc*/
+data-styled.g4[id="sc-fWnslK"]{content:"hJuoxX,tJLWz,"}/*!sc*/
+.bTqehu{padding:40px 0;}/*!sc*/
+.bTqehu:last-child{min-height:calc(100vh + 1px);}/*!sc*/
+.bTqehu>.bTqehu:last-child{min-height:initial;}/*!sc*/
+@media print,screen and (max-width: 75rem){.bTqehu{padding:0;}}/*!sc*/
+.ftfFlx{padding:40px 0;position:relative;}/*!sc*/
+.ftfFlx:last-child{min-height:calc(100vh + 1px);}/*!sc*/
+.ftfFlx>.ftfFlx:last-child{min-height:initial;}/*!sc*/
+@media print,screen and (max-width: 75rem){.ftfFlx{padding:0;}}/*!sc*/
+.ftfFlx:not(:last-of-type):after{position:absolute;bottom:0;width:100%;display:block;content:'';border-bottom:1px solid rgba(0, 0, 0, 0.2);}/*!sc*/
+data-styled.g5[id="sc-dIMoHT"]{content:"bTqehu,ftfFlx,"}/*!sc*/
+.rcGrS{width:40%;color:#ffffff;background-color:#263238;padding:0 40px;}/*!sc*/
+@media print,screen and (max-width: 75rem){.rcGrS{width:100%;padding:40px 40px;}}/*!sc*/
+data-styled.g6[id="sc-iQQCXo"]{content:"rcGrS,"}/*!sc*/
+.ijAuiF{background-color:#263238;}/*!sc*/
+data-styled.g7[id="sc-gDpztx"]{content:"ijAuiF,"}/*!sc*/
+.ipybeG{display:flex;width:100%;padding:0;}/*!sc*/
+@media print,screen and (max-width: 75rem){.ipybeG{flex-direction:column;}}/*!sc*/
+data-styled.g8[id="sc-kpOvIu"]{content:"ipybeG,"}/*!sc*/
+.blNiPA{font-family:Poppins,sans-serif;font-weight:600;font-size:1.85714em;line-height:1.4em;color:#333333;}/*!sc*/
+data-styled.g9[id="sc-icnseD"]{content:"blNiPA,"}/*!sc*/
+.buhkzt{font-family:Poppins,sans-serif;font-weight:600;font-size:1.57143em;line-height:1.4em;color:#333333;margin:0 0 20px;}/*!sc*/
+data-styled.g10[id="sc-jMsorb"]{content:"buhkzt,"}/*!sc*/
+.esvUOo{color:#ffffff;}/*!sc*/
+data-styled.g12[id="sc-jJAtPt"]{content:"esvUOo,"}/*!sc*/
+.crXcll{border-bottom:1px solid rgba(38, 50, 56, 0.3);margin:1em 0 1em 0;color:rgba(38, 50, 56, 0.5);font-weight:normal;text-transform:uppercase;font-size:0.929em;line-height:20px;}/*!sc*/
+data-styled.g13[id="sc-cUiCeM"]{content:"crXcll,"}/*!sc*/
+.jRyfmD{cursor:pointer;margin-left:-20px;padding:0;line-height:1;width:20px;display:inline-block;outline:0;}/*!sc*/
+.jRyfmD:before{content:'';width:15px;height:15px;background-size:contain;background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMCIgeT0iMCIgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1MTIgNTEyIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cGF0aCBmaWxsPSIjMDEwMTAxIiBkPSJNNDU5LjcgMjMzLjRsLTkwLjUgOTAuNWMtNTAgNTAtMTMxIDUwLTE4MSAwIC03LjktNy44LTE0LTE2LjctMTkuNC0yNS44bDQyLjEtNDIuMWMyLTIgNC41LTMuMiA2LjgtNC41IDIuOSA5LjkgOCAxOS4zIDE1LjggMjcuMiAyNSAyNSA2NS42IDI0LjkgOTAuNSAwbDkwLjUtOTAuNWMyNS0yNSAyNS02NS42IDAtOTAuNSAtMjQuOS0yNS02NS41LTI1LTkwLjUgMGwtMzIuMiAzMi4yYy0yNi4xLTEwLjItNTQuMi0xMi45LTgxLjYtOC45bDY4LjYtNjguNmM1MC01MCAxMzEtNTAgMTgxIDBDNTA5LjYgMTAyLjMgNTA5LjYgMTgzLjQgNDU5LjcgMjMzLjR6TTIyMC4zIDM4Mi4ybC0zMi4yIDMyLjJjLTI1IDI0LjktNjUuNiAyNC45LTkwLjUgMCAtMjUtMjUtMjUtNjUuNiAwLTkwLjVsOTAuNS05MC41YzI1LTI1IDY1LjUtMjUgOTAuNSAwIDcuOCA3LjggMTIuOSAxNy4yIDE1LjggMjcuMSAyLjQtMS40IDQuOC0yLjUgNi44LTQuNWw0Mi4xLTQyYy01LjQtOS4yLTExLjYtMTgtMTkuNC0yNS44IC01MC01MC0xMzEtNTAtMTgxIDBsLTkwLjUgOTAuNWMtNTAgNTAtNTAgMTMxIDAgMTgxIDUwIDUwIDEzMSA1MCAxODEgMGw2OC42LTY4LjZDMjc0LjYgMzk1LjEgMjQ2LjQgMzkyLjMgMjIwLjMgMzgyLjJ6Ii8+PC9zdmc+Cg==');opacity:0.5;visibility:hidden;display:inline-block;vertical-align:middle;}/*!sc*/
+h1:hover>.jRyfmD::before,h2:hover>.jRyfmD::before,.jRyfmD:hover::before{visibility:visible;}/*!sc*/
+data-styled.g14[id="sc-jScdur"]{content:"jRyfmD,"}/*!sc*/
+.enjdhx{height:18px;width:18px;min-width:18px;vertical-align:middle;float:right;transition:transform 0.2s ease-out;transform:rotateZ(-90deg);}/*!sc*/
+.fxGamD{height:20px;width:20px;min-width:20px;vertical-align:middle;float:right;transition:transform 0.2s ease-out;transform:rotateZ(0);}/*!sc*/
+.fxGamD polygon{fill:black;}/*!sc*/
+.jvLsrI{height:1.3em;width:1.3em;min-width:1.3em;vertical-align:middle;transition:transform 0.2s ease-out;transform:rotateZ(-90deg);}/*!sc*/
+.doZSdm{height:1.5em;width:1.5em;min-width:1.5em;vertical-align:middle;float:left;transition:transform 0.2s ease-out;transform:rotateZ(-90deg);}/*!sc*/
+.doZSdm polygon{fill:#16a34a;}/*!sc*/
+data-styled.g15[id="sc-dcKlJK"]{content:"enjdhx,fxGamD,jvLsrI,doZSdm,"}/*!sc*/
+.iBIVdD{border-left:1px solid #a584b2;box-sizing:border-box;position:relative;padding:10px 10px 10px 0;}/*!sc*/
+@media screen and (max-width: 50rem){.iBIVdD{display:block;overflow:hidden;}}/*!sc*/
+tr:first-of-type>.iBIVdD,tr.last>.iBIVdD{border-left-width:0;background-position:top left;background-repeat:no-repeat;background-size:1px 100%;}/*!sc*/
+tr:first-of-type>.iBIVdD{background-image:linear-gradient(
+      to bottom,
+      transparent 0%,
+      transparent 22px,
+      #a584b2 22px,
+      #a584b2 100%
+    );}/*!sc*/
+tr.last>.iBIVdD{background-image:linear-gradient(
+      to bottom,
+      #a584b2 0%,
+      #a584b2 22px,
+      transparent 22px,
+      transparent 100%
+    );}/*!sc*/
+tr.last+tr>.iBIVdD{border-left-color:transparent;}/*!sc*/
+tr.last:first-child>.iBIVdD{background:none;border-left-color:transparent;}/*!sc*/
+data-styled.g18[id="sc-lixPIL"]{content:"iBIVdD,"}/*!sc*/
+.jFCVCh{vertical-align:top;line-height:20px;white-space:nowrap;font-size:13px;font-family:Fira Code,Monaco,Consolas,monospace;}/*!sc*/
+.jFCVCh.deprecated{text-decoration:line-through;color:#707070;}/*!sc*/
+data-styled.g20[id="sc-dFaThA"]{content:"jFCVCh,"}/*!sc*/
+.DQNkw{border-bottom:1px solid #9fb4be;padding:10px 0;width:75%;box-sizing:border-box;}/*!sc*/
+tr.expanded .DQNkw{border-bottom:none;}/*!sc*/
+@media screen and (max-width: 50rem){.DQNkw{padding:0 20px;border-bottom:none;border-left:1px solid #a584b2;}tr.last>.DQNkw{border-left:none;}}/*!sc*/
+data-styled.g21[id="sc-fjUQFl"]{content:"DQNkw,"}/*!sc*/
+.cBJZHL{color:#a584b2;font-family:Fira Code,Monaco,Consolas,monospace;margin-right:10px;}/*!sc*/
+.cBJZHL::before{content:'';display:inline-block;vertical-align:middle;width:10px;height:1px;background:#a584b2;}/*!sc*/
+.cBJZHL::after{content:'';display:inline-block;vertical-align:middle;width:1px;background:#a584b2;height:7px;}/*!sc*/
+data-styled.g22[id="sc-guGTOK"]{content:"cBJZHL,"}/*!sc*/
+.gkzLzl{border-collapse:separate;border-radius:3px;font-size:14px;border-spacing:0;width:100%;}/*!sc*/
+.gkzLzl >tr{vertical-align:middle;}/*!sc*/
+@media screen and (max-width: 50rem){.gkzLzl{display:block;}.gkzLzl >tr,.gkzLzl >tbody>tr{display:block;}}/*!sc*/
+@media screen and (max-width: 50rem) and (-ms-high-contrast:none){.gkzLzl td{float:left;width:100%;}}/*!sc*/
+.gkzLzl .sc-hZARmv,.gkzLzl .sc-hZARmv .sc-hZARmv .sc-hZARmv,.gkzLzl .sc-hZARmv .sc-hZARmv .sc-hZARmv .sc-hZARmv .sc-hZARmv{margin:1em;margin-right:0;background:#fafafa;}/*!sc*/
+.gkzLzl .sc-hZARmv .sc-hZARmv,.gkzLzl .sc-hZARmv .sc-hZARmv .sc-hZARmv .sc-hZARmv,.gkzLzl .sc-hZARmv .sc-hZARmv .sc-hZARmv .sc-hZARmv .sc-hZARmv .sc-hZARmv{background:#ffffff;}/*!sc*/
+data-styled.g24[id="sc-dKKIkQ"]{content:"gkzLzl,"}/*!sc*/
+.dVvSml >ul{list-style:none;padding:0;margin:0;margin:0 -5px;}/*!sc*/
+.dVvSml >ul >li{padding:5px 10px;display:inline-block;background-color:#11171a;border-bottom:1px solid rgba(0, 0, 0, 0.5);cursor:pointer;text-align:center;outline:none;color:#ccc;margin:0 5px 5px 5px;border:1px solid #07090b;border-radius:5px;min-width:60px;font-size:0.9em;font-weight:bold;}/*!sc*/
+.dVvSml >ul >li.react-tabs__tab--selected{color:#333333;background:#ffffff;}/*!sc*/
+.dVvSml >ul >li.react-tabs__tab--selected:focus{outline:auto;}/*!sc*/
+.dVvSml >ul >li:only-child{flex:none;min-width:100px;}/*!sc*/
+.dVvSml >ul >li.tab-success{color:#16a34a;}/*!sc*/
+.dVvSml >ul >li.tab-redirect{color:#f59e0b;}/*!sc*/
+.dVvSml >ul >li.tab-info{color:#87ceeb;}/*!sc*/
+.dVvSml >ul >li.tab-error{color:#dc2626;}/*!sc*/
+.dVvSml >.react-tabs__tab-panel{background:#11171a;}/*!sc*/
+.dVvSml >.react-tabs__tab-panel>div,.dVvSml >.react-tabs__tab-panel>pre{padding:20px;margin:0;}/*!sc*/
+.dVvSml >.react-tabs__tab-panel>div>pre{padding:0;}/*!sc*/
+data-styled.g30[id="sc-brzPDJ"]{content:"dVvSml,"}/*!sc*/
+.gAHTYt code[class*='language-'],.gAHTYt pre[class*='language-']{text-shadow:0 -0.1em 0.2em black;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none;}/*!sc*/
+@media print{.gAHTYt code[class*='language-'],.gAHTYt pre[class*='language-']{text-shadow:none;}}/*!sc*/
+.gAHTYt pre[class*='language-']{padding:1em;margin:0.5em 0;overflow:auto;}/*!sc*/
+.gAHTYt .token.comment,.gAHTYt .token.prolog,.gAHTYt .token.doctype,.gAHTYt .token.cdata{color:hsl(30, 20%, 50%);}/*!sc*/
+.gAHTYt .token.punctuation{opacity:0.7;}/*!sc*/
+.gAHTYt .namespace{opacity:0.7;}/*!sc*/
+.gAHTYt .token.property,.gAHTYt .token.tag,.gAHTYt .token.number,.gAHTYt .token.constant,.gAHTYt .token.symbol{color:#4a8bb3;}/*!sc*/
+.gAHTYt .token.boolean{color:#e64441;}/*!sc*/
+.gAHTYt .token.selector,.gAHTYt .token.attr-name,.gAHTYt .token.string,.gAHTYt .token.char,.gAHTYt .token.builtin,.gAHTYt .token.inserted{color:#a0fbaa;}/*!sc*/
+.gAHTYt .token.selector+a,.gAHTYt .token.attr-name+a,.gAHTYt .token.string+a,.gAHTYt .token.char+a,.gAHTYt .token.builtin+a,.gAHTYt .token.inserted+a,.gAHTYt .token.selector+a:visited,.gAHTYt .token.attr-name+a:visited,.gAHTYt .token.string+a:visited,.gAHTYt .token.char+a:visited,.gAHTYt .token.builtin+a:visited,.gAHTYt .token.inserted+a:visited{color:#4ed2ba;text-decoration:underline;}/*!sc*/
+.gAHTYt .token.property.string{color:white;}/*!sc*/
+.gAHTYt .token.operator,.gAHTYt .token.entity,.gAHTYt .token.url,.gAHTYt .token.variable{color:hsl(40, 90%, 60%);}/*!sc*/
+.gAHTYt .token.atrule,.gAHTYt .token.attr-value,.gAHTYt .token.keyword{color:hsl(350, 40%, 70%);}/*!sc*/
+.gAHTYt .token.regex,.gAHTYt .token.important{color:#e90;}/*!sc*/
+.gAHTYt .token.important,.gAHTYt .token.bold{font-weight:bold;}/*!sc*/
+.gAHTYt .token.italic{font-style:italic;}/*!sc*/
+.gAHTYt .token.entity{cursor:help;}/*!sc*/
+.gAHTYt .token.deleted{color:red;}/*!sc*/
+data-styled.g32[id="sc-dTUlgT"]{content:"gAHTYt,"}/*!sc*/
+.bQiGVc{opacity:0.7;transition:opacity 0.3s ease;text-align:right;}/*!sc*/
+.bQiGVc:focus-within{opacity:1;}/*!sc*/
+.bQiGVc >button{background-color:transparent;border:0;color:inherit;padding:2px 10px;font-family:Poppins,-apple-system,BlinkMacSystemFont,sans-serif;font-size:14px;line-height:1.6em;cursor:pointer;outline:0;}/*!sc*/
+.bQiGVc >button :hover,.bQiGVc >button :focus{background:rgba(255, 255, 255, 0.1);}/*!sc*/
+data-styled.g33[id="sc-lpbaSe"]{content:"bQiGVc,"}/*!sc*/
+.iIaVY:hover .sc-lpbaSe{opacity:1;}/*!sc*/
+data-styled.g34[id="sc-bxjEGZ"]{content:"iIaVY,"}/*!sc*/
+.isfpWW{font-family:Fira Code,Monaco,Consolas,monospace;font-size:13px;overflow-x:auto;margin:0;white-space:pre;}/*!sc*/
+data-styled.g35[id="sc-iSqusk"]{content:"isfpWW,"}/*!sc*/
+.plAcM{position:relative;}/*!sc*/
+data-styled.g37[id="sc-dZEakj"]{content:"plAcM,"}/*!sc*/
+.ccnFKG{position:absolute;pointer-events:none;z-index:1;top:50%;-webkit-transform:translateY(-50%);-ms-transform:translateY(-50%);transform:translateY(-50%);right:8px;margin:auto;text-align:center;}/*!sc*/
+.ccnFKG polyline{color:white;}/*!sc*/
+data-styled.g38[id="sc-fpgwy"]{content:"ccnFKG,"}/*!sc*/
+.bPGuUS{box-sizing:border-box;min-width:100px;outline:none;display:inline-block;border-radius:2px;border:1px solid rgba(38, 50, 56, 0.5);vertical-align:bottom;padding:2px 0px 2px 6px;position:relative;width:auto;background:white;color:#263238;font-family:Poppins,sans-serif;font-size:0.929em;line-height:1.5em;cursor:pointer;transition:border 0.25s ease,color 0.25s ease,box-shadow 0.25s ease;}/*!sc*/
+.bPGuUS label{box-sizing:border-box;min-width:100px;outline:none;display:inline-block;font-family:Poppins,sans-serif;color:#333333;vertical-align:bottom;width:auto;text-transform:none;padding:0 22px 0 4px;font-size:0.929em;line-height:1.5em;font-family:inherit;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}/*!sc*/
+.bPGuUS .dropdown-select{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;border:none;appearance:none;cursor:pointer;color:#333333;line-height:inherit;font-family:inherit;}/*!sc*/
+.bPGuUS:hover,.bPGuUS:focus-within{border:1px solid #7b3b95;color:#7b3b95;box-shadow:0px 0px 0px 1px #7b3b95;}/*!sc*/
+data-styled.g39[id="sc-cNFqVt"]{content:"bPGuUS,"}/*!sc*/
+.iKSlPA{margin-left:10px;text-transform:none;font-size:0.929em;color:black;}/*!sc*/
+data-styled.g41[id="sc-dCVDEO"]{content:"iKSlPA,"}/*!sc*/
+.dDsjus{font-family:Poppins,-apple-system,BlinkMacSystemFont,sans-serif;font-weight:400;line-height:1.6em;}/*!sc*/
+.dDsjus p:last-child{margin-bottom:0;}/*!sc*/
+.dDsjus h1{font-family:Poppins,sans-serif;font-weight:600;font-size:1.85714em;line-height:1.4em;color:#7b3b95;margin-top:0;}/*!sc*/
+.dDsjus h2{font-family:Poppins,sans-serif;font-weight:600;font-size:1.57143em;line-height:1.4em;color:#333333;}/*!sc*/
+.dDsjus code{color:#e53935;background-color:#f7f7f9;font-family:Fira Code,Monaco,Consolas,monospace;border-radius:2px;border:1px solid rgba(38, 50, 56, 0.1);padding:0 5px;font-size:13px;font-weight:400;word-break:break-word;}/*!sc*/
+.dDsjus pre{font-family:Fira Code,Monaco,Consolas,monospace;white-space:pre;background-color:#11171a;color:white;padding:20px;overflow-x:auto;line-height:normal;border-radius:0;border:1px solid rgba(38, 50, 56, 0.1);}/*!sc*/
+.dDsjus pre code{background-color:transparent;color:white;padding:0;}/*!sc*/
+.dDsjus pre code:before,.dDsjus pre code:after{content:none;}/*!sc*/
+.dDsjus blockquote{margin:0;margin-bottom:1em;padding:0 15px;color:#777;border-left:4px solid #ddd;}/*!sc*/
+.dDsjus img{max-width:100%;box-sizing:content-box;}/*!sc*/
+.dDsjus ul,.dDsjus ol{padding-left:2em;margin:0;margin-bottom:1em;}/*!sc*/
+.dDsjus ul ul,.dDsjus ol ul,.dDsjus ul ol,.dDsjus ol ol{margin-bottom:0;margin-top:0;}/*!sc*/
+.dDsjus table{display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all;border-collapse:collapse;border-spacing:0;margin-top:1.5em;margin-bottom:1.5em;}/*!sc*/
+.dDsjus table tr{background-color:#fff;border-top:1px solid #ccc;}/*!sc*/
+.dDsjus table tr:nth-child(2n){background-color:#fafafa;}/*!sc*/
+.dDsjus table th,.dDsjus table td{padding:6px 13px;border:1px solid #ddd;}/*!sc*/
+.dDsjus table th{text-align:left;font-weight:bold;}/*!sc*/
+.dDsjus .share-link{cursor:pointer;margin-left:-20px;padding:0;line-height:1;width:20px;display:inline-block;outline:0;}/*!sc*/
+.dDsjus .share-link:before{content:'';width:15px;height:15px;background-size:contain;background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMCIgeT0iMCIgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1MTIgNTEyIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cGF0aCBmaWxsPSIjMDEwMTAxIiBkPSJNNDU5LjcgMjMzLjRsLTkwLjUgOTAuNWMtNTAgNTAtMTMxIDUwLTE4MSAwIC03LjktNy44LTE0LTE2LjctMTkuNC0yNS44bDQyLjEtNDIuMWMyLTIgNC41LTMuMiA2LjgtNC41IDIuOSA5LjkgOCAxOS4zIDE1LjggMjcuMiAyNSAyNSA2NS42IDI0LjkgOTAuNSAwbDkwLjUtOTAuNWMyNS0yNSAyNS02NS42IDAtOTAuNSAtMjQuOS0yNS02NS41LTI1LTkwLjUgMGwtMzIuMiAzMi4yYy0yNi4xLTEwLjItNTQuMi0xMi45LTgxLjYtOC45bDY4LjYtNjguNmM1MC01MCAxMzEtNTAgMTgxIDBDNTA5LjYgMTAyLjMgNTA5LjYgMTgzLjQgNDU5LjcgMjMzLjR6TTIyMC4zIDM4Mi4ybC0zMi4yIDMyLjJjLTI1IDI0LjktNjUuNiAyNC45LTkwLjUgMCAtMjUtMjUtMjUtNjUuNiAwLTkwLjVsOTAuNS05MC41YzI1LTI1IDY1LjUtMjUgOTAuNSAwIDcuOCA3LjggMTIuOSAxNy4yIDE1LjggMjcuMSAyLjQtMS40IDQuOC0yLjUgNi44LTQuNWw0Mi4xLTQyYy01LjQtOS4yLTExLjYtMTgtMTkuNC0yNS44IC01MC01MC0xMzEtNTAtMTgxIDBsLTkwLjUgOTAuNWMtNTAgNTAtNTAgMTMxIDAgMTgxIDUwIDUwIDEzMSA1MCAxODEgMGw2OC42LTY4LjZDMjc0LjYgMzk1LjEgMjQ2LjQgMzkyLjMgMjIwLjMgMzgyLjJ6Ii8+PC9zdmc+Cg==');opacity:0.5;visibility:hidden;display:inline-block;vertical-align:middle;}/*!sc*/
+.dDsjus h1:hover>.share-link::before,.dDsjus h2:hover>.share-link::before,.dDsjus .share-link:hover::before{visibility:visible;}/*!sc*/
+.dDsjus a{text-decoration:auto;color:#7b3b95;}/*!sc*/
+.dDsjus a:visited{color:#5a2a6e;}/*!sc*/
+.dDsjus a:hover{color:#fe8264;text-decoration:auto;}/*!sc*/
+.hQGA-dW{font-family:Poppins,-apple-system,BlinkMacSystemFont,sans-serif;font-weight:400;line-height:1.6em;}/*!sc*/
+.hQGA-dW p:last-child{margin-bottom:0;}/*!sc*/
+.hQGA-dW p:first-child{margin-top:0;}/*!sc*/
+.hQGA-dW p:last-child{margin-bottom:0;}/*!sc*/
+.hQGA-dW h1{font-family:Poppins,sans-serif;font-weight:600;font-size:1.85714em;line-height:1.4em;color:#7b3b95;margin-top:0;}/*!sc*/
+.hQGA-dW h2{font-family:Poppins,sans-serif;font-weight:600;font-size:1.57143em;line-height:1.4em;color:#333333;}/*!sc*/
+.hQGA-dW code{color:#e53935;background-color:#f7f7f9;font-family:Fira Code,Monaco,Consolas,monospace;border-radius:2px;border:1px solid rgba(38, 50, 56, 0.1);padding:0 5px;font-size:13px;font-weight:400;word-break:break-word;}/*!sc*/
+.hQGA-dW pre{font-family:Fira Code,Monaco,Consolas,monospace;white-space:pre;background-color:#11171a;color:white;padding:20px;overflow-x:auto;line-height:normal;border-radius:0;border:1px solid rgba(38, 50, 56, 0.1);}/*!sc*/
+.hQGA-dW pre code{background-color:transparent;color:white;padding:0;}/*!sc*/
+.hQGA-dW pre code:before,.hQGA-dW pre code:after{content:none;}/*!sc*/
+.hQGA-dW blockquote{margin:0;margin-bottom:1em;padding:0 15px;color:#777;border-left:4px solid #ddd;}/*!sc*/
+.hQGA-dW img{max-width:100%;box-sizing:content-box;}/*!sc*/
+.hQGA-dW ul,.hQGA-dW ol{padding-left:2em;margin:0;margin-bottom:1em;}/*!sc*/
+.hQGA-dW ul ul,.hQGA-dW ol ul,.hQGA-dW ul ol,.hQGA-dW ol ol{margin-bottom:0;margin-top:0;}/*!sc*/
+.hQGA-dW table{display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all;border-collapse:collapse;border-spacing:0;margin-top:1.5em;margin-bottom:1.5em;}/*!sc*/
+.hQGA-dW table tr{background-color:#fff;border-top:1px solid #ccc;}/*!sc*/
+.hQGA-dW table tr:nth-child(2n){background-color:#fafafa;}/*!sc*/
+.hQGA-dW table th,.hQGA-dW table td{padding:6px 13px;border:1px solid #ddd;}/*!sc*/
+.hQGA-dW table th{text-align:left;font-weight:bold;}/*!sc*/
+.hQGA-dW .share-link{cursor:pointer;margin-left:-20px;padding:0;line-height:1;width:20px;display:inline-block;outline:0;}/*!sc*/
+.hQGA-dW .share-link:before{content:'';width:15px;height:15px;background-size:contain;background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMCIgeT0iMCIgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1MTIgNTEyIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cGF0aCBmaWxsPSIjMDEwMTAxIiBkPSJNNDU5LjcgMjMzLjRsLTkwLjUgOTAuNWMtNTAgNTAtMTMxIDUwLTE4MSAwIC03LjktNy44LTE0LTE2LjctMTkuNC0yNS44bDQyLjEtNDIuMWMyLTIgNC41LTMuMiA2LjgtNC41IDIuOSA5LjkgOCAxOS4zIDE1LjggMjcuMiAyNSAyNSA2NS42IDI0LjkgOTAuNSAwbDkwLjUtOTAuNWMyNS0yNSAyNS02NS42IDAtOTAuNSAtMjQuOS0yNS02NS41LTI1LTkwLjUgMGwtMzIuMiAzMi4yYy0yNi4xLTEwLjItNTQuMi0xMi45LTgxLjYtOC45bDY4LjYtNjguNmM1MC01MCAxMzEtNTAgMTgxIDBDNTA5LjYgMTAyLjMgNTA5LjYgMTgzLjQgNDU5LjcgMjMzLjR6TTIyMC4zIDM4Mi4ybC0zMi4yIDMyLjJjLTI1IDI0LjktNjUuNiAyNC45LTkwLjUgMCAtMjUtMjUtMjUtNjUuNiAwLTkwLjVsOTAuNS05MC41YzI1LTI1IDY1LjUtMjUgOTAuNSAwIDcuOCA3LjggMTIuOSAxNy4yIDE1LjggMjcuMSAyLjQtMS40IDQuOC0yLjUgNi44LTQuNWw0Mi4xLTQyYy01LjQtOS4yLTExLjYtMTgtMTkuNC0yNS44IC01MC01MC0xMzEtNTAtMTgxIDBsLTkwLjUgOTAuNWMtNTAgNTAtNTAgMTMxIDAgMTgxIDUwIDUwIDEzMSA1MCAxODEgMGw2OC42LTY4LjZDMjc0LjYgMzk1LjEgMjQ2LjQgMzkyLjMgMjIwLjMgMzgyLjJ6Ii8+PC9zdmc+Cg==');opacity:0.5;visibility:hidden;display:inline-block;vertical-align:middle;}/*!sc*/
+.hQGA-dW h1:hover>.share-link::before,.hQGA-dW h2:hover>.share-link::before,.hQGA-dW .share-link:hover::before{visibility:visible;}/*!sc*/
+.hQGA-dW a{text-decoration:auto;color:#7b3b95;}/*!sc*/
+.hQGA-dW a:visited{color:#5a2a6e;}/*!sc*/
+.hQGA-dW a:hover{color:#fe8264;text-decoration:auto;}/*!sc*/
+.hvaEOm{font-family:Poppins,-apple-system,BlinkMacSystemFont,sans-serif;font-weight:400;line-height:1.6em;}/*!sc*/
+.hvaEOm p:last-child{margin-bottom:0;}/*!sc*/
+.hvaEOm p:first-child{margin-top:0;}/*!sc*/
+.hvaEOm p:last-child{margin-bottom:0;}/*!sc*/
+.hvaEOm p{display:inline-block;}/*!sc*/
+.hvaEOm h1{font-family:Poppins,sans-serif;font-weight:600;font-size:1.85714em;line-height:1.4em;color:#7b3b95;margin-top:0;}/*!sc*/
+.hvaEOm h2{font-family:Poppins,sans-serif;font-weight:600;font-size:1.57143em;line-height:1.4em;color:#333333;}/*!sc*/
+.hvaEOm code{color:#e53935;background-color:#f7f7f9;font-family:Fira Code,Monaco,Consolas,monospace;border-radius:2px;border:1px solid rgba(38, 50, 56, 0.1);padding:0 5px;font-size:13px;font-weight:400;word-break:break-word;}/*!sc*/
+.hvaEOm pre{font-family:Fira Code,Monaco,Consolas,monospace;white-space:pre;background-color:#11171a;color:white;padding:20px;overflow-x:auto;line-height:normal;border-radius:0;border:1px solid rgba(38, 50, 56, 0.1);}/*!sc*/
+.hvaEOm pre code{background-color:transparent;color:white;padding:0;}/*!sc*/
+.hvaEOm pre code:before,.hvaEOm pre code:after{content:none;}/*!sc*/
+.hvaEOm blockquote{margin:0;margin-bottom:1em;padding:0 15px;color:#777;border-left:4px solid #ddd;}/*!sc*/
+.hvaEOm img{max-width:100%;box-sizing:content-box;}/*!sc*/
+.hvaEOm ul,.hvaEOm ol{padding-left:2em;margin:0;margin-bottom:1em;}/*!sc*/
+.hvaEOm ul ul,.hvaEOm ol ul,.hvaEOm ul ol,.hvaEOm ol ol{margin-bottom:0;margin-top:0;}/*!sc*/
+.hvaEOm table{display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all;border-collapse:collapse;border-spacing:0;margin-top:1.5em;margin-bottom:1.5em;}/*!sc*/
+.hvaEOm table tr{background-color:#fff;border-top:1px solid #ccc;}/*!sc*/
+.hvaEOm table tr:nth-child(2n){background-color:#fafafa;}/*!sc*/
+.hvaEOm table th,.hvaEOm table td{padding:6px 13px;border:1px solid #ddd;}/*!sc*/
+.hvaEOm table th{text-align:left;font-weight:bold;}/*!sc*/
+.hvaEOm .share-link{cursor:pointer;margin-left:-20px;padding:0;line-height:1;width:20px;display:inline-block;outline:0;}/*!sc*/
+.hvaEOm .share-link:before{content:'';width:15px;height:15px;background-size:contain;background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMCIgeT0iMCIgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1MTIgNTEyIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cGF0aCBmaWxsPSIjMDEwMTAxIiBkPSJNNDU5LjcgMjMzLjRsLTkwLjUgOTAuNWMtNTAgNTAtMTMxIDUwLTE4MSAwIC03LjktNy44LTE0LTE2LjctMTkuNC0yNS44bDQyLjEtNDIuMWMyLTIgNC41LTMuMiA2LjgtNC41IDIuOSA5LjkgOCAxOS4zIDE1LjggMjcuMiAyNSAyNSA2NS42IDI0LjkgOTAuNSAwbDkwLjUtOTAuNWMyNS0yNSAyNS02NS42IDAtOTAuNSAtMjQuOS0yNS02NS41LTI1LTkwLjUgMGwtMzIuMiAzMi4yYy0yNi4xLTEwLjItNTQuMi0xMi45LTgxLjYtOC45bDY4LjYtNjguNmM1MC01MCAxMzEtNTAgMTgxIDBDNTA5LjYgMTAyLjMgNTA5LjYgMTgzLjQgNDU5LjcgMjMzLjR6TTIyMC4zIDM4Mi4ybC0zMi4yIDMyLjJjLTI1IDI0LjktNjUuNiAyNC45LTkwLjUgMCAtMjUtMjUtMjUtNjUuNiAwLTkwLjVsOTAuNS05MC41YzI1LTI1IDY1LjUtMjUgOTAuNSAwIDcuOCA3LjggMTIuOSAxNy4yIDE1LjggMjcuMSAyLjQtMS40IDQuOC0yLjUgNi44LTQuNWw0Mi4xLTQyYy01LjQtOS4yLTExLjYtMTgtMTkuNC0yNS44IC01MC01MC0xMzEtNTAtMTgxIDBsLTkwLjUgOTAuNWMtNTAgNTAtNTAgMTMxIDAgMTgxIDUwIDUwIDEzMSA1MCAxODEgMGw2OC42LTY4LjZDMjc0LjYgMzk1LjEgMjQ2LjQgMzkyLjMgMjIwLjMgMzgyLjJ6Ii8+PC9zdmc+Cg==');opacity:0.5;visibility:hidden;display:inline-block;vertical-align:middle;}/*!sc*/
+.hvaEOm h1:hover>.share-link::before,.hvaEOm h2:hover>.share-link::before,.hvaEOm .share-link:hover::before{visibility:visible;}/*!sc*/
+.hvaEOm a{text-decoration:auto;color:#7b3b95;}/*!sc*/
+.hvaEOm a:visited{color:#5a2a6e;}/*!sc*/
+.hvaEOm a:hover{color:#fe8264;text-decoration:auto;}/*!sc*/
+data-styled.g42[id="sc-fhPBcz"]{content:"dDsjus,hQGA-dW,hvaEOm,"}/*!sc*/
+.kfJzSr{display:inline;}/*!sc*/
+data-styled.g43[id="sc-dNpohg"]{content:"kfJzSr,"}/*!sc*/
+.jYcDQz{position:relative;}/*!sc*/
+data-styled.g44[id="sc-fsjlER"]{content:"jYcDQz,"}/*!sc*/
+.bbuVaA{padding:0.9em;background-color:rgba(38,50,56,0.4);margin:0 0 10px 0;display:block;font-family:Poppins,sans-serif;font-size:0.929em;line-height:1.5em;}/*!sc*/
+data-styled.g51[id="sc-bpuAaX"]{content:"bbuVaA,"}/*!sc*/
+.fPUzOF{font-family:Poppins,sans-serif;font-size:12px;position:absolute;z-index:1;top:-11px;left:12px;font-weight:600;color:rgba(255,255,255,0.7);}/*!sc*/
+data-styled.g52[id="sc-fPyrPm"]{content:"fPUzOF,"}/*!sc*/
+.hMtTVz{position:relative;}/*!sc*/
+data-styled.g53[id="sc-bmCFzp"]{content:"hMtTVz,"}/*!sc*/
+.eHJULL{margin:0 0 10px 0;display:block;background-color:rgba(38,50,56,0.4);border:none;padding:0.9em 1.6em 0.9em 0.9em;box-shadow:none;}/*!sc*/
+.eHJULL label{color:#ffffff;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;font-size:1em;text-transform:none;border:none;}/*!sc*/
+.eHJULL:hover,.eHJULL:focus-within{border:none;box-shadow:none;background-color:rgba(38,50,56,0.7);}/*!sc*/
+data-styled.g54[id="sc-fMGxnE"]{content:"eHJULL,"}/*!sc*/
+.jPYqSz{margin-top:15px;}/*!sc*/
+data-styled.g56[id="sc-kmqAS"]{content:"jPYqSz,"}/*!sc*/
+.hHoKqR{vertical-align:middle;font-size:13px;line-height:20px;}/*!sc*/
+data-styled.g58[id="sc-huvZk"]{content:"hHoKqR,"}/*!sc*/
+.jolyEu{color:rgba(102,102,102,0.9);}/*!sc*/
+data-styled.g59[id="sc-cLAbsH"]{content:"jolyEu,"}/*!sc*/
+.NHcBj{color:#666;}/*!sc*/
+data-styled.g60[id="sc-hlDTgW"]{content:"NHcBj,"}/*!sc*/
+.cuZQIJ{color:#dc2626;font-size:0.9em;font-weight:normal;margin-left:20px;line-height:1;}/*!sc*/
+data-styled.g62[id="sc-icsLOd"]{content:"cuZQIJ,"}/*!sc*/
+.jLSDbX{border-radius:2px;word-break:break-word;background-color:rgba(51,51,51,0.05);color:rgba(51,51,51,0.9);padding:0 5px;border:1px solid rgba(51,51,51,0.1);font-family:Fira Code,Monaco,Consolas,monospace;}/*!sc*/
++{margin-left:0;}/*!sc*/
+data-styled.g66[id="sc-cxgKzJ"]{content:"jLSDbX,"}/*!sc*/
+.gXJkJP{border-radius:2px;background-color:rgba(155,91,181,0.05);color:rgba(123,59,149,0.9);margin:0 5px;padding:0 5px;border:1px solid rgba(123,59,149,0.1);}/*!sc*/
++{margin-left:0;}/*!sc*/
+data-styled.g68[id="sc-fmMLgT"]{content:"gXJkJP,"}/*!sc*/
+.bicYmj:after{content:' and ';font-weight:normal;}/*!sc*/
+.bicYmj:last-child:after{content:none;}/*!sc*/
+.bicYmj a{text-decoration:auto;color:#7b3b95;}/*!sc*/
+.bicYmj a:visited{color:#5a2a6e;}/*!sc*/
+.bicYmj a:hover{color:#fe8264;text-decoration:auto;}/*!sc*/
+data-styled.g81[id="sc-hWwHby"]{content:"bicYmj,"}/*!sc*/
+.khiRa-d{white-space:nowrap;}/*!sc*/
+.khiRa-d:after{content:' or ';white-space:pre;}/*!sc*/
+.khiRa-d:last-child:after,.khiRa-d:only-child:after{content:none;}/*!sc*/
+.khiRa-d a{text-decoration:auto;color:#7b3b95;}/*!sc*/
+.khiRa-d a:visited{color:#5a2a6e;}/*!sc*/
+.khiRa-d a:hover{color:#fe8264;text-decoration:auto;}/*!sc*/
+data-styled.g82[id="sc-jBqEzj"]{content:"khiRa-d,"}/*!sc*/
+.fEyRno{flex:1 1 auto;cursor:pointer;}/*!sc*/
+data-styled.g83[id="sc-igQrDQ"]{content:"fEyRno,"}/*!sc*/
+.bPuOE{width:75%;text-overflow:ellipsis;border-radius:4px;overflow:hidden;}/*!sc*/
+@media screen and (max-width: 50rem){.bPuOE{margin-top:10px;}}/*!sc*/
+data-styled.g84[id="sc-jLKpbB"]{content:"bPuOE,"}/*!sc*/
+.abBws{display:inline-block;margin:0;}/*!sc*/
+data-styled.g85[id="sc-icgweO"]{content:"abBws,"}/*!sc*/
+.hbKehx{width:100%;display:flex;margin:1em 0;flex-direction:row;}/*!sc*/
+@media screen and (max-width: 50rem){.hbKehx{flex-direction:column;}}/*!sc*/
+data-styled.g86[id="sc-jHatCz"]{content:"hbKehx,"}/*!sc*/
+.DDxJV{margin-top:0;margin-bottom:0.5em;}/*!sc*/
+data-styled.g92[id="sc-kiZvlW"]{content:"DDxJV,"}/*!sc*/
+.bmxErA::before{content:'|';display:inline-block;opacity:0.5;width:15px;text-align:center;}/*!sc*/
+.bmxErA:last-child::after{display:none;}/*!sc*/
+data-styled.g94[id="sc-kghAKo"]{content:"bmxErA,"}/*!sc*/
+.gnuaA-d{overflow:hidden;}/*!sc*/
+data-styled.g95[id="sc-fOFsAX"]{content:"gnuaA-d,"}/*!sc*/
+.eXggDo{display:flex;flex-wrap:wrap;margin-left:-15px;}/*!sc*/
+data-styled.g96[id="sc-koJkpm"]{content:"eXggDo,"}/*!sc*/
+.iljeoY{max-height:260px;max-width:260px;padding:2px;width:100%;display:block;}/*!sc*/
+data-styled.g97[id="sc-fLNxZp"]{content:"iljeoY,"}/*!sc*/
+.gzaKIy{text-align:center;}/*!sc*/
+data-styled.g98[id="sc-klRpNE"]{content:"gzaKIy,"}/*!sc*/
+.koHdYb{display:inline-block;}/*!sc*/
+data-styled.g99[id="sc-dWyRdj"]{content:"koHdYb,"}/*!sc*/
+.bNCFRj{width:9ex;display:inline-block;height:13px;line-height:13px;background-color:#333;border-radius:3px;background-repeat:no-repeat;background-position:6px 4px;font-size:7px;font-family:Verdana,sans-serif;color:white;text-transform:uppercase;text-align:center;font-weight:bold;vertical-align:middle;margin-right:6px;margin-top:2px;}/*!sc*/
+.bNCFRj.get{background-color:#16a34a;}/*!sc*/
+.bNCFRj.post{background-color:#186FAF;}/*!sc*/
+.bNCFRj.put{background-color:#9b5bb5;}/*!sc*/
+.bNCFRj.options{background-color:#6b7280;}/*!sc*/
+.bNCFRj.patch{background-color:#f59e0b;}/*!sc*/
+.bNCFRj.delete{background-color:#dc2626;}/*!sc*/
+.bNCFRj.basic{background-color:#707070;}/*!sc*/
+.bNCFRj.link{background-color:#07818F;}/*!sc*/
+.bNCFRj.head{background-color:#6b7280;}/*!sc*/
+.bNCFRj.hook{background-color:#7b3b95;}/*!sc*/
+.bNCFRj.schema{background-color:#707070;}/*!sc*/
+data-styled.g100[id="sc-iwCIRy"]{content:"bNCFRj,"}/*!sc*/
+.jyJesI{margin:0;padding:0;}/*!sc*/
+.jyJesI:first-child{padding-bottom:32px;}/*!sc*/
+.sc-kNNXoD .sc-kNNXoD{font-size:0.929em;}/*!sc*/
+.jYWRJV{margin:0;padding:0;display:none;}/*!sc*/
+.jYWRJV:first-child{padding-bottom:32px;}/*!sc*/
+.sc-kNNXoD .sc-kNNXoD{font-size:0.929em;}/*!sc*/
+data-styled.g101[id="sc-kNNXoD"]{content:"jyJesI,jYWRJV,"}/*!sc*/
+.jDUkYV{list-style:none inside none;overflow:hidden;text-overflow:ellipsis;padding:0;margin-top:15px;}/*!sc*/
+.GjPJT{list-style:none inside none;overflow:hidden;text-overflow:ellipsis;padding:0;}/*!sc*/
+data-styled.g102[id="sc-bfkVnW"]{content:"jDUkYV,GjPJT,"}/*!sc*/
+.HbZpa{cursor:pointer;color:#374151;margin:0;padding:12.5px 20px;display:flex;justify-content:space-between;font-family:Poppins,sans-serif;opacity:0.7;text-transform:uppercase;font-size:0.8em;padding-bottom:0;cursor:default;background-color:#ffffff;}/*!sc*/
+.HbZpa .sc-dcKlJK{height:1.5em;width:1.5em;}/*!sc*/
+.HbZpa .sc-dcKlJK polygon{fill:#374151;}/*!sc*/
+.bwAwlm{cursor:pointer;color:#374151;margin:0;padding:12.5px 20px;display:flex;justify-content:space-between;font-family:Poppins,sans-serif;font-size:0.929em;text-transform:none;background-color:#ffffff;}/*!sc*/
+.bwAwlm:hover{color:#7b3b95;background-color:#e6e6e6;}/*!sc*/
+.bwAwlm .sc-dcKlJK{height:1.5em;width:1.5em;}/*!sc*/
+.bwAwlm .sc-dcKlJK polygon{fill:#374151;}/*!sc*/
+.epZHO{cursor:pointer;color:#374151;margin:0;padding:12.5px 20px;display:flex;justify-content:space-between;font-family:Poppins,sans-serif;background-color:#ffffff;}/*!sc*/
+.epZHO:hover{color:#7b3b95;background-color:#f2f2f2;}/*!sc*/
+.epZHO .sc-dcKlJK{height:1.5em;width:1.5em;}/*!sc*/
+.epZHO .sc-dcKlJK polygon{fill:#374151;}/*!sc*/
+data-styled.g103[id="sc-dSsMvJ"]{content:"HbZpa,bwAwlm,epZHO,"}/*!sc*/
+.iqJPdR{display:inline-block;vertical-align:middle;width:calc(100% - 38px);overflow:hidden;text-overflow:ellipsis;}/*!sc*/
+data-styled.g104[id="sc-fzltTY"]{content:"iqJPdR,"}/*!sc*/
+.iKwoqA{font-size:0.8em;margin-top:10px;text-align:center;position:fixed;width:260px;bottom:0;background:#ffffff;}/*!sc*/
+.iKwoqA a,.iKwoqA a:visited,.iKwoqA a:hover{color:#374151!important;padding:5px 0;border-top:1px solid #e6e6e6;text-decoration:none;display:flex;align-items:center;justify-content:center;}/*!sc*/
+.iKwoqA img{width:15px;margin-right:5px;}/*!sc*/
+@media screen and (max-width: 50rem){.iKwoqA{width:100%;}}/*!sc*/
+data-styled.g105[id="sc-kHrqIz"]{content:"iKwoqA,"}/*!sc*/
+.bgkhSA{cursor:pointer;position:relative;margin-bottom:5px;}/*!sc*/
+data-styled.g111[id="sc-dYwfDW"]{content:"bgkhSA,"}/*!sc*/
+.blCRPE{font-family:Fira Code,Monaco,Consolas,monospace;margin-left:10px;flex:1;overflow-x:hidden;text-overflow:ellipsis;}/*!sc*/
+data-styled.g112[id="sc-iuoeev"]{content:"blCRPE,"}/*!sc*/
+.gPwsZM{outline:0;color:inherit;width:100%;text-align:left;cursor:pointer;padding:10px 30px 10px 10px;border-radius:0;background-color:transparent;display:flex;white-space:nowrap;align-items:center;border:0;border-bottom:1px solid #ccc;transition:border-color 0.25s ease;}/*!sc*/
+.gPwsZM ..sc-iuoeev{color:#333333;}/*!sc*/
+.gPwsZM:focus{box-shadow:inset 0 2px 2px rgba(0, 0, 0, 0.45),0 2px 0 rgba(128, 128, 128, 0.25);}/*!sc*/
+data-styled.g113[id="sc-lnzCgU"]{content:"gPwsZM,"}/*!sc*/
+.ivliqf{font-size:0.929em;line-height:20px;background-color:#16a34a;color:#ffffff;padding:3px 10px;text-transform:uppercase;font-family:Poppins,sans-serif;margin:0;}/*!sc*/
+.cdnzQJ{font-size:0.929em;line-height:20px;background-color:#186FAF;color:#ffffff;padding:3px 10px;text-transform:uppercase;font-family:Poppins,sans-serif;margin:0;}/*!sc*/
+data-styled.g114[id="sc-etVRix"]{content:"ivliqf,cdnzQJ,"}/*!sc*/
+.gTtGYM{position:absolute;width:100%;z-index:100;background:#fafafa;color:#263238;box-sizing:border-box;box-shadow:0 0 6px rgba(0, 0, 0, 0.33);overflow:hidden;border-bottom-left-radius:4px;border-bottom-right-radius:4px;transition:all 0.25s ease;visibility:hidden;transform:translateY(-50%) scaleY(0);}/*!sc*/
+data-styled.g115[id="sc-dRZyXS"]{content:"gTtGYM,"}/*!sc*/
+.iajdpk{padding:10px;}/*!sc*/
+data-styled.g116[id="sc-inRxyr"]{content:"iajdpk,"}/*!sc*/
+.gLboTv{padding:5px;border:1px solid #ccc;background:#fff;word-break:break-all;color:#7b3b95;}/*!sc*/
+.gLboTv >span{color:#333333;}/*!sc*/
+data-styled.g117[id="sc-lhcVAQ"]{content:"gLboTv,"}/*!sc*/
+.idyeCO{text-transform:lowercase;margin-left:0;line-height:1.5em;}/*!sc*/
+data-styled.g118[id="sc-enzkCt"]{content:"idyeCO,"}/*!sc*/
+.jeRWvd{display:block;border:0;width:100%;text-align:left;padding:10px;border-radius:2px;margin-bottom:4px;line-height:1.5em;cursor:pointer;color:#16a34a;background-color:rgba(22,163,74,0.07);}/*!sc*/
+.jeRWvd:focus{outline:auto #16a34a;}/*!sc*/
+data-styled.g120[id="sc-koGwOT"]{content:"jeRWvd,"}/*!sc*/
+.ljgvjV{vertical-align:top;}/*!sc*/
+data-styled.g123[id="sc-dHZbTr"]{content:"ljgvjV,"}/*!sc*/
+.dsRSAK{font-size:1.3em;padding:0.2em 0;margin:3em 0 1.1em;color:#333333;font-weight:normal;}/*!sc*/
+data-styled.g124[id="sc-fCdovG"]{content:"dsRSAK,"}/*!sc*/
+.kPKKPE{margin-bottom:30px;}/*!sc*/
+data-styled.g129[id="sc-bpSLYx"]{content:"kPKKPE,"}/*!sc*/
+.bSLfNl{user-select:none;width:20px;height:20px;align-self:center;display:flex;flex-direction:column;color:#7b3b95;}/*!sc*/
+data-styled.g130[id="sc-djWYAM"]{content:"bSLfNl,"}/*!sc*/
+.cywWeU{width:260px;background-color:#ffffff;overflow:hidden;display:flex;flex-direction:column;backface-visibility:hidden;height:100vh;position:sticky;position:-webkit-sticky;top:0;}/*!sc*/
+@media screen and (max-width: 50rem){.cywWeU{position:fixed;z-index:20;width:100%;background:#ffffff;display:none;}}/*!sc*/
+@media print{.cywWeU{display:none;}}/*!sc*/
+data-styled.g131[id="sc-dVElco"]{content:"cywWeU,"}/*!sc*/
+.dcuijn{outline:none;user-select:none;background-color:#f2f2f2;color:#7b3b95;display:none;cursor:pointer;position:fixed;right:20px;z-index:100;border-radius:50%;box-shadow:0 0 20px rgba(0, 0, 0, 0.3);bottom:44px;width:60px;height:60px;padding:0 20px;}/*!sc*/
+@media screen and (max-width: 50rem){.dcuijn{display:flex;}}/*!sc*/
+.dcuijn svg{color:#0065FB;}/*!sc*/
+@media print{.dcuijn{display:none;}}/*!sc*/
+data-styled.g132[id="sc-irwjCN"]{content:"dcuijn,"}/*!sc*/
+.jGTipp{font-family:Poppins,-apple-system,BlinkMacSystemFont,sans-serif;font-size:14px;font-weight:400;line-height:1.6em;color:#333333;display:flex;position:relative;text-align:left;-webkit-font-smoothing:antialiased;font-smoothing:antialiased;text-rendering:optimizeSpeed!important;tap-highlight-color:rgba(0, 0, 0, 0);text-size-adjust:100%;}/*!sc*/
+.jGTipp *{box-sizing:border-box;-webkit-tap-highlight-color:rgba(255, 255, 255, 0);}/*!sc*/
+data-styled.g133[id="sc-ldfREC"]{content:"jGTipp,"}/*!sc*/
+.eDQhjF{z-index:1;position:relative;overflow:hidden;width:calc(100% - 260px);contain:layout;}/*!sc*/
+@media print,screen and (max-width: 50rem){.eDQhjF{width:100%;}}/*!sc*/
+data-styled.g134[id="sc-ejCgGf"]{content:"eDQhjF,"}/*!sc*/
+.cCFEoS{background:#263238;position:absolute;top:0;bottom:0;right:0;width:calc((100% - 260px) * 0.4);}/*!sc*/
+@media print,screen and (max-width: 75rem){.cCFEoS{display:none;}}/*!sc*/
+data-styled.g135[id="sc-dPhEwk"]{content:"cCFEoS,"}/*!sc*/
+</style>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
+</head>
+
+<body>
+    <a href="#redoc-container" class="skip-link">Aller au contenu</a>
+    <nav class="top-nav" aria-label="Navigation">
+        <a href="./openapi.yaml" class="nav-button nav-button--download" download="account-openapi.yaml" title="Download OpenAPI specification" aria-label="Download OpenAPI specification"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> OpenAPI</a>
+        <a href="../" class="nav-button" title="Back to documentation home" aria-label="Back to documentation home"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg> Docs</a>
+        <a href="https://www.smsbox.net" class="nav-button nav-button--secondary" target="_blank" rel="noopener" title="Go to smsbox.net" aria-label="Go to smsbox.net">smsbox.net <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
+    </nav>
+  
+      <div id="redoc"><link rel="preload" as="image" href="../logo-en.png"/><div class="sc-ldfREC jGTipp redoc-wrap"><div class="sc-dVElco cywWeU menu-content" style="top:0px;height:calc(100vh - 0px)"><div style="background-color:#FFFFFF" class="sc-klRpNE gzaKIy"><a href="../" class="sc-dWyRdj koHdYb"><img src="../logo-en.png" alt="SMSBOX logo" class="sc-fLNxZp iljeoY"/></a></div><div class="sc-dZEakj plAcM scrollbar-container undefined"><ul role="menu" class="sc-kNNXoD jyJesI"><li tabindex="0" depth="0" data-item-id="group/Account" role="menuitem" aria-label="Account" aria-expanded="true" class="sc-bfkVnW jDUkYV"><label class="sc-dSsMvJ HbZpa -depth0"><span width="calc(100% - 38px)" title="Account" class="sc-fzltTY iqJPdR">Account</span></label><ul class="sc-kNNXoD jyJesI"><li tabindex="0" depth="1" data-item-id="tag/account-credit" role="menuitem" aria-label="Credit" aria-expanded="false" class="sc-bfkVnW GjPJT"><label class="sc-dSsMvJ bwAwlm -depth1"><span width="calc(100% - 38px)" title="Credit" class="sc-fzltTY iqJPdR">Credit</span><svg class="sc-dcKlJK enjdhx" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg></label><ul class="sc-kNNXoD jYWRJV"><li tabindex="0" depth="2" data-item-id="tag/account-credit/operation/getCredit" role="menuitem" aria-label="Check balance" aria-expanded="false" class="sc-bfkVnW GjPJT"><label class="sc-dSsMvJ epZHO -depth2"><span type="get" class="sc-iwCIRy bNCFRj operation-type get">get</span><span tabindex="0" width="calc(100% - 38px)" class="sc-fzltTY iqJPdR">Check balance</span></label></li><li tabindex="0" depth="2" data-item-id="tag/account-credit/operation/manageSubAccountCredit" role="menuitem" aria-label="Manage sub-account credit" aria-expanded="false" class="sc-bfkVnW GjPJT"><label class="sc-dSsMvJ epZHO -depth2"><span type="post" class="sc-iwCIRy bNCFRj operation-type post">post</span><span tabindex="0" width="calc(100% - 38px)" class="sc-fzltTY iqJPdR">Manage sub-account credit</span></label></li></ul></li><li tabindex="0" depth="1" data-item-id="tag/account-users" role="menuitem" aria-label="Users" aria-expanded="false" class="sc-bfkVnW GjPJT"><label class="sc-dSsMvJ bwAwlm -depth1"><span width="calc(100% - 38px)" title="Users" class="sc-fzltTY iqJPdR">Users</span><svg class="sc-dcKlJK enjdhx" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg></label><ul class="sc-kNNXoD jYWRJV"><li tabindex="0" depth="2" data-item-id="tag/account-users/operation/createSubAccount" role="menuitem" aria-label="Create sub-account" aria-expanded="false" class="sc-bfkVnW GjPJT"><label class="sc-dSsMvJ epZHO -depth2"><span type="post" class="sc-iwCIRy bNCFRj operation-type post">post</span><span tabindex="0" width="calc(100% - 38px)" class="sc-fzltTY iqJPdR">Create sub-account</span></label></li></ul></li></ul></li></ul><div class="sc-kHrqIz iKwoqA"><a target="_blank" rel="noopener noreferrer" href="https://redocly.com/redoc/">API docs by Redocly</a></div></div></div><div class="sc-irwjCN dcuijn"><div class="sc-djWYAM bSLfNl"><svg class="" style="transform:translate(2px, -4px) rotate(180deg);transition:transform 0.2s ease" viewBox="0 0 926.23699 573.74994" version="1.1" x="0px" y="0px" width="15" height="15"><g transform="translate(904.92214,-879.1482)"><path d="
+          m -673.67664,1221.6502 -231.2455,-231.24803 55.6165,
+          -55.627 c 30.5891,-30.59485 56.1806,-55.627 56.8701,-55.627 0.6894,
+          0 79.8637,78.60862 175.9427,174.68583 l 174.6892,174.6858 174.6892,
+          -174.6858 c 96.079,-96.07721 175.253196,-174.68583 175.942696,
+          -174.68583 0.6895,0 26.281,25.03215 56.8701,
+          55.627 l 55.6165,55.627 -231.245496,231.24803 c -127.185,127.1864
+          -231.5279,231.248 -231.873,231.248 -0.3451,0 -104.688,
+          -104.0616 -231.873,-231.248 z
+        " fill="currentColor"></path></g></svg><svg class="" style="transform:translate(2px, 4px);transition:transform 0.2s ease" viewBox="0 0 926.23699 573.74994" version="1.1" x="0px" y="0px" width="15" height="15"><g transform="translate(904.92214,-879.1482)"><path d="
+          m -673.67664,1221.6502 -231.2455,-231.24803 55.6165,
+          -55.627 c 30.5891,-30.59485 56.1806,-55.627 56.8701,-55.627 0.6894,
+          0 79.8637,78.60862 175.9427,174.68583 l 174.6892,174.6858 174.6892,
+          -174.6858 c 96.079,-96.07721 175.253196,-174.68583 175.942696,
+          -174.68583 0.6895,0 26.281,25.03215 56.8701,
+          55.627 l 55.6165,55.627 -231.245496,231.24803 c -127.185,127.1864
+          -231.5279,231.248 -231.873,231.248 -0.3451,0 -104.688,
+          -104.0616 -231.873,-231.248 z
+        " fill="currentColor"></path></g></svg></div></div><div class="sc-ejCgGf eDQhjF api-content"><div class="sc-dIMoHT bTqehu"><div class="sc-kpOvIu ipybeG"><div class="sc-fWnslK hJuoxX api-info"><h1 class="sc-icnseD sc-kiZvlW blNiPA DDxJV">SMSBOX - Account API Documentation<!-- --> <span>(<!-- -->1.0.0<!-- -->)</span></h1><div class="sc-dTUlgT sc-fhPBcz gAHTYt dDsjus"><div class="sc-fOFsAX gnuaA-d"><div class="sc-koJkpm eXggDo"> <span class="sc-kghAKo bmxErA">URL: <a href="https://www.smsbox.net">https://www.smsbox.net</a></span> <!-- --> </div></div></div><div data-role="redoc-summary" html="" class="sc-dTUlgT sc-fhPBcz gAHTYt dDsjus"></div><div data-role="redoc-description" html="&lt;h3 id=&quot;changelog&quot;&gt;Changelog&lt;/h3&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Version&lt;/th&gt;
+&lt;th&gt;Date&lt;/th&gt;
+&lt;th&gt;Changes&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;1.0.0&lt;/td&gt;
+&lt;td&gt;01/15/2026&lt;/td&gt;
+&lt;td&gt;Initial Account API documentation (Credits and Users management).&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+" class="sc-dTUlgT sc-fhPBcz gAHTYt dDsjus"><h3 id="changelog">Changelog</h3>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Date</th>
+<th>Changes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1.0.0</td>
+<td>01/15/2026</td>
+<td>Initial Account API documentation (Credits and Users management).</td>
+</tr>
+</tbody></table>
+</div></div></div></div><div id="tag/account-credit" data-section-id="tag/account-credit" class="sc-dIMoHT bTqehu"><div class="sc-kpOvIu ipybeG"><div class="sc-fWnslK hJuoxX"><h2 class="sc-jMsorb buhkzt"><a class="sc-jScdur jRyfmD" href="#tag/account-credit" aria-label="tag/account-credit"></a>Credit</h2></div></div><div class="sc-fWnslK tJLWz"><div class="sc-dTUlgT sc-fhPBcz gAHTYt dDsjus redoc-markdown " html="&lt;p&gt;Check your credit balance and manage credits for sub-accounts.&lt;/p&gt;
+"><p>Check your credit balance and manage credits for sub-accounts.</p>
+</div></div></div><div id="tag/account-credit/operation/getCredit" data-section-id="tag/account-credit/operation/getCredit" class="sc-dIMoHT ftfFlx"><div data-section-id="operation/getCredit" id="operation/getCredit" class="sc-kpOvIu ipybeG"><div class="sc-fWnslK hJuoxX"><h2 class="sc-jMsorb buhkzt"><a class="sc-jScdur jRyfmD" href="#tag/account-credit/operation/getCredit" aria-label="tag/account-credit/operation/getCredit"></a>Check balance<!-- --> </h2><div class="sc-dYwfDW bgkhSA"><button class="sc-lnzCgU gPwsZM"><span type="get" class="sc-etVRix ivliqf http-verb get">get</span><span class="sc-iuoeev blCRPE">/1.1/api.php?action=credit</span><svg class="sc-dcKlJK fxGamD" style="margin-right:-25px" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg></button><div aria-hidden="true" class="sc-dRZyXS gTtGYM"><div class="sc-inRxyr iajdpk"><div html="" class="sc-dTUlgT sc-fhPBcz gAHTYt hQGA-dW"></div><div tabindex="0" role="button"><div class="sc-lhcVAQ gLboTv"><span>https://api.smsbox.pro</span>/1.1/api.php?action=credit</div></div></div></div></div><div class="sc-bpSLYx kPKKPE"><div html="&lt;p&gt;Retrieve your current credit balance.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Usage:&lt;/strong&gt; Add &lt;code&gt;action=credit&lt;/code&gt; as a query parameter to the endpoint URL.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;GET &lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;1.1&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;api&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;php&lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt;action&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;credit
+&lt;/code&gt;&lt;/pre&gt;
+" class="sc-dTUlgT sc-fhPBcz gAHTYt dDsjus"><p>Retrieve your current credit balance.</p>
+<p><strong>Usage:</strong> Add <code>action=credit</code> as a query parameter to the endpoint URL.</p>
+<pre><code>GET <span class="token operator">/</span><span class="token number">1.1</span><span class="token operator">/</span>api<span class="token punctuation">.</span>php<span class="token operator">?</span>action<span class="token operator">=</span>credit
+</code></pre>
+</div></div><div class="sc-jHatCz hbKehx"><div class="sc-igQrDQ fEyRno"><h5 class="sc-cUiCeM sc-icgweO crXcll abBws">Authorizations:</h5><svg class="sc-dcKlJK jvLsrI" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg></div><div class="sc-jLKpbB bPuOE"><span class="sc-jBqEzj khiRa-d"><span class="sc-hWwHby bicYmj"><i>ApiKey</i></span></span></div></div><div><h5 class="sc-cUiCeM crXcll">query<!-- --> Parameters</h5><table class="sc-dKKIkQ gkzLzl"><tbody><tr class="last "><td kind="field" title="action" class="sc-lixPIL sc-dFaThA iBIVdD jFCVCh"><span class="sc-guGTOK cBJZHL"></span><span class="property-name">action</span><div class="sc-huvZk sc-icsLOd hHoKqR cuZQIJ">required</div></td><td class="sc-fjUQFl DQNkw"><div><div><span class="sc-huvZk sc-cLAbsH hHoKqR jolyEu"></span><span class="sc-huvZk sc-hlDTgW hHoKqR NHcBj">string</span></div><div><span class="sc-huvZk hHoKqR"> <!-- -->Value<!-- -->:</span> <span class="sc-huvZk sc-cxgKzJ hHoKqR jLSDbX">&quot;credit&quot;</span> </div> <div><div html="&lt;p&gt;Action identifier. Must be set to &lt;code&gt;credit&lt;/code&gt;.&lt;/p&gt;
+" class="sc-dTUlgT sc-fhPBcz gAHTYt hQGA-dW"><p>Action identifier. Must be set to <code>credit</code>.</p>
+</div></div></div></td></tr></tbody></table></div><div><h3 class="sc-fCdovG dsRSAK">Responses</h3><div><button class="sc-koGwOT jeRWvd"><svg class="sc-dcKlJK doZSdm" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg><strong class="sc-dHZbTr ljgvjV">200<!-- --> </strong><div html="&lt;p&gt;Returns the current credit balance.&lt;/p&gt;
+" class="sc-dTUlgT sc-fhPBcz sc-dNpohg gAHTYt hvaEOm kfJzSr"><p>Returns the current credit balance.</p>
+</div></button></div></div></div><div class="sc-iQQCXo sc-gDpztx rcGrS ijAuiF"><div><h3 class="sc-jJAtPt esvUOo"> <!-- -->Request samples<!-- --> </h3><div class="sc-brzPDJ dVvSml" data-rttabs="true"><ul class="react-tabs__tab-list" role="tablist"><li class="react-tabs__tab react-tabs__tab--selected" role="tab" id="tab«R2ab6q»0" aria-selected="true" aria-disabled="false" aria-controls="panel«R2ab6q»0" tabindex="0" data-rttab="true">cURL</li><li class="react-tabs__tab" role="tab" id="tab«R2ab6q»1" aria-selected="false" aria-disabled="false" aria-controls="panel«R2ab6q»1" data-rttab="true">Python</li><li class="react-tabs__tab" role="tab" id="tab«R2ab6q»2" aria-selected="false" aria-disabled="false" aria-controls="panel«R2ab6q»2" data-rttab="true">JavaScript</li><li class="react-tabs__tab" role="tab" id="tab«R2ab6q»3" aria-selected="false" aria-disabled="false" aria-controls="panel«R2ab6q»3" data-rttab="true">PHP</li></ul><div class="react-tabs__tab-panel react-tabs__tab-panel--selected" role="tabpanel" id="panel«R2ab6q»0" aria-labelledby="tab«R2ab6q»0"><div class="sc-bxjEGZ iIaVY"><div class="sc-lpbaSe bQiGVc"><button><div class="sc-fsjlER jYcDQz">Copy</div></button></div><pre class="sc-dTUlgT sc-iSqusk gAHTYt isfpWW">curl <span class="token operator">-</span>X POST <span class="token string">"https://api.smsbox.pro/1.1/api.php?action=credit"</span> \
+  <span class="token operator">-</span>H <span class="token string">"Authorization: App YOUR_API_KEY"</span>
+</pre></div></div><div class="react-tabs__tab-panel" role="tabpanel" id="panel«R2ab6q»1" aria-labelledby="tab«R2ab6q»1"></div><div class="react-tabs__tab-panel" role="tabpanel" id="panel«R2ab6q»2" aria-labelledby="tab«R2ab6q»2"></div><div class="react-tabs__tab-panel" role="tabpanel" id="panel«R2ab6q»3" aria-labelledby="tab«R2ab6q»3"></div></div></div><div><h3 class="sc-jJAtPt esvUOo"> <!-- -->Response samples<!-- --> </h3><div class="sc-brzPDJ dVvSml" data-rttabs="true"><ul class="react-tabs__tab-list" role="tablist"><li class="tab-success react-tabs__tab--selected" role="tab" id="tab«R2eb6q»0" aria-selected="true" aria-disabled="false" aria-controls="panel«R2eb6q»0" tabindex="0" data-rttab="true">200</li></ul><div class="react-tabs__tab-panel react-tabs__tab-panel--selected" role="tabpanel" id="panel«R2eb6q»0" aria-labelledby="tab«R2eb6q»0"><div><div class="sc-bmCFzp hMtTVz"><span class="sc-fPyrPm fPUzOF">Content type</span><div class="sc-bpuAaX bbuVaA">text/plain</div></div><div class="sc-kmqAS jPYqSz"><div class="sc-bmCFzp hMtTVz"><span class="sc-fPyrPm fPUzOF">Example</span><div class="sc-cNFqVt sc-fMGxnE bPGuUS eHJULL"><svg class="sc-fpgwy ccnFKG" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg><select class="dropdown-select"><option value="Credit balance" selected="">Credit balance</option><option value="Error">Error</option></select><label>Credit balance</label></div></div><div><div class="sc-bxjEGZ iIaVY"><div class="sc-lpbaSe bQiGVc"><button><div class="sc-fsjlER jYcDQz">Copy</div></button></div><pre class="sc-dTUlgT sc-iSqusk gAHTYt isfpWW">CREDIT <span class="token number">22</span></pre></div></div></div></div></div></div></div></div></div></div><div id="tag/account-credit/operation/manageSubAccountCredit" data-section-id="tag/account-credit/operation/manageSubAccountCredit" class="sc-dIMoHT ftfFlx"><div data-section-id="operation/manageSubAccountCredit" id="operation/manageSubAccountCredit" class="sc-kpOvIu ipybeG"><div class="sc-fWnslK hJuoxX"><h2 class="sc-jMsorb buhkzt"><a class="sc-jScdur jRyfmD" href="#tag/account-credit/operation/manageSubAccountCredit" aria-label="tag/account-credit/operation/manageSubAccountCredit"></a>Manage sub-account credit<!-- --> </h2><div class="sc-dYwfDW bgkhSA"><button class="sc-lnzCgU gPwsZM"><span type="post" class="sc-etVRix cdnzQJ http-verb post">post</span><span class="sc-iuoeev blCRPE">/1.1/api.php?action=credit&amp;do=manage</span><svg class="sc-dcKlJK fxGamD" style="margin-right:-25px" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg></button><div aria-hidden="true" class="sc-dRZyXS gTtGYM"><div class="sc-inRxyr iajdpk"><div html="" class="sc-dTUlgT sc-fhPBcz gAHTYt hQGA-dW"></div><div tabindex="0" role="button"><div class="sc-lhcVAQ gLboTv"><span>https://api.smsbox.pro</span>/1.1/api.php?action=credit&amp;do=manage</div></div></div></div></div><div class="sc-bpSLYx kPKKPE"><div html="&lt;p&gt;Add or remove credits from a sub-account.&lt;/p&gt;
+&lt;p&gt;Credits are transferred from your main account balance.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Usage:&lt;/strong&gt; Add &lt;code&gt;action=credit&lt;/code&gt; as a query parameter to the endpoint URL.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;POST &lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;1.1&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;api&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;php&lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt;action&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;credit
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;No-limit option:&lt;/strong&gt; Sub-accounts can be configured to use the main account&amp;#39;s balance directly without allocated credits. Enable this option in &amp;quot;User Management&amp;quot; in your account dashboard.&lt;/p&gt;
+" class="sc-dTUlgT sc-fhPBcz gAHTYt dDsjus"><p>Add or remove credits from a sub-account.</p>
+<p>Credits are transferred from your main account balance.</p>
+<p><strong>Usage:</strong> Add <code>action=credit</code> as a query parameter to the endpoint URL.</p>
+<pre><code>POST <span class="token operator">/</span><span class="token number">1.1</span><span class="token operator">/</span>api<span class="token punctuation">.</span>php<span class="token operator">?</span>action<span class="token operator">=</span>credit
+</code></pre>
+<p><strong>No-limit option:</strong> Sub-accounts can be configured to use the main account&#39;s balance directly without allocated credits. Enable this option in &quot;User Management&quot; in your account dashboard.</p>
+</div></div><div class="sc-jHatCz hbKehx"><div class="sc-igQrDQ fEyRno"><h5 class="sc-cUiCeM sc-icgweO crXcll abBws">Authorizations:</h5><svg class="sc-dcKlJK jvLsrI" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg></div><div class="sc-jLKpbB bPuOE"><span class="sc-jBqEzj khiRa-d"><span class="sc-hWwHby bicYmj"><i>ApiKey</i></span></span></div></div><div><h5 class="sc-cUiCeM crXcll">query<!-- --> Parameters</h5><table class="sc-dKKIkQ gkzLzl"><tbody><tr class="last "><td kind="field" title="action" class="sc-lixPIL sc-dFaThA iBIVdD jFCVCh"><span class="sc-guGTOK cBJZHL"></span><span class="property-name">action</span><div class="sc-huvZk sc-icsLOd hHoKqR cuZQIJ">required</div></td><td class="sc-fjUQFl DQNkw"><div><div><span class="sc-huvZk sc-cLAbsH hHoKqR jolyEu"></span><span class="sc-huvZk sc-hlDTgW hHoKqR NHcBj">string</span></div><div><span class="sc-huvZk hHoKqR"> <!-- -->Value<!-- -->:</span> <span class="sc-huvZk sc-cxgKzJ hHoKqR jLSDbX">&quot;credit&quot;</span> </div> <div><div html="&lt;p&gt;Action identifier. Must be set to &lt;code&gt;credit&lt;/code&gt;.&lt;/p&gt;
+" class="sc-dTUlgT sc-fhPBcz gAHTYt hQGA-dW"><p>Action identifier. Must be set to <code>credit</code>.</p>
+</div></div></div></td></tr></tbody></table></div><h5 class="sc-cUiCeM crXcll">Request Body schema: <span class="sc-dCVDEO iKSlPA">application/x-www-form-urlencoded</span><div class="sc-huvZk sc-icsLOd sc-enzkCt hHoKqR cuZQIJ idyeCO">required</div></h5><div html="" class="sc-dTUlgT sc-fhPBcz gAHTYt dDsjus"></div><table class="sc-dKKIkQ gkzLzl"><tbody><tr class=""><td kind="field" title="to" class="sc-lixPIL sc-dFaThA iBIVdD jFCVCh"><span class="sc-guGTOK cBJZHL"></span><span class="property-name">to</span><div class="sc-huvZk sc-icsLOd hHoKqR cuZQIJ">required</div></td><td class="sc-fjUQFl DQNkw"><div><div><span class="sc-huvZk sc-cLAbsH hHoKqR jolyEu"></span><span class="sc-huvZk sc-hlDTgW hHoKqR NHcBj">string</span></div> <div><div html="&lt;p&gt;Sub-account username to manage credits for.&lt;/p&gt;
+" class="sc-dTUlgT sc-fhPBcz gAHTYt hQGA-dW"><p>Sub-account username to manage credits for.</p>
+</div></div></div></td></tr><tr class="last "><td kind="field" title="credit" class="sc-lixPIL sc-dFaThA iBIVdD jFCVCh"><span class="sc-guGTOK cBJZHL"></span><span class="property-name">credit</span><div class="sc-huvZk sc-icsLOd hHoKqR cuZQIJ">required</div></td><td class="sc-fjUQFl DQNkw"><div><div><span class="sc-huvZk sc-cLAbsH hHoKqR jolyEu"></span><span class="sc-huvZk sc-hlDTgW hHoKqR NHcBj">integer</span></div> <div><div html="&lt;p&gt;Number of SMS credits to add (positive) or remove (negative).&lt;/p&gt;
+&lt;p&gt;Credits are transferred from/to the main account balance.&lt;/p&gt;
+" class="sc-dTUlgT sc-fhPBcz gAHTYt hQGA-dW"><p>Number of SMS credits to add (positive) or remove (negative).</p>
+<p>Credits are transferred from/to the main account balance.</p>
+</div></div></div></td></tr></tbody></table><div><h3 class="sc-fCdovG dsRSAK">Responses</h3><div><button class="sc-koGwOT jeRWvd"><svg class="sc-dcKlJK doZSdm" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg><strong class="sc-dHZbTr ljgvjV">200<!-- --> </strong><div html="&lt;p&gt;The API always returns HTTP 200. Check the response body for the actual status.&lt;/p&gt;
+&lt;div style=&quot;background-color: #d4edda; border-left: 4px solid #28a745; padding: 12px; margin: 10px 0;&quot;&gt;
+&lt;strong&gt;Success response:&lt;/strong&gt;&lt;br&gt;
+• &lt;code&gt;OK&lt;/code&gt; - Credits successfully transferred
+&lt;/div&gt;
+
+&lt;div style=&quot;background-color: #f8d7da; border-left: 4px solid #dc3545; padding: 12px; margin: 10px 0; color: #721c24 !important;&quot;&gt;
+&lt;strong&gt;Error response:&lt;/strong&gt;&lt;br&gt;
+• &lt;code&gt;ERREUR&lt;/code&gt; - Operation failed (invalid sub-account, insufficient balance, or other error)
+&lt;/div&gt;
+" class="sc-dTUlgT sc-fhPBcz sc-dNpohg gAHTYt hvaEOm kfJzSr"><p>The API always returns HTTP 200. Check the response body for the actual status.</p>
+<div style="background-color: #d4edda; border-left: 4px solid #28a745; padding: 12px; margin: 10px 0;">
+<strong>Success response:</strong><br>
+• <code>OK</code> - Credits successfully transferred
+</div>
+
+<div style="background-color: #f8d7da; border-left: 4px solid #dc3545; padding: 12px; margin: 10px 0; color: #721c24 !important;">
+<strong>Error response:</strong><br>
+• <code>ERREUR</code> - Operation failed (invalid sub-account, insufficient balance, or other error)
+</div>
+</div></button></div></div></div><div class="sc-iQQCXo sc-gDpztx rcGrS ijAuiF"><div><h3 class="sc-jJAtPt esvUOo"> <!-- -->Request samples<!-- --> </h3><div class="sc-brzPDJ dVvSml" data-rttabs="true"><ul class="react-tabs__tab-list" role="tablist"><li class="react-tabs__tab react-tabs__tab--selected" role="tab" id="tab«R2ad6q»0" aria-selected="true" aria-disabled="false" aria-controls="panel«R2ad6q»0" tabindex="0" data-rttab="true">cURL</li><li class="react-tabs__tab" role="tab" id="tab«R2ad6q»1" aria-selected="false" aria-disabled="false" aria-controls="panel«R2ad6q»1" data-rttab="true">Python</li><li class="react-tabs__tab" role="tab" id="tab«R2ad6q»2" aria-selected="false" aria-disabled="false" aria-controls="panel«R2ad6q»2" data-rttab="true">JavaScript</li><li class="react-tabs__tab" role="tab" id="tab«R2ad6q»3" aria-selected="false" aria-disabled="false" aria-controls="panel«R2ad6q»3" data-rttab="true">PHP</li></ul><div class="react-tabs__tab-panel react-tabs__tab-panel--selected" role="tabpanel" id="panel«R2ad6q»0" aria-labelledby="tab«R2ad6q»0"><div class="sc-bxjEGZ iIaVY"><div class="sc-lpbaSe bQiGVc"><button><div class="sc-fsjlER jYcDQz">Copy</div></button></div><pre class="sc-dTUlgT sc-iSqusk gAHTYt isfpWW">curl <span class="token operator">-</span>X POST <span class="token string">"https://api.smsbox.pro/1.1/api.php?action=credit"</span> \
+  <span class="token operator">-</span>H <span class="token string">"Authorization: App YOUR_API_KEY"</span> \
+  <span class="token operator">-</span>d <span class="token string">"to=subaccount1&amp;credit=100"</span>
+</pre></div></div><div class="react-tabs__tab-panel" role="tabpanel" id="panel«R2ad6q»1" aria-labelledby="tab«R2ad6q»1"></div><div class="react-tabs__tab-panel" role="tabpanel" id="panel«R2ad6q»2" aria-labelledby="tab«R2ad6q»2"></div><div class="react-tabs__tab-panel" role="tabpanel" id="panel«R2ad6q»3" aria-labelledby="tab«R2ad6q»3"></div></div></div><div><h3 class="sc-jJAtPt esvUOo"> <!-- -->Response samples<!-- --> </h3><div class="sc-brzPDJ dVvSml" data-rttabs="true"><ul class="react-tabs__tab-list" role="tablist"><li class="tab-success react-tabs__tab--selected" role="tab" id="tab«R2ed6q»0" aria-selected="true" aria-disabled="false" aria-controls="panel«R2ed6q»0" tabindex="0" data-rttab="true">200</li></ul><div class="react-tabs__tab-panel react-tabs__tab-panel--selected" role="tabpanel" id="panel«R2ed6q»0" aria-labelledby="tab«R2ed6q»0"><div><div class="sc-bmCFzp hMtTVz"><span class="sc-fPyrPm fPUzOF">Content type</span><div class="sc-bpuAaX bbuVaA">text/plain</div></div><div class="sc-kmqAS jPYqSz"><div class="sc-bmCFzp hMtTVz"><span class="sc-fPyrPm fPUzOF">Example</span><div class="sc-cNFqVt sc-fMGxnE bPGuUS eHJULL"><svg class="sc-fpgwy ccnFKG" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg><select class="dropdown-select"><option value="Success" selected="">Success</option><option value="Error">Error</option></select><label>Success</label></div></div><div><div class="sc-bxjEGZ iIaVY"><div class="sc-lpbaSe bQiGVc"><button><div class="sc-fsjlER jYcDQz">Copy</div></button></div><pre class="sc-dTUlgT sc-iSqusk gAHTYt isfpWW">OK</pre></div></div></div></div></div></div></div></div></div></div><div id="tag/account-users" data-section-id="tag/account-users" class="sc-dIMoHT bTqehu"><div class="sc-kpOvIu ipybeG"><div class="sc-fWnslK hJuoxX"><h2 class="sc-jMsorb buhkzt"><a class="sc-jScdur jRyfmD" href="#tag/account-users" aria-label="tag/account-users"></a>Users</h2></div></div><div class="sc-fWnslK tJLWz"><div class="sc-dTUlgT sc-fhPBcz gAHTYt dDsjus redoc-markdown " html="&lt;p&gt;Create and manage sub-accounts.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Limits:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Maximum 500 sub-accounts per main account&lt;/li&gt;
+&lt;li&gt;Username (pseudo): maximum 50 characters&lt;/li&gt;
+&lt;li&gt;Password (mdp): maximum 50 characters&lt;/li&gt;
+&lt;/ul&gt;
+"><p>Create and manage sub-accounts.</p>
+<p><strong>Limits:</strong></p>
+<ul>
+<li>Maximum 500 sub-accounts per main account</li>
+<li>Username (pseudo): maximum 50 characters</li>
+<li>Password (mdp): maximum 50 characters</li>
+</ul>
+</div></div></div><div id="tag/account-users/operation/createSubAccount" data-section-id="tag/account-users/operation/createSubAccount" class="sc-dIMoHT ftfFlx"><div data-section-id="operation/createSubAccount" id="operation/createSubAccount" class="sc-kpOvIu ipybeG"><div class="sc-fWnslK hJuoxX"><h2 class="sc-jMsorb buhkzt"><a class="sc-jScdur jRyfmD" href="#tag/account-users/operation/createSubAccount" aria-label="tag/account-users/operation/createSubAccount"></a>Create sub-account<!-- --> </h2><div class="sc-dYwfDW bgkhSA"><button class="sc-lnzCgU gPwsZM"><span type="post" class="sc-etVRix cdnzQJ http-verb post">post</span><span class="sc-iuoeev blCRPE">/1.1/api.php?action=utilisateur</span><svg class="sc-dcKlJK fxGamD" style="margin-right:-25px" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg></button><div aria-hidden="true" class="sc-dRZyXS gTtGYM"><div class="sc-inRxyr iajdpk"><div html="" class="sc-dTUlgT sc-fhPBcz gAHTYt hQGA-dW"></div><div tabindex="0" role="button"><div class="sc-lhcVAQ gLboTv"><span>https://api.smsbox.pro</span>/1.1/api.php?action=utilisateur</div></div></div></div></div><div class="sc-bpSLYx kPKKPE"><div html="&lt;p&gt;Create a new sub-account under your main account.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Usage:&lt;/strong&gt; Add &lt;code&gt;action=utilisateur&lt;/code&gt; as a query parameter to the endpoint URL.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;POST &lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;token number&quot;&gt;1.1&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;/&lt;/span&gt;api&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;php&lt;span class=&quot;token operator&quot;&gt;?&lt;/span&gt;action&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;utilisateur
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Limits:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Maximum 500 sub-accounts per main account&lt;/li&gt;
+&lt;li&gt;Username: maximum 50 characters&lt;/li&gt;
+&lt;li&gt;Password: maximum 50 characters&lt;/li&gt;
+&lt;/ul&gt;
+" class="sc-dTUlgT sc-fhPBcz gAHTYt dDsjus"><p>Create a new sub-account under your main account.</p>
+<p><strong>Usage:</strong> Add <code>action=utilisateur</code> as a query parameter to the endpoint URL.</p>
+<pre><code>POST <span class="token operator">/</span><span class="token number">1.1</span><span class="token operator">/</span>api<span class="token punctuation">.</span>php<span class="token operator">?</span>action<span class="token operator">=</span>utilisateur
+</code></pre>
+<p><strong>Limits:</strong></p>
+<ul>
+<li>Maximum 500 sub-accounts per main account</li>
+<li>Username: maximum 50 characters</li>
+<li>Password: maximum 50 characters</li>
+</ul>
+</div></div><div class="sc-jHatCz hbKehx"><div class="sc-igQrDQ fEyRno"><h5 class="sc-cUiCeM sc-icgweO crXcll abBws">Authorizations:</h5><svg class="sc-dcKlJK jvLsrI" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg></div><div class="sc-jLKpbB bPuOE"><span class="sc-jBqEzj khiRa-d"><span class="sc-hWwHby bicYmj"><i>ApiKey</i></span></span></div></div><div><h5 class="sc-cUiCeM crXcll">query<!-- --> Parameters</h5><table class="sc-dKKIkQ gkzLzl"><tbody><tr class="last "><td kind="field" title="action" class="sc-lixPIL sc-dFaThA iBIVdD jFCVCh"><span class="sc-guGTOK cBJZHL"></span><span class="property-name">action</span><div class="sc-huvZk sc-icsLOd hHoKqR cuZQIJ">required</div></td><td class="sc-fjUQFl DQNkw"><div><div><span class="sc-huvZk sc-cLAbsH hHoKqR jolyEu"></span><span class="sc-huvZk sc-hlDTgW hHoKqR NHcBj">string</span></div><div><span class="sc-huvZk hHoKqR"> <!-- -->Value<!-- -->:</span> <span class="sc-huvZk sc-cxgKzJ hHoKqR jLSDbX">&quot;utilisateur&quot;</span> </div> <div><div html="&lt;p&gt;Action identifier. Must be set to &lt;code&gt;utilisateur&lt;/code&gt;.&lt;/p&gt;
+" class="sc-dTUlgT sc-fhPBcz gAHTYt hQGA-dW"><p>Action identifier. Must be set to <code>utilisateur</code>.</p>
+</div></div></div></td></tr></tbody></table></div><h5 class="sc-cUiCeM crXcll">Request Body schema: <span class="sc-dCVDEO iKSlPA">application/x-www-form-urlencoded</span><div class="sc-huvZk sc-icsLOd sc-enzkCt hHoKqR cuZQIJ idyeCO">required</div></h5><div html="" class="sc-dTUlgT sc-fhPBcz gAHTYt dDsjus"></div><table class="sc-dKKIkQ gkzLzl"><tbody><tr class=""><td kind="field" title="do" class="sc-lixPIL sc-dFaThA iBIVdD jFCVCh"><span class="sc-guGTOK cBJZHL"></span><span class="property-name">do</span><div class="sc-huvZk sc-icsLOd hHoKqR cuZQIJ">required</div></td><td class="sc-fjUQFl DQNkw"><div><div><span class="sc-huvZk sc-cLAbsH hHoKqR jolyEu"></span><span class="sc-huvZk sc-hlDTgW hHoKqR NHcBj">string</span></div><div><span class="sc-huvZk hHoKqR"> <!-- -->Value<!-- -->:</span> <span class="sc-huvZk sc-cxgKzJ hHoKqR jLSDbX">&quot;add&quot;</span> </div> <div><div html="&lt;p&gt;Operation type. Must be set to &lt;code&gt;add&lt;/code&gt; to create a sub-account.&lt;/p&gt;
+" class="sc-dTUlgT sc-fhPBcz gAHTYt hQGA-dW"><p>Operation type. Must be set to <code>add</code> to create a sub-account.</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="pseudo" class="sc-lixPIL sc-dFaThA iBIVdD jFCVCh"><span class="sc-guGTOK cBJZHL"></span><span class="property-name">pseudo</span><div class="sc-huvZk sc-icsLOd hHoKqR cuZQIJ">required</div></td><td class="sc-fjUQFl DQNkw"><div><div><span class="sc-huvZk sc-cLAbsH hHoKqR jolyEu"></span><span class="sc-huvZk sc-hlDTgW hHoKqR NHcBj">string</span><span> <span class="sc-huvZk sc-fmMLgT hHoKqR gXJkJP"> <!-- -->&lt;= 50 characters<!-- --> </span></span></div> <div><div html="&lt;p&gt;Username for the new sub-account.&lt;/p&gt;
+&lt;p&gt;Maximum 50 characters.&lt;/p&gt;
+" class="sc-dTUlgT sc-fhPBcz gAHTYt hQGA-dW"><p>Username for the new sub-account.</p>
+<p>Maximum 50 characters.</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="mdp" class="sc-lixPIL sc-dFaThA iBIVdD jFCVCh"><span class="sc-guGTOK cBJZHL"></span><span class="property-name">mdp</span><div class="sc-huvZk sc-icsLOd hHoKqR cuZQIJ">required</div></td><td class="sc-fjUQFl DQNkw"><div><div><span class="sc-huvZk sc-cLAbsH hHoKqR jolyEu"></span><span class="sc-huvZk sc-hlDTgW hHoKqR NHcBj">string</span><span> <span class="sc-huvZk sc-fmMLgT hHoKqR gXJkJP"> <!-- -->&lt;= 50 characters<!-- --> </span></span></div> <div><div html="&lt;p&gt;Password for the new sub-account.&lt;/p&gt;
+&lt;p&gt;Maximum 50 characters.&lt;/p&gt;
+" class="sc-dTUlgT sc-fhPBcz gAHTYt hQGA-dW"><p>Password for the new sub-account.</p>
+<p>Maximum 50 characters.</p>
+</div></div></div></td></tr><tr class="last "><td kind="field" title="nolimit" class="sc-lixPIL sc-dFaThA iBIVdD jFCVCh"><span class="sc-guGTOK cBJZHL"></span><span class="property-name">nolimit</span></td><td class="sc-fjUQFl DQNkw"><div><div><span class="sc-huvZk sc-cLAbsH hHoKqR jolyEu"></span><span class="sc-huvZk sc-hlDTgW hHoKqR NHcBj">string</span></div><div><span class="sc-huvZk hHoKqR"> <!-- -->Enum<!-- -->:</span> <span class="sc-huvZk sc-cxgKzJ hHoKqR jLSDbX">&quot;yes&quot;</span> <span class="sc-huvZk sc-cxgKzJ hHoKqR jLSDbX">&quot;no&quot;</span> </div> <div><div html="&lt;p&gt;Enable &amp;quot;No-limit&amp;quot; option.&lt;/p&gt;
+&lt;p&gt;When set to &lt;code&gt;yes&lt;/code&gt;, the sub-account can use credits from the main account balance directly.&lt;/p&gt;
+" class="sc-dTUlgT sc-fhPBcz gAHTYt hQGA-dW"><p>Enable &quot;No-limit&quot; option.</p>
+<p>When set to <code>yes</code>, the sub-account can use credits from the main account balance directly.</p>
+</div></div></div></td></tr></tbody></table><div><h3 class="sc-fCdovG dsRSAK">Responses</h3><div><button class="sc-koGwOT jeRWvd"><svg class="sc-dcKlJK doZSdm" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg><strong class="sc-dHZbTr ljgvjV">200<!-- --> </strong><div html="&lt;p&gt;The API always returns HTTP 200. Check the response body for the actual status.&lt;/p&gt;
+&lt;div style=&quot;background-color: #d4edda; border-left: 4px solid #28a745; padding: 12px; margin: 10px 0;&quot;&gt;
+&lt;strong&gt;Success response:&lt;/strong&gt;&lt;br&gt;
+• &lt;code&gt;OK&lt;/code&gt; - Sub-account created successfully
+&lt;/div&gt;
+
+&lt;div style=&quot;background-color: #f8d7da; border-left: 4px solid #dc3545; padding: 12px; margin: 10px 0; color: #721c24 !important;&quot;&gt;
+&lt;strong&gt;Error response:&lt;/strong&gt;&lt;br&gt;
+• &lt;code&gt;ERREUR&lt;/code&gt; - Creation failed (duplicate username, limit reached, or invalid parameters)
+&lt;/div&gt;
+" class="sc-dTUlgT sc-fhPBcz sc-dNpohg gAHTYt hvaEOm kfJzSr"><p>The API always returns HTTP 200. Check the response body for the actual status.</p>
+<div style="background-color: #d4edda; border-left: 4px solid #28a745; padding: 12px; margin: 10px 0;">
+<strong>Success response:</strong><br>
+• <code>OK</code> - Sub-account created successfully
+</div>
+
+<div style="background-color: #f8d7da; border-left: 4px solid #dc3545; padding: 12px; margin: 10px 0; color: #721c24 !important;">
+<strong>Error response:</strong><br>
+• <code>ERREUR</code> - Creation failed (duplicate username, limit reached, or invalid parameters)
+</div>
+</div></button></div></div></div><div class="sc-iQQCXo sc-gDpztx rcGrS ijAuiF"><div><h3 class="sc-jJAtPt esvUOo"> <!-- -->Request samples<!-- --> </h3><div class="sc-brzPDJ dVvSml" data-rttabs="true"><ul class="react-tabs__tab-list" role="tablist"><li class="react-tabs__tab react-tabs__tab--selected" role="tab" id="tab«R157aq»0" aria-selected="true" aria-disabled="false" aria-controls="panel«R157aq»0" tabindex="0" data-rttab="true">cURL</li><li class="react-tabs__tab" role="tab" id="tab«R157aq»1" aria-selected="false" aria-disabled="false" aria-controls="panel«R157aq»1" data-rttab="true">Python</li><li class="react-tabs__tab" role="tab" id="tab«R157aq»2" aria-selected="false" aria-disabled="false" aria-controls="panel«R157aq»2" data-rttab="true">JavaScript</li><li class="react-tabs__tab" role="tab" id="tab«R157aq»3" aria-selected="false" aria-disabled="false" aria-controls="panel«R157aq»3" data-rttab="true">PHP</li></ul><div class="react-tabs__tab-panel react-tabs__tab-panel--selected" role="tabpanel" id="panel«R157aq»0" aria-labelledby="tab«R157aq»0"><div class="sc-bxjEGZ iIaVY"><div class="sc-lpbaSe bQiGVc"><button><div class="sc-fsjlER jYcDQz">Copy</div></button></div><pre class="sc-dTUlgT sc-iSqusk gAHTYt isfpWW">curl <span class="token operator">-</span>X POST <span class="token string">"https://api.smsbox.pro/1.1/api.php?action=utilisateur"</span> \
+  <span class="token operator">-</span>H <span class="token string">"Authorization: App YOUR_API_KEY"</span> \
+  <span class="token operator">-</span>d <span class="token string">"do=add&amp;pseudo=subaccount1&amp;mdp=SecurePassword123&amp;nolimit=yes"</span>
+</pre></div></div><div class="react-tabs__tab-panel" role="tabpanel" id="panel«R157aq»1" aria-labelledby="tab«R157aq»1"></div><div class="react-tabs__tab-panel" role="tabpanel" id="panel«R157aq»2" aria-labelledby="tab«R157aq»2"></div><div class="react-tabs__tab-panel" role="tabpanel" id="panel«R157aq»3" aria-labelledby="tab«R157aq»3"></div></div></div><div><h3 class="sc-jJAtPt esvUOo"> <!-- -->Response samples<!-- --> </h3><div class="sc-brzPDJ dVvSml" data-rttabs="true"><ul class="react-tabs__tab-list" role="tablist"><li class="tab-success react-tabs__tab--selected" role="tab" id="tab«R177aq»0" aria-selected="true" aria-disabled="false" aria-controls="panel«R177aq»0" tabindex="0" data-rttab="true">200</li></ul><div class="react-tabs__tab-panel react-tabs__tab-panel--selected" role="tabpanel" id="panel«R177aq»0" aria-labelledby="tab«R177aq»0"><div><div class="sc-bmCFzp hMtTVz"><span class="sc-fPyrPm fPUzOF">Content type</span><div class="sc-bpuAaX bbuVaA">text/plain</div></div><div class="sc-kmqAS jPYqSz"><div class="sc-bmCFzp hMtTVz"><span class="sc-fPyrPm fPUzOF">Example</span><div class="sc-cNFqVt sc-fMGxnE bPGuUS eHJULL"><svg class="sc-fpgwy ccnFKG" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg><select class="dropdown-select"><option value="Success" selected="">Success</option><option value="Error">Error</option></select><label>Success</label></div></div><div><div class="sc-bxjEGZ iIaVY"><div class="sc-lpbaSe bQiGVc"><button><div class="sc-fsjlER jYcDQz">Copy</div></button></div><pre class="sc-dTUlgT sc-iSqusk gAHTYt isfpWW">OK</pre></div></div></div></div></div></div></div></div></div></div></div><div class="sc-dPhEwk cCFEoS"></div></div></div>
+      <script>
+      const __redoc_state = {"menu":{"activeItemIdx":-1},"spec":{"data":{"openapi":"3.1.0","info":{"title":"SMSBOX - Account API Documentation","version":"1.0.0","contact":{"url":"https://www.smsbox.net"},"x-logo":{"url":"../logo-en.png","backgroundColor":"#FFFFFF","altText":"SMSBOX logo","href":"https://www.smsbox.net"},"description":"\n### Changelog\n| Version | Date | Changes                                                                                                |\n| ------- | ----- |-------------------------------------------------------------------------------------------------------|\n| 1.0.0 | 01/15/2026 | Initial Account API documentation (Credits and Users management).             |\n"},"servers":[{"url":"https://api.smsbox.pro"}],"tags":[{"name":"account-credit","x-displayName":"Credit","description":"Check your credit balance and manage credits for sub-accounts.\n"},{"name":"account-users","x-displayName":"Users","description":"Create and manage sub-accounts.\n\n**Limits:**\n- Maximum 500 sub-accounts per main account\n- Username (pseudo): maximum 50 characters\n- Password (mdp): maximum 50 characters\n"}],"paths":{"/1.1/api.php?action=credit":{"get":{"operationId":"getCredit","tags":["account-credit"],"security":[{"ApiKey":[]}],"summary":"Check balance","description":"Retrieve your current credit balance.\n\n**Usage:** Add ``action=credit`` as a query parameter to the endpoint URL.\n\n```\nGET /1.1/api.php?action=credit\n```\n","parameters":[{"name":"action","in":"query","required":true,"schema":{"type":"string","enum":["credit"]},"description":"Action identifier. Must be set to ``credit``.\n"}],"responses":{"200":{"description":"Returns the current credit balance.\n","content":{"text/plain":{"schema":{"type":"string"},"examples":{"success":{"summary":"Credit balance","value":"CREDIT 22"},"error":{"summary":"Error","value":"ERREUR"}}}}}},"x-codeSamples":[{"lang":"cURL","source":"curl -X POST \"https://api.smsbox.pro/1.1/api.php?action=credit\" \\\n  -H \"Authorization: App YOUR_API_KEY\"\n"},{"lang":"Python","source":"import requests\n\nresponse = requests.post(\n    \"https://api.smsbox.pro/1.1/api.php\",\n    params={\"action\": \"credit\"},\n    headers={\"Authorization\": \"App YOUR_API_KEY\"}\n)\nprint(response.text)\n"},{"lang":"JavaScript","source":"const response = await fetch(\n  \"https://api.smsbox.pro/1.1/api.php?action=credit\",\n  {\n    method: \"POST\",\n    headers: {\n      Authorization: \"App YOUR_API_KEY\",\n    },\n  }\n);\nconsole.log(await response.text());\n"},{"lang":"PHP","source":"<?php\n$ch = curl_init();\ncurl_setopt($ch, CURLOPT_URL, \"https://api.smsbox.pro/1.1/api.php?action=credit\");\ncurl_setopt($ch, CURLOPT_POST, true);\ncurl_setopt($ch, CURLOPT_HTTPHEADER, [\"Authorization: App YOUR_API_KEY\"]);\ncurl_setopt($ch, CURLOPT_RETURNTRANSFER, true);\n$response = curl_exec($ch);\ncurl_close($ch);\necho $response;\n"}]}},"/1.1/api.php?action=credit&do=manage":{"post":{"operationId":"manageSubAccountCredit","tags":["account-credit"],"security":[{"ApiKey":[]}],"summary":"Manage sub-account credit","description":"Add or remove credits from a sub-account.\n\nCredits are transferred from your main account balance.\n\n**Usage:** Add ``action=credit`` as a query parameter to the endpoint URL.\n\n```\nPOST /1.1/api.php?action=credit\n```\n\n**No-limit option:** Sub-accounts can be configured to use the main account's balance directly without allocated credits. Enable this option in \"User Management\" in your account dashboard.\n","parameters":[{"name":"action","in":"query","required":true,"schema":{"type":"string","enum":["credit"]},"description":"Action identifier. Must be set to ``credit``.\n"}],"requestBody":{"required":true,"content":{"application/x-www-form-urlencoded":{"schema":{"$ref":"#/components/schemas/ManageCredit"}}}},"responses":{"200":{"description":"The API always returns HTTP 200. Check the response body for the actual status.\n\n<div style=\"background-color: #d4edda; border-left: 4px solid #28a745; padding: 12px; margin: 10px 0;\">\n<strong>Success response:</strong><br>\n• <code>OK</code> - Credits successfully transferred\n</div>\n\n<div style=\"background-color: #f8d7da; border-left: 4px solid #dc3545; padding: 12px; margin: 10px 0; color: #721c24 !important;\">\n<strong>Error response:</strong><br>\n• <code>ERREUR</code> - Operation failed (invalid sub-account, insufficient balance, or other error)\n</div>\n","content":{"text/plain":{"schema":{"type":"string"},"examples":{"success":{"summary":"Success","value":"OK"},"error":{"summary":"Error","value":"ERREUR"}}}}}},"x-codeSamples":[{"lang":"cURL","source":"curl -X POST \"https://api.smsbox.pro/1.1/api.php?action=credit\" \\\n  -H \"Authorization: App YOUR_API_KEY\" \\\n  -d \"to=subaccount1&credit=100\"\n"},{"lang":"Python","source":"import requests\n\nresponse = requests.post(\n    \"https://api.smsbox.pro/1.1/api.php\",\n    params={\"action\": \"credit\"},\n    headers={\"Authorization\": \"App YOUR_API_KEY\"},\n    data={\"to\": \"subaccount1\", \"credit\": 100}\n)\nprint(response.text)\n"},{"lang":"JavaScript","source":"const response = await fetch(\n  \"https://api.smsbox.pro/1.1/api.php?action=credit\",\n  {\n    method: \"POST\",\n    headers: {\n      Authorization: \"App YOUR_API_KEY\",\n      \"Content-Type\": \"application/x-www-form-urlencoded\",\n    },\n    body: new URLSearchParams({\n      to: \"subaccount1\",\n      credit: \"100\",\n    }),\n  }\n);\nconsole.log(await response.text());\n"},{"lang":"PHP","source":"<?php\n$ch = curl_init();\ncurl_setopt($ch, CURLOPT_URL, \"https://api.smsbox.pro/1.1/api.php?action=credit\");\ncurl_setopt($ch, CURLOPT_POST, true);\ncurl_setopt($ch, CURLOPT_HTTPHEADER, [\"Authorization: App YOUR_API_KEY\"]);\ncurl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([\n    \"to\" => \"subaccount1\",\n    \"credit\" => 100\n]));\ncurl_setopt($ch, CURLOPT_RETURNTRANSFER, true);\n$response = curl_exec($ch);\ncurl_close($ch);\necho $response;\n"}]}},"/1.1/api.php?action=utilisateur":{"post":{"operationId":"createSubAccount","tags":["account-users"],"security":[{"ApiKey":[]}],"summary":"Create sub-account","description":"Create a new sub-account under your main account.\n\n**Usage:** Add ``action=utilisateur`` as a query parameter to the endpoint URL.\n\n```\nPOST /1.1/api.php?action=utilisateur\n```\n\n**Limits:**\n- Maximum 500 sub-accounts per main account\n- Username: maximum 50 characters\n- Password: maximum 50 characters\n","parameters":[{"name":"action","in":"query","required":true,"schema":{"type":"string","enum":["utilisateur"]},"description":"Action identifier. Must be set to ``utilisateur``.\n"}],"requestBody":{"required":true,"content":{"application/x-www-form-urlencoded":{"schema":{"$ref":"#/components/schemas/CreateUser"}}}},"responses":{"200":{"description":"The API always returns HTTP 200. Check the response body for the actual status.\n\n<div style=\"background-color: #d4edda; border-left: 4px solid #28a745; padding: 12px; margin: 10px 0;\">\n<strong>Success response:</strong><br>\n• <code>OK</code> - Sub-account created successfully\n</div>\n\n<div style=\"background-color: #f8d7da; border-left: 4px solid #dc3545; padding: 12px; margin: 10px 0; color: #721c24 !important;\">\n<strong>Error response:</strong><br>\n• <code>ERREUR</code> - Creation failed (duplicate username, limit reached, or invalid parameters)\n</div>\n","content":{"text/plain":{"schema":{"type":"string"},"examples":{"success":{"summary":"Success","value":"OK"},"error":{"summary":"Error","value":"ERREUR"}}}}}},"x-codeSamples":[{"lang":"cURL","source":"curl -X POST \"https://api.smsbox.pro/1.1/api.php?action=utilisateur\" \\\n  -H \"Authorization: App YOUR_API_KEY\" \\\n  -d \"do=add&pseudo=subaccount1&mdp=SecurePassword123&nolimit=yes\"\n"},{"lang":"Python","source":"import requests\n\nresponse = requests.post(\n    \"https://api.smsbox.pro/1.1/api.php\",\n    params={\"action\": \"utilisateur\"},\n    headers={\"Authorization\": \"App YOUR_API_KEY\"},\n    data={\n        \"do\": \"add\",\n        \"pseudo\": \"subaccount1\",\n        \"mdp\": \"SecurePassword123\",\n        \"nolimit\": \"yes\"\n    }\n)\nprint(response.text)\n"},{"lang":"JavaScript","source":"const response = await fetch(\n  \"https://api.smsbox.pro/1.1/api.php?action=utilisateur\",\n  {\n    method: \"POST\",\n    headers: {\n      Authorization: \"App YOUR_API_KEY\",\n      \"Content-Type\": \"application/x-www-form-urlencoded\",\n    },\n    body: new URLSearchParams({\n      do: \"add\",\n      pseudo: \"subaccount1\",\n      mdp: \"SecurePassword123\",\n      nolimit: \"yes\",\n    }),\n  }\n);\nconsole.log(await response.text());\n"},{"lang":"PHP","source":"<?php\n$ch = curl_init();\ncurl_setopt($ch, CURLOPT_URL, \"https://api.smsbox.pro/1.1/api.php?action=utilisateur\");\ncurl_setopt($ch, CURLOPT_POST, true);\ncurl_setopt($ch, CURLOPT_HTTPHEADER, [\"Authorization: App YOUR_API_KEY\"]);\ncurl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([\n    \"do\" => \"add\",\n    \"pseudo\" => \"subaccount1\",\n    \"mdp\" => \"SecurePassword123\",\n    \"nolimit\" => \"yes\"\n]));\ncurl_setopt($ch, CURLOPT_RETURNTRANSFER, true);\n$response = curl_exec($ch);\ncurl_close($ch);\necho $response;\n"}]}}},"components":{"securitySchemes":{"ApiKey":{"type":"apiKey","in":"header","name":"Authorization","description":"Example: `Authorization: App YOUR_API_KEY`\n"}},"schemas":{"ManageCredit":{"type":"object","properties":{"to":{"type":"string","description":"Sub-account username to manage credits for.\n","example":"subaccount1"},"credit":{"type":"integer","description":"Number of SMS credits to add (positive) or remove (negative).\n\nCredits are transferred from/to the main account balance.\n","example":100}},"required":["to","credit"]},"CreateUser":{"type":"object","properties":{"do":{"type":"string","enum":["add"],"description":"Operation type. Must be set to ``add`` to create a sub-account.\n","example":"add"},"pseudo":{"type":"string","maxLength":50,"description":"Username for the new sub-account.\n\nMaximum 50 characters.\n","example":"subaccount1"},"mdp":{"type":"string","maxLength":50,"description":"Password for the new sub-account.\n\nMaximum 50 characters.\n","example":"SecurePassword123"},"nolimit":{"type":"string","enum":["yes","no"],"description":"Enable \"No-limit\" option.\n\nWhen set to ``yes``, the sub-account can use credits from the main account balance directly.\n","example":"yes"}},"required":["do","pseudo","mdp"]}}},"x-tagGroups":[{"name":"Account","tags":["account-credit","account-users"]}]}},"options":{"disableSearch":true,"hideDownloadButton":true,"pathInMiddlePanel":true,"theme":{"sidebar":{"backgroundColor":"#ffffff","textColor":"#374151","activeBgColor":"#f3e8ff","activeTextColor":"#7b3b95","fontSize":"14px","groupItems":{"textTransform":"uppercase"},"level1items":{"textTransform":"none"}},"colors":{"primary":{"main":"#7b3b95","light":"#9b5bb5","dark":"#5a2a6e","contrastText":"#ffffff"},"success":{"main":"#16a34a"},"warning":{"main":"#f59e0b"},"error":{"main":"#dc2626"},"http":{"get":"#16a34a","post":"#186FAF","put":"#9b5bb5","patch":"#f59e0b","delete":"#dc2626","options":"#6b7280","head":"#6b7280"}},"typography":{"fontSize":"14px","lineHeight":"1.6em","fontWeightLight":"300","fontWeightRegular":"400","fontWeightBold":"600","fontFamily":"Poppins, -apple-system, BlinkMacSystemFont, sans-serif","smoothing":"antialiased","optimizeSpeed":true,"headings":{"fontFamily":"Poppins, sans-serif","fontWeight":"600","lineHeight":"1.4em"},"links":{"color":"#7b3b95","visited":"#5a2a6e","hover":"#fe8264"},"code":{"fontSize":"13px","fontFamily":"Fira Code, Monaco, Consolas, monospace","backgroundColor":"#f7f7f9"}}}}};
+
+      var container = document.getElementById('redoc');
+      Redoc.hydrate(__redoc_state, container);
+
+      </script>
+</body>
+
+</html>

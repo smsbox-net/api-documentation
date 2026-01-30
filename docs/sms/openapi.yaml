@@ -1,0 +1,2983 @@
+openapi: 3.1.0
+info:
+  title: SMSBOX - SMS API Documentation
+  version: 1.1.0
+  contact:
+    url: https://www.smsbox.net
+  x-logo:
+    url: ../logo-en.png
+    backgroundColor: '#FFFFFF'
+    altText: SMSBOX logo
+    href: https://www.smsbox.net
+  description: >
+
+    ### Changelog
+
+    | Version | Date |
+    Changes                                                                                               
+    |
+
+    | ------- | -----
+    |-------------------------------------------------------------------------------------------------------|
+
+    | 1.1.0 | 01/15/2026 | 📲 Initial OpenAPI documentation for the SMS API v1.1
+    (migrated from PDF documentation).             |
+servers:
+  - url: https://api.smsbox.pro
+tags:
+  - name: sms-send
+    x-displayName: Send
+    description: >
+      Send SMS messages to one or multiple recipients, or to predefined contact
+      groups.
+
+
+      **Useful tool:** Use our [SMS character
+      counter](https://www.smsbox.net/en/counter-character) to check your
+      message length and the number of SMS required based on encoding (GSM 7-bit
+      or Unicode).
+
+
+      ![SMS Character Counter](../images/sms/character-counter.png)
+
+
+      **Testing:** Use [Sandbox](#tag/sms-sandbox) numbers to test your
+      integration with simulated delivery reports.
+  - name: sms-sandbox
+    x-displayName: Sandbox
+    description: >
+      Use sandbox phone numbers starting with **+999** to test your integration
+      with simulated delivery reports at reduced cost (0.05 credit per SMS).
+
+
+      **Rules:**
+
+      - Destination number must start with ``+999``
+
+      - Total length: 7 to 16 digits (including the "999" prefix)
+
+
+      **Simulated delivery statuses based on prefix:**
+
+
+      | Prefix | Status Flow | Final Status |
+
+      |--------|-------------|--------------|
+
+      | +9990XXXXXX | 9 → 0 | Received |
+
+      | +9991XXXXXX | 9 → 1 | Transmission failure |
+
+      | +9992XXXXXX | 9 → 2 | Rejected |
+
+      | +9993XXXXXX | 9 → 3 | Inactive mobile |
+
+      | +9994XXXXXX | 9 → 4 | Mobile not responding |
+
+      | +9995XXXXXX | 9 → 5 | Reception error |
+
+      | +9996XXXXXX | 9 → 6 | Saturated mobile |
+
+      | +9997XXXXXX | 9 → 7 | Unknown number |
+
+      | +9998XXXXXX | 9 → 8 | Non-routable |
+
+      | +9999XXXXXX | → -3 | Refunded |
+
+
+      Sandbox numbers require [``callback=1``](#operation/sendSms) to receive
+      simulated delivery reports.
+  - name: sms-senders
+    x-displayName: Senders
+    description: >
+      Manage your sender IDs (names displayed to recipients).
+
+
+      Senders must be registered in your account's "Sender Management" section
+      before use.
+  - name: addressbook-groups
+    x-displayName: Groups
+    description: |
+      Manage contact groups for bulk messaging.
+  - name: messages-history
+    x-displayName: History
+    description: |
+      Retrieve your sent message history.
+  - name: messages-scheduled
+    x-displayName: Scheduled
+    description: |
+      Manage scheduled (deferred) messages.
+  - name: sms-webhooks
+    x-displayName: Webhooks
+    description: >
+      **Delivery Reports (Callbacks)**<br><br>
+
+      To receive delivery reports, add the ``callback=1`` parameter to your
+      requests and configure your callback URL in your [Customer
+      Area](https://client.smsbox.net) under **My settings > My preferences >
+      Callback URLs**.<br><br>
+
+      If you are using a firewall, make sure to allow these IPv4 addresses:
+       - 37.59.198.135
+       - 178.33.185.51
+       - 54.36.93.79
+       - 54.36.93.80
+       - 62.4.31.47
+       - 62.4.31.48
+paths:
+  /1.1/api.php:
+    post:
+      operationId: sendSms
+      tags:
+        - sms-send
+      security:
+        - ApiKey: []
+      summary: Send message
+      description: >
+        Send one or multiple SMS messages to one or multiple recipients.
+
+
+        **Character limits:**
+
+        - GSM alphabet: 160 characters per SMS (153 when concatenated)
+
+        - Unicode: 70 characters per SMS (67 when concatenated)
+
+        - Maximum 8 concatenated SMS parts allowed
+
+
+        **Important:** By default, without a specified strategy, your message
+        will be considered commercial and must comply with authorized days/hours
+        and include a valid unsubscribe mention (STOP SMS).
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SendSMS'
+      responses:
+        '200':
+          description: >
+            The API always returns HTTP 200. Check the response body for the
+            actual status.
+
+
+            <div style="background-color: #d4edda; border-left: 4px solid
+            #28a745; padding: 12px; margin: 10px 0;">
+
+            <strong>Success responses:</strong><br>
+
+            • <code>OK</code> - Message accepted<br>
+
+            • <code>OK 123456789012</code> - Message accepted with reference
+            (when <code>id=1</code>)<br>
+
+            • <code>OK 123456789012,123456789013</code> - Multiple parts with
+            references
+
+            </div>
+
+
+            <div style="background-color: #f8d7da; border-left: 4px solid
+            #dc3545; padding: 12px; margin: 10px 0; color: #721c24 !important;">
+
+            <strong>Error responses:</strong><br>
+
+            • <code>ERROR 01</code> - Missing or invalid parameters<br>
+
+            • <code>ERROR 02</code> - Invalid credentials, suspended API key, or
+            IP restriction<br>
+
+            • <code>ERROR 03</code> - Insufficient balance<br>
+
+            • <code>ERROR 04</code> - Invalid destination number<br>
+
+            • <code>ERROR 05</code> - Internal error (can be retried)<br>
+
+            • <code>ERROR</code> - Other errors (blacklist, duplicate,
+            unsupported prefix)
+
+            </div>
+
+
+            ⚠️ ``OK`` status does not mean the message was delivered. Check
+            delivery receipts for final status.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                success:
+                  summary: Success without reference
+                  value: OK
+                successWithId:
+                  summary: Success with reference (id=1)
+                  value: OK 123456789012
+                successMultipleParts:
+                  summary: Success with multiple parts
+                  value: OK 123456789012,123456789013
+                error01:
+                  summary: Missing or invalid parameters
+                  value: ERROR 01
+                error02:
+                  summary: Authentication failed
+                  value: ERROR 02
+                error03:
+                  summary: Insufficient balance
+                  value: ERROR 03
+                error04:
+                  summary: Invalid destination number
+                  value: ERROR 04
+                error05:
+                  summary: Internal error (retryable)
+                  value: ERROR 05
+                error:
+                  summary: Other errors
+                  value: ERROR
+      x-codeSamples:
+        - lang: cURL
+          source: "curl --request POST \\\n\t--url https://api.smsbox.pro/1.1/api.php \\\n\t--header 'Authorization: App <APIKEY>' \\\n\t--header 'Content-Type: application/x-www-form-urlencoded' \\\n\t--data 'dest=33600123456' \\\n\t--data 'msg=Hello, this is a test message.' \\\n\t--data 'mode=Standard' \\\n\t--data 'strategy=4' \\\n\t--data 'id=1'\n"
+        - lang: Python
+          source: |
+            import requests
+
+            url = 'https://api.smsbox.pro/1.1/api.php'
+            headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+            data = {
+                'dest': '33600123456',
+                'msg': 'Hello, this is a test message.',
+                'mode': 'Standard',
+                'strategy': 4,
+                'id': 1
+            }
+
+            response = requests.post(url, headers=headers, data=data)
+
+            print(response.status_code)
+            print(response.text)
+        - lang: JavaScript
+          source: |
+            const url = 'https://api.smsbox.pro/1.1/api.php';
+            const headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            };
+            const data = new URLSearchParams({
+                dest: '33600123456',
+                msg: 'Hello, this is a test message.',
+                mode: 'Standard',
+                strategy: '4',
+                id: '1'
+            });
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: data
+            })
+                .then(response => response.text())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        - lang: PHP
+          source: |
+            <?php
+            // composer require smsbox/php-sdk
+
+            use Smsbox\SmsboxClient;
+            use Smsbox\Messages\SmsMessage;
+            use Smsbox\Options\SMS\SmsOptions;
+            use Smsbox\Enum\SMS\Strategy;
+            use Smsbox\Enum\SMS\Mode;
+
+            $client = new SmsboxClient('YOUR_API_KEY');
+
+            $message = new SmsMessage(
+                ['+33600123456'],
+                'Hello, this is a test message.'
+            );
+
+            $options = (new SmsOptions())
+                ->strategy(Strategy::MARKETING)
+                ->mode(Mode::STANDARD);
+
+            $message->options($options);
+
+            $response = $client->sendSms($message);
+            echo 'Reference: ' . $response['refId'];
+  /1.1/api.php?action=envoigroupe:
+    post:
+      operationId: sendSmsToGroup
+      tags:
+        - sms-send
+      security:
+        - ApiKey: []
+      summary: Send to group
+      description: >
+        Send an SMS message to a predefined group of recipients.
+
+
+        The group must be created beforehand in your account's contact
+        management section.
+
+
+        **Usage:** Add ``action=envoigroupe`` as a query parameter to the
+        endpoint URL.
+
+
+        ```
+
+        POST /1.1/api.php?action=envoigroupe
+
+        ```
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - envoigroupe
+          description: >
+            Action identifier. Must be set to ``envoigroupe`` to send to a
+            group.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SendToGroup'
+      responses:
+        '200':
+          description: >
+            The API always returns HTTP 200. Check the response body for the
+            actual status.
+
+
+            <div style="background-color: #d4edda; border-left: 4px solid
+            #28a745; padding: 12px; margin: 10px 0;">
+
+            <strong>Success responses:</strong><br>
+
+            • <code>OK</code> - Message accepted
+
+            </div>
+
+
+            <div style="background-color: #f8d7da; border-left: 4px solid
+            #dc3545; padding: 12px; margin: 10px 0; color: #721c24 !important;">
+
+            <strong>Error responses:</strong><br>
+
+            See "Send SMS" endpoint for the complete list of error codes.
+
+            </div>
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                success:
+                  summary: Success
+                  value: OK
+                error01:
+                  summary: Missing or invalid parameters
+                  value: ERROR 01
+      x-codeSamples:
+        - lang: cURL
+          source: "curl --request POST \\\n\t--url 'https://api.smsbox.pro/1.1/api.php?action=envoigroupe' \\\n\t--header 'Authorization: App <APIKEY>' \\\n\t--header 'Content-Type: application/x-www-form-urlencoded' \\\n\t--data 'groupe=12345' \\\n\t--data 'msg=Hello group members, this is a test message.' \\\n\t--data 'mode=Standard' \\\n\t--data 'strategy=4'\n"
+        - lang: Python
+          source: |
+            import requests
+
+            url = 'https://api.smsbox.pro/1.1/api.php?action=envoigroupe'
+            headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+            data = {
+                'groupe': 12345,
+                'msg': 'Hello group members, this is a test message.',
+                'mode': 'Standard',
+                'strategy': 4
+            }
+
+            response = requests.post(url, headers=headers, data=data)
+
+            print(response.status_code)
+            print(response.text)
+        - lang: JavaScript
+          source: |
+            const url = 'https://api.smsbox.pro/1.1/api.php?action=envoigroupe';
+            const headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            };
+            const data = new URLSearchParams({
+                groupe: '12345',
+                msg: 'Hello group members, this is a test message.',
+                mode: 'Standard',
+                strategy: '4'
+            });
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: data
+            })
+                .then(response => response.text())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        - lang: PHP
+          source: |
+            <?php
+
+            $url = 'https://api.smsbox.pro/1.1/api.php?action=envoigroupe';
+            $headers = [
+                'Authorization: App <APIKEY>',
+                'Content-Type: application/x-www-form-urlencoded'
+            ];
+
+            $data = [
+                'groupe' => 12345,
+                'msg' => 'Hello group members, this is a test message.',
+                'mode' => 'Standard',
+                'strategy' => 4
+            ];
+
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+
+            echo $response;
+  /1.1/api.php?action=emetteur:
+    get:
+      operationId: getDefaultSender
+      tags:
+        - sms-senders
+      security:
+        - ApiKey: []
+      summary: Get default sender
+      description: >
+        Retrieve your default sender ID.
+
+
+        **Usage:** Add ``action=emetteur`` as a query parameter to the endpoint
+        URL.
+
+
+        ```
+
+        POST /1.1/api.php?action=emetteur
+
+        ```
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - emetteur
+          description: |
+            Action identifier. Must be set to ``emetteur``.
+      responses:
+        '200':
+          description: |
+            Returns the default sender ID configured in your account.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                success:
+                  summary: Default sender
+                  value: MyCompany
+      x-codeSamples:
+        - lang: cURL
+          source: |
+            curl -X POST "https://api.smsbox.pro/1.1/api.php?action=emetteur" \
+              -H "Authorization: App YOUR_API_KEY"
+        - lang: Python
+          source: |
+            import requests
+
+            response = requests.post(
+                "https://api.smsbox.pro/1.1/api.php",
+                params={"action": "emetteur"},
+                headers={"Authorization": "App YOUR_API_KEY"}
+            )
+            print(response.text)
+        - lang: JavaScript
+          source: |
+            const response = await fetch(
+              "https://api.smsbox.pro/1.1/api.php?action=emetteur",
+              {
+                method: "POST",
+                headers: {
+                  Authorization: "App YOUR_API_KEY",
+                },
+              }
+            );
+            console.log(await response.text());
+        - lang: PHP
+          source: >
+            <?php
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL,
+            "https://api.smsbox.pro/1.1/api.php?action=emetteur");
+
+            curl_setopt($ch, CURLOPT_POST, true);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: App
+            YOUR_API_KEY"]);
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+            echo $response;
+  /1.1/api.php?action=emetteur&do=list:
+    get:
+      operationId: listSenders
+      tags:
+        - sms-senders
+      security:
+        - ApiKey: []
+      summary: List senders
+      description: >
+        Retrieve all registered sender IDs.
+
+
+        **Usage:** Add ``action=emetteur&do=list`` as query parameters to the
+        endpoint URL.
+
+
+        ```
+
+        POST /1.1/api.php?action=emetteur&do=list
+
+        ```
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - emetteur
+          description: |
+            Action identifier. Must be set to ``emetteur``.
+        - name: do
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - list
+          description: |
+            Operation type. Must be set to ``list``.
+      responses:
+        '200':
+          description: |
+            Returns a list of registered senders, one per line.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                success:
+                  summary: Sender list
+                  value: |-
+                    MyCompany
+                    MyBrand
+                    Alerts
+      x-codeSamples:
+        - lang: cURL
+          source: >
+            curl -X POST
+            "https://api.smsbox.pro/1.1/api.php?action=emetteur&do=list" \
+              -H "Authorization: App YOUR_API_KEY"
+        - lang: Python
+          source: |
+            import requests
+
+            response = requests.post(
+                "https://api.smsbox.pro/1.1/api.php",
+                params={"action": "emetteur", "do": "list"},
+                headers={"Authorization": "App YOUR_API_KEY"}
+            )
+            print(response.text)
+        - lang: JavaScript
+          source: |
+            const response = await fetch(
+              "https://api.smsbox.pro/1.1/api.php?action=emetteur&do=list",
+              {
+                method: "POST",
+                headers: {
+                  Authorization: "App YOUR_API_KEY",
+                },
+              }
+            );
+            console.log(await response.text());
+        - lang: PHP
+          source: >
+            <?php
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL,
+            "https://api.smsbox.pro/1.1/api.php?action=emetteur&do=list");
+
+            curl_setopt($ch, CURLOPT_POST, true);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: App
+            YOUR_API_KEY"]);
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+            echo $response;
+  /1.1/api.php?action=emetteur&do=set:
+    post:
+      operationId: setDefaultSender
+      tags:
+        - sms-senders
+      security:
+        - ApiKey: []
+      summary: Set default sender
+      description: >
+        Set your default sender ID.
+
+
+        **Usage:** Add ``action=emetteur&do=set`` as query parameters to the
+        endpoint URL.
+
+
+        ```
+
+        POST /1.1/api.php?action=emetteur&do=set
+
+        ```
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - emetteur
+          description: |
+            Action identifier. Must be set to ``emetteur``.
+        - name: do
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - set
+          description: |
+            Operation type. Must be set to ``set``.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SetSender'
+      responses:
+        '200':
+          description: >
+            <div style="background-color: #d4edda; border-left: 4px solid
+            #28a745; padding: 12px; margin: 10px 0;">
+
+            <strong>Success:</strong> Returns the sender value that was set.
+
+            </div>
+
+
+            <div style="background-color: #f8d7da; border-left: 4px solid
+            #dc3545; padding: 12px; margin: 10px 0; color: #721c24 !important;">
+
+            <strong>Error:</strong> Returns <code>ERREUR</code> on failure.
+
+            </div>
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                success:
+                  summary: Success
+                  value: MyCompany
+                error:
+                  summary: Error
+                  value: ERREUR
+      x-codeSamples:
+        - lang: cURL
+          source: >
+            curl -X POST
+            "https://api.smsbox.pro/1.1/api.php?action=emetteur&do=set" \
+              -H "Authorization: App YOUR_API_KEY" \
+              -d "emetteur=MyCompany"
+        - lang: Python
+          source: |
+            import requests
+
+            response = requests.post(
+                "https://api.smsbox.pro/1.1/api.php",
+                params={"action": "emetteur", "do": "set"},
+                headers={"Authorization": "App YOUR_API_KEY"},
+                data={"emetteur": "MyCompany"}
+            )
+            print(response.text)
+        - lang: JavaScript
+          source: |
+            const response = await fetch(
+              "https://api.smsbox.pro/1.1/api.php?action=emetteur&do=set",
+              {
+                method: "POST",
+                headers: {
+                  Authorization: "App YOUR_API_KEY",
+                  "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                  emetteur: "MyCompany",
+                }),
+              }
+            );
+            console.log(await response.text());
+        - lang: PHP
+          source: >
+            <?php
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL,
+            "https://api.smsbox.pro/1.1/api.php?action=emetteur&do=set");
+
+            curl_setopt($ch, CURLOPT_POST, true);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: App
+            YOUR_API_KEY"]);
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+                "emetteur" => "MyCompany"
+            ]));
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+            echo $response;
+  /1.1/api.php?action=groupes:
+    get:
+      operationId: listGroups
+      tags:
+        - addressbook-groups
+      security:
+        - ApiKey: []
+      summary: List groups
+      description: >
+        Retrieve all contact groups.
+
+
+        **Usage:** Add ``action=groupes`` as a query parameter to the endpoint
+        URL.
+
+
+        ```
+
+        POST /1.1/api.php?action=groupes
+
+        ```
+
+
+        Add ``hide_numbers=1`` to get only the contact count instead of phone
+        numbers.
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - groupes
+          description: |
+            Action identifier. Must be set to ``groupes``.
+        - name: hide_numbers
+          in: query
+          required: false
+          schema:
+            type: integer
+            enum:
+              - 0
+              - 1
+          description: |
+            Set to ``1`` to return contact count instead of phone numbers.
+      responses:
+        '200':
+          description: >
+            Returns groups in CSV format: ``ID;name;numbers`` or
+            ``ID;name;count`` (one per line).
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                withNumbers:
+                  summary: With phone numbers
+                  value: |-
+                    1;VIP Clients;33600123456,33600789012
+                    2;Staff;33600111111
+                withCount:
+                  summary: With contact count (hide_numbers=1)
+                  value: |-
+                    1;VIP Clients;2
+                    2;Staff;1
+      x-codeSamples:
+        - lang: cURL
+          source: |
+            curl -X POST "https://api.smsbox.pro/1.1/api.php?action=groupes" \
+              -H "Authorization: App YOUR_API_KEY"
+        - lang: Python
+          source: |
+            import requests
+
+            response = requests.post(
+                "https://api.smsbox.pro/1.1/api.php",
+                params={"action": "groupes"},
+                headers={"Authorization": "App YOUR_API_KEY"}
+            )
+            print(response.text)
+        - lang: JavaScript
+          source: |
+            const response = await fetch(
+              "https://api.smsbox.pro/1.1/api.php?action=groupes",
+              {
+                method: "POST",
+                headers: {
+                  Authorization: "App YOUR_API_KEY",
+                },
+              }
+            );
+            console.log(await response.text());
+        - lang: PHP
+          source: >
+            <?php
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL,
+            "https://api.smsbox.pro/1.1/api.php?action=groupes");
+
+            curl_setopt($ch, CURLOPT_POST, true);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: App
+            YOUR_API_KEY"]);
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+            echo $response;
+  /1.1/api.php?action=groupes&do=add:
+    post:
+      operationId: addGroup
+      tags:
+        - addressbook-groups
+      security:
+        - ApiKey: []
+      summary: Add group
+      description: >
+        Create a new contact group.
+
+
+        **Usage:** Add ``action=groupes&do=add`` as query parameters to the
+        endpoint URL.
+
+
+        ```
+
+        POST /1.1/api.php?action=groupes&do=add
+
+        ```
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - groupes
+          description: |
+            Action identifier. Must be set to ``groupes``.
+        - name: do
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - add
+          description: |
+            Operation type. Must be set to ``add``.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AddGroup'
+      responses:
+        '200':
+          description: >
+            <div style="background-color: #d4edda; border-left: 4px solid
+            #28a745; padding: 12px; margin: 10px 0;">
+
+            <strong>Success:</strong> Returns <code>OK</code>.
+
+            </div>
+
+
+            <div style="background-color: #f8d7da; border-left: 4px solid
+            #dc3545; padding: 12px; margin: 10px 0; color: #721c24 !important;">
+
+            <strong>Error:</strong> Returns <code>ERREUR</code> on failure.
+
+            </div>
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                success:
+                  summary: Success
+                  value: OK
+                error:
+                  summary: Error
+                  value: ERREUR
+      x-codeSamples:
+        - lang: cURL
+          source: >
+            curl -X POST
+            "https://api.smsbox.pro/1.1/api.php?action=groupes&do=add" \
+              -H "Authorization: App YOUR_API_KEY" \
+              -d "nom=VIP%20Clients&num=33600123456,33600789012"
+        - lang: Python
+          source: |
+            import requests
+
+            response = requests.post(
+                "https://api.smsbox.pro/1.1/api.php",
+                params={"action": "groupes", "do": "add"},
+                headers={"Authorization": "App YOUR_API_KEY"},
+                data={"nom": "VIP Clients", "num": "33600123456,33600789012"}
+            )
+            print(response.text)
+        - lang: JavaScript
+          source: |
+            const response = await fetch(
+              "https://api.smsbox.pro/1.1/api.php?action=groupes&do=add",
+              {
+                method: "POST",
+                headers: {
+                  Authorization: "App YOUR_API_KEY",
+                  "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                  nom: "VIP Clients",
+                  num: "33600123456,33600789012",
+                }),
+              }
+            );
+            console.log(await response.text());
+        - lang: PHP
+          source: >
+            <?php
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL,
+            "https://api.smsbox.pro/1.1/api.php?action=groupes&do=add");
+
+            curl_setopt($ch, CURLOPT_POST, true);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: App
+            YOUR_API_KEY"]);
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+                "nom" => "VIP Clients",
+                "num" => "33600123456,33600789012"
+            ]));
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+            echo $response;
+  /1.1/api.php?action=groupes&do=edit:
+    post:
+      operationId: editGroup
+      tags:
+        - addressbook-groups
+      security:
+        - ApiKey: []
+      summary: Edit group
+      description: >
+        Edit an existing contact group.
+
+
+        **Usage:** Add ``action=groupes&do=edit`` as query parameters to the
+        endpoint URL.
+
+
+        ```
+
+        POST /1.1/api.php?action=groupes&do=edit
+
+        ```
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - groupes
+          description: |
+            Action identifier. Must be set to ``groupes``.
+        - name: do
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - edit
+          description: |
+            Operation type. Must be set to ``edit``.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EditGroup'
+      responses:
+        '200':
+          description: >
+            <div style="background-color: #d4edda; border-left: 4px solid
+            #28a745; padding: 12px; margin: 10px 0;">
+
+            <strong>Success:</strong> Returns <code>OK</code>.
+
+            </div>
+
+
+            <div style="background-color: #f8d7da; border-left: 4px solid
+            #dc3545; padding: 12px; margin: 10px 0; color: #721c24 !important;">
+
+            <strong>Error:</strong> Returns <code>ERREUR</code> on failure.
+
+            </div>
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                success:
+                  summary: Success
+                  value: OK
+                error:
+                  summary: Error
+                  value: ERREUR
+      x-codeSamples:
+        - lang: cURL
+          source: >
+            curl -X POST
+            "https://api.smsbox.pro/1.1/api.php?action=groupes&do=edit" \
+              -H "Authorization: App YOUR_API_KEY" \
+              -d "id=123&nom=Premium%20Clients&num=33600123456,33600789012"
+        - lang: Python
+          source: |
+            import requests
+
+            response = requests.post(
+                "https://api.smsbox.pro/1.1/api.php",
+                params={"action": "groupes", "do": "edit"},
+                headers={"Authorization": "App YOUR_API_KEY"},
+                data={"id": 123, "nom": "Premium Clients", "num": "33600123456,33600789012"}
+            )
+            print(response.text)
+        - lang: JavaScript
+          source: |
+            const response = await fetch(
+              "https://api.smsbox.pro/1.1/api.php?action=groupes&do=edit",
+              {
+                method: "POST",
+                headers: {
+                  Authorization: "App YOUR_API_KEY",
+                  "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                  id: "123",
+                  nom: "Premium Clients",
+                  num: "33600123456,33600789012",
+                }),
+              }
+            );
+            console.log(await response.text());
+        - lang: PHP
+          source: >
+            <?php
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL,
+            "https://api.smsbox.pro/1.1/api.php?action=groupes&do=edit");
+
+            curl_setopt($ch, CURLOPT_POST, true);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: App
+            YOUR_API_KEY"]);
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+                "id" => 123,
+                "nom" => "Premium Clients",
+                "num" => "33600123456,33600789012"
+            ]));
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+            echo $response;
+  /1.1/api.php?action=groupes&do=add_numbers:
+    post:
+      operationId: addNumbersToGroup
+      tags:
+        - addressbook-groups
+      security:
+        - ApiKey: []
+      summary: Add numbers to group
+      description: >
+        Add phone numbers to an existing group.
+
+
+        **Usage:** Add ``action=groupes&do=add_numbers`` as query parameters to
+        the endpoint URL.
+
+
+        ```
+
+        POST /1.1/api.php?action=groupes&do=add_numbers
+
+        ```
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - groupes
+          description: |
+            Action identifier. Must be set to ``groupes``.
+        - name: do
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - add_numbers
+          description: |
+            Operation type. Must be set to ``add_numbers``.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AddNumbersToGroup'
+      responses:
+        '200':
+          description: >
+            <div style="background-color: #d4edda; border-left: 4px solid
+            #28a745; padding: 12px; margin: 10px 0;">
+
+            <strong>Success:</strong> Returns <code>OK</code>.
+
+            </div>
+
+
+            <div style="background-color: #f8d7da; border-left: 4px solid
+            #dc3545; padding: 12px; margin: 10px 0; color: #721c24 !important;">
+
+            <strong>Error:</strong> Returns <code>ERREUR</code> on failure.
+
+            </div>
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                success:
+                  summary: Success
+                  value: OK
+                error:
+                  summary: Error
+                  value: ERREUR
+      x-codeSamples:
+        - lang: cURL
+          source: >
+            curl -X POST
+            "https://api.smsbox.pro/1.1/api.php?action=groupes&do=add_numbers" \
+              -H "Authorization: App YOUR_API_KEY" \
+              -d "id=123&num=33600222222,33600333333"
+        - lang: Python
+          source: |
+            import requests
+
+            response = requests.post(
+                "https://api.smsbox.pro/1.1/api.php",
+                params={"action": "groupes", "do": "add_numbers"},
+                headers={"Authorization": "App YOUR_API_KEY"},
+                data={"id": 123, "num": "33600222222,33600333333"}
+            )
+            print(response.text)
+        - lang: JavaScript
+          source: |
+            const response = await fetch(
+              "https://api.smsbox.pro/1.1/api.php?action=groupes&do=add_numbers",
+              {
+                method: "POST",
+                headers: {
+                  Authorization: "App YOUR_API_KEY",
+                  "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                  id: "123",
+                  num: "33600222222,33600333333",
+                }),
+              }
+            );
+            console.log(await response.text());
+        - lang: PHP
+          source: >
+            <?php
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL,
+            "https://api.smsbox.pro/1.1/api.php?action=groupes&do=add_numbers");
+
+            curl_setopt($ch, CURLOPT_POST, true);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: App
+            YOUR_API_KEY"]);
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+                "id" => 123,
+                "num" => "33600222222,33600333333"
+            ]));
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+            echo $response;
+  /1.1/api.php?action=groupes&do=del:
+    post:
+      operationId: deleteGroup
+      tags:
+        - addressbook-groups
+      security:
+        - ApiKey: []
+      summary: Delete group
+      description: >
+        Delete a contact group.
+
+
+        **Usage:** Add ``action=groupes&do=del`` as query parameters to the
+        endpoint URL.
+
+
+        ```
+
+        POST /1.1/api.php?action=groupes&do=del
+
+        ```
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - groupes
+          description: |
+            Action identifier. Must be set to ``groupes``.
+        - name: do
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - del
+          description: |
+            Operation type. Must be set to ``del``.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DeleteGroup'
+      responses:
+        '200':
+          description: >
+            <div style="background-color: #d4edda; border-left: 4px solid
+            #28a745; padding: 12px; margin: 10px 0;">
+
+            <strong>Success:</strong> Returns <code>OK</code>.
+
+            </div>
+
+
+            <div style="background-color: #f8d7da; border-left: 4px solid
+            #dc3545; padding: 12px; margin: 10px 0; color: #721c24 !important;">
+
+            <strong>Error:</strong> Returns <code>ERREUR</code> on failure.
+
+            </div>
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                success:
+                  summary: Success
+                  value: OK
+                error:
+                  summary: Error
+                  value: ERREUR
+      x-codeSamples:
+        - lang: cURL
+          source: >
+            curl -X POST
+            "https://api.smsbox.pro/1.1/api.php?action=groupes&do=del" \
+              -H "Authorization: App YOUR_API_KEY" \
+              -d "id=123"
+        - lang: Python
+          source: |
+            import requests
+
+            response = requests.post(
+                "https://api.smsbox.pro/1.1/api.php",
+                params={"action": "groupes", "do": "del"},
+                headers={"Authorization": "App YOUR_API_KEY"},
+                data={"id": 123}
+            )
+            print(response.text)
+        - lang: JavaScript
+          source: |
+            const response = await fetch(
+              "https://api.smsbox.pro/1.1/api.php?action=groupes&do=del",
+              {
+                method: "POST",
+                headers: {
+                  Authorization: "App YOUR_API_KEY",
+                  "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                  id: "123",
+                }),
+              }
+            );
+            console.log(await response.text());
+        - lang: PHP
+          source: >
+            <?php
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL,
+            "https://api.smsbox.pro/1.1/api.php?action=groupes&do=del");
+
+            curl_setopt($ch, CURLOPT_POST, true);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: App
+            YOUR_API_KEY"]);
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+                "id" => 123
+            ]));
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+            echo $response;
+  /1.1/api.php?action=historique&do=count:
+    get:
+      operationId: getHistoryCount
+      tags:
+        - messages-history
+      security:
+        - ApiKey: []
+      summary: Get history count
+      description: >
+        Get the total number of records in your message history.
+
+
+        **Usage:** Add ``action=historique`` as a query parameter to the
+        endpoint URL.
+
+
+        ```
+
+        POST /1.1/api.php?action=historique
+
+        ```
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - historique
+          description: |
+            Action identifier. Must be set to ``historique``.
+      responses:
+        '200':
+          description: |
+            Returns the total number of history records.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                success:
+                  summary: History count
+                  value: HISTORIQUE 123
+      x-codeSamples:
+        - lang: cURL
+          source: >
+            curl -X POST "https://api.smsbox.pro/1.1/api.php?action=historique"
+            \
+              -H "Authorization: App YOUR_API_KEY"
+        - lang: Python
+          source: |
+            import requests
+
+            response = requests.post(
+                "https://api.smsbox.pro/1.1/api.php",
+                params={"action": "historique"},
+                headers={"Authorization": "App YOUR_API_KEY"}
+            )
+            print(response.text)
+        - lang: JavaScript
+          source: |
+            const response = await fetch(
+              "https://api.smsbox.pro/1.1/api.php?action=historique",
+              {
+                method: "POST",
+                headers: {
+                  Authorization: "App YOUR_API_KEY",
+                },
+              }
+            );
+            console.log(await response.text());
+        - lang: PHP
+          source: >
+            <?php
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL,
+            "https://api.smsbox.pro/1.1/api.php?action=historique");
+
+            curl_setopt($ch, CURLOPT_POST, true);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: App
+            YOUR_API_KEY"]);
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+            echo $response;
+  /1.1/api.php?action=historique&do=list:
+    post:
+      operationId: listHistory
+      tags:
+        - messages-history
+      security:
+        - ApiKey: []
+      summary: List history
+      description: >
+        Retrieve sent message history.
+
+
+        **Usage:** Add ``action=historique`` as a query parameter to the
+        endpoint URL.
+
+
+        ```
+
+        POST /1.1/api.php?action=historique
+
+        ```
+
+
+        **Response format (CSV):**
+
+        - Date and time (Paris timezone, format: dd/MM/yyyy HH:mm:ss)
+
+        - Reference (only if ``showref=1``)
+
+        - Recipient number (international format)
+
+        - Sender
+
+        - Send type (0=Classic, 1=Flash, 2=Other)
+
+        - Always "1"
+
+        - Delivery status code
+
+
+        **Maximum records:** 5000 per request (50000 with date filters).
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - historique
+          description: |
+            Action identifier. Must be set to ``historique``.
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListHistory'
+      responses:
+        '200':
+          description: |
+            Returns history records in CSV format (semicolon-separated).
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                success:
+                  summary: History records
+                  value: 20/10/2024 18:15:00;33600123456;MyCompany;0;1;0
+                withRef:
+                  summary: With reference (showref=1)
+                  value: 20/10/2024 18:15:00;123456789012;33600123456;MyCompany;0;1;0
+      x-codeSamples:
+        - lang: cURL
+          source: >
+            curl -X POST "https://api.smsbox.pro/1.1/api.php?action=historique"
+            \
+              -H "Authorization: App YOUR_API_KEY" \
+              -d "from=0&nb=20&showref=1"
+        - lang: Python
+          source: |
+            import requests
+
+            response = requests.post(
+                "https://api.smsbox.pro/1.1/api.php",
+                params={"action": "historique"},
+                headers={"Authorization": "App YOUR_API_KEY"},
+                data={"from": 0, "nb": 20, "showref": 1}
+            )
+            print(response.text)
+        - lang: JavaScript
+          source: |
+            const response = await fetch(
+              "https://api.smsbox.pro/1.1/api.php?action=historique",
+              {
+                method: "POST",
+                headers: {
+                  Authorization: "App YOUR_API_KEY",
+                  "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                  from: "0",
+                  nb: "20",
+                  showref: "1",
+                }),
+              }
+            );
+            console.log(await response.text());
+        - lang: PHP
+          source: >
+            <?php
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL,
+            "https://api.smsbox.pro/1.1/api.php?action=historique");
+
+            curl_setopt($ch, CURLOPT_POST, true);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: App
+            YOUR_API_KEY"]);
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+                "from" => 0,
+                "nb" => 20,
+                "showref" => 1
+            ]));
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+            echo $response;
+  /1.1/api.php?action=differes&do=count:
+    get:
+      operationId: getScheduledCount
+      tags:
+        - messages-scheduled
+      security:
+        - ApiKey: []
+      summary: Get scheduled count
+      description: >
+        Get the total number of scheduled (deferred) messages.
+
+
+        **Usage:** Add ``action=differes`` as a query parameter to the endpoint
+        URL.
+
+
+        ```
+
+        GET /1.1/api.php?action=differes
+
+        ```
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - differes
+          description: |
+            Action identifier. Must be set to ``differes``.
+      responses:
+        '200':
+          description: |
+            Returns the total number of scheduled messages.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                success:
+                  summary: Scheduled count
+                  value: DIFFERES 50
+      x-codeSamples:
+        - lang: cURL
+          source: |
+            curl -X POST "https://api.smsbox.pro/1.1/api.php?action=differes" \
+              -H "Authorization: App YOUR_API_KEY"
+        - lang: Python
+          source: |
+            import requests
+
+            response = requests.post(
+                "https://api.smsbox.pro/1.1/api.php",
+                params={"action": "differes"},
+                headers={"Authorization": "App YOUR_API_KEY"}
+            )
+            print(response.text)
+        - lang: JavaScript
+          source: |
+            const response = await fetch(
+              "https://api.smsbox.pro/1.1/api.php?action=differes",
+              {
+                method: "POST",
+                headers: {
+                  Authorization: "App YOUR_API_KEY",
+                },
+              }
+            );
+            console.log(await response.text());
+        - lang: PHP
+          source: >
+            <?php
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL,
+            "https://api.smsbox.pro/1.1/api.php?action=differes");
+
+            curl_setopt($ch, CURLOPT_POST, true);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: App
+            YOUR_API_KEY"]);
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+            echo $response;
+  /1.1/api.php?action=differes&do=list:
+    post:
+      operationId: listScheduled
+      tags:
+        - messages-scheduled
+      security:
+        - ApiKey: []
+      summary: List scheduled
+      description: >
+        Retrieve scheduled (deferred) messages.
+
+
+        **Usage:** Add ``action=differes`` as a query parameter to the endpoint
+        URL.
+
+
+        ```
+
+        POST /1.1/api.php?action=differes
+
+        ```
+
+
+        **Response format (CSV):**
+
+        - Record ID
+
+        - Reference (only if ``showref=1``)
+
+        - Recipient number (international format)
+
+        - Empty value
+
+        - Always "0"
+
+        - Scheduled date and time (Paris timezone, format: dd/MM/yyyy HH:mm:ss)
+
+        - Message content
+
+
+        **Maximum records:** 5000 per request.
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - differes
+          description: |
+            Action identifier. Must be set to ``differes``.
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListScheduled'
+      responses:
+        '200':
+          description: |
+            Returns scheduled messages in CSV format (semicolon-separated).
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                success:
+                  summary: Scheduled messages
+                  value: >-
+                    6408047;123456789012;33612345678;;0;12/11/2024 16:30:00;Your
+                    appointment is confirmed...
+      x-codeSamples:
+        - lang: cURL
+          source: |
+            curl -X POST "https://api.smsbox.pro/1.1/api.php?action=differes" \
+              -H "Authorization: App YOUR_API_KEY" \
+              -d "from=0&nb=20&showref=1"
+        - lang: Python
+          source: |
+            import requests
+
+            response = requests.post(
+                "https://api.smsbox.pro/1.1/api.php",
+                params={"action": "differes"},
+                headers={"Authorization": "App YOUR_API_KEY"},
+                data={"from": 0, "nb": 20, "showref": 1}
+            )
+            print(response.text)
+        - lang: JavaScript
+          source: |
+            const response = await fetch(
+              "https://api.smsbox.pro/1.1/api.php?action=differes",
+              {
+                method: "POST",
+                headers: {
+                  Authorization: "App YOUR_API_KEY",
+                  "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                  from: "0",
+                  nb: "20",
+                  showref: "1",
+                }),
+              }
+            );
+            console.log(await response.text());
+        - lang: PHP
+          source: >
+            <?php
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL,
+            "https://api.smsbox.pro/1.1/api.php?action=differes");
+
+            curl_setopt($ch, CURLOPT_POST, true);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: App
+            YOUR_API_KEY"]);
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+                "from" => 0,
+                "nb" => 20,
+                "showref" => 1
+            ]));
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+            echo $response;
+  /1.1/api.php?action=differes&do=del:
+    post:
+      operationId: deleteScheduled
+      tags:
+        - messages-scheduled
+      security:
+        - ApiKey: []
+      summary: Delete scheduled
+      description: >
+        Delete a scheduled (deferred) message.
+
+
+        **Usage:** Add ``action=differes&do=del`` as query parameters to the
+        endpoint URL.
+
+
+        ```
+
+        POST /1.1/api.php?action=differes&do=del
+
+        ```
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - differes
+          description: |
+            Action identifier. Must be set to ``differes``.
+        - name: do
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - del
+          description: |
+            Operation type. Must be set to ``del``.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DeleteScheduled'
+      responses:
+        '200':
+          description: >
+            <div style="background-color: #d4edda; border-left: 4px solid
+            #28a745; padding: 12px; margin: 10px 0;">
+
+            <strong>Success:</strong> Returns <code>OK</code>.
+
+            </div>
+
+
+            <div style="background-color: #f8d7da; border-left: 4px solid
+            #dc3545; padding: 12px; margin: 10px 0; color: #721c24 !important;">
+
+            <strong>Error:</strong> Returns <code>ERREUR</code> on failure.
+
+            </div>
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                success:
+                  summary: Success
+                  value: OK
+                error:
+                  summary: Error
+                  value: ERREUR
+      x-codeSamples:
+        - lang: cURL
+          source: >
+            curl -X POST
+            "https://api.smsbox.pro/1.1/api.php?action=differes&do=del" \
+              -H "Authorization: App YOUR_API_KEY" \
+              -d "ref=123456789012"
+        - lang: Python
+          source: |
+            import requests
+
+            response = requests.post(
+                "https://api.smsbox.pro/1.1/api.php",
+                params={"action": "differes", "do": "del"},
+                headers={"Authorization": "App YOUR_API_KEY"},
+                data={"ref": "123456789012"}
+            )
+            print(response.text)
+        - lang: JavaScript
+          source: |
+            const response = await fetch(
+              "https://api.smsbox.pro/1.1/api.php?action=differes&do=del",
+              {
+                method: "POST",
+                headers: {
+                  Authorization: "App YOUR_API_KEY",
+                  "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                  ref: "123456789012",
+                }),
+              }
+            );
+            console.log(await response.text());
+        - lang: PHP
+          source: >
+            <?php
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL,
+            "https://api.smsbox.pro/1.1/api.php?action=differes&do=del");
+
+            curl_setopt($ch, CURLOPT_POST, true);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: App
+            YOUR_API_KEY"]);
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+                "ref" => "123456789012"
+            ]));
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+            echo $response;
+webhooks:
+  DeliveryReport:
+    post:
+      operationId: webhookDeliveryReport
+      summary: Delivery Report
+      tags:
+        - sms-webhooks
+      security: []
+      description: >
+        Delivery reports are sent to your callback URL when using ``callback=1``
+        in your send request.
+
+
+        **Prerequisites:** Configure your callback URL in your [Customer
+        Area](https://client.smsbox.net) under **My settings > My preferences >
+        Callback URLs** (field "Delivery reports (API)").
+
+
+        **Method:** ``GET``
+
+
+        Example request to your server:
+
+        ```
+
+        GET
+        https://your-server.com/callback?numero=33600123456&reference=123456789&accuse=0&ts=1705326600
+
+        ```
+
+
+        **How to respond:**
+
+        Return HTTP ``200`` with body ``OK`` to confirm successful processing.
+        If processing fails, return ``ERROR`` with any non-200 status code.
+
+
+        **Automatic retries:**
+
+        Failed callbacks are retried every 15 minutes for up to 12 hours.
+
+
+        ⚠️ **Warning:** HTTP codes ``401``, ``403``, and ``404`` are considered
+        permanent failures and are not retried.
+
+
+        **Performance requirement:**
+
+        Respond within 3 seconds. We recommend storing the data immediately and
+        processing it asynchronously. If your script is slow, our system waits
+        before sending the next callback.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DeliveryReport'
+      responses:
+        '200':
+          description: Return HTTP ``200`` with body ``OK``.
+  IncomingMessage:
+    post:
+      operationId: webhookIncomingMessage
+      summary: Incoming Message (Reply)
+      tags:
+        - sms-webhooks
+      security: []
+      description: >
+        Incoming SMS received on your keyword (shared number), dedicated number,
+        or in response to messages sent via Response mode.
+
+
+        **Prerequisites:** Configure your callback URL in your [Customer
+        Area](https://client.smsbox.net) under **My settings > My preferences >
+        Callback URLs** (field "SMS-MO / STOP").
+
+
+        **Method:** ``GET``
+
+
+        Example request to your server:
+
+        ```
+
+        GET
+        https://your-server.com/callback?modem=33XXXXXXXXX&numero=33600123456&reference=12345678&ts=1705326600&charset=ISO-8859-1&message=Hello+world
+
+        ```
+
+
+        **How to respond:**
+
+        Return HTTP ``200`` with body ``OK`` to confirm successful processing.
+        If processing fails, return ``ERROR`` with any non-200 status code.
+
+
+        **Automatic retries:**
+
+        Failed callbacks are retried every 15 minutes for up to 12 hours.
+
+
+        ⚠️ **Warning:** HTTP codes ``401``, ``403``, and ``404`` are considered
+        permanent failures and are not retried.
+
+
+        **Performance requirement:**
+
+        Respond within 3 seconds. We recommend storing the data immediately and
+        processing it asynchronously. If your script is slow, our system waits
+        before sending the next callback.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/IncomingMessage'
+      responses:
+        '200':
+          description: Return HTTP ``200`` with body ``OK``.
+components:
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: |
+        Example: `Authorization: App YOUR_API_KEY`
+  schemas:
+    SmsBaseOptions:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: >
+            The message content to send.
+
+
+            - Encoding must match the ``charset`` parameter
+
+            - Character limits depend on ``coding`` parameter
+
+            - Messages exceeding limits will be split into multiple SMS (up to 8
+            parts)
+
+
+            **Important:** Commercial messages must include a valid unsubscribe
+            mention (STOP SMS).
+          example: Hello, this is a test message.
+        mode:
+          type: string
+          enum:
+            - Standard
+            - Expert
+            - Reponse
+          description: >
+            Sending mode:
+
+
+            | Value | Description |
+
+            |-------|-------------|
+
+            | **Standard** | Displays a numeric shortcode (3-5 digits) as sender
+            |
+
+            | **Expert** | Allows custom sender name, e.g. a brand name
+            (requires ``origine`` parameter) |
+
+            | **Reponse** | Enables recipient replies (valid for 48h, charged to
+            recipient). Replies are routed to the inbox available in the
+            customer portal, or can be redirected to a callback URL. |
+          example: Standard
+        strategy:
+          type: integer
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+          description: >
+            Message type indicator for proper routing:
+
+
+            | Value | Type | Description |
+
+            |-------|------|-------------|
+
+            | **1** | Private | Person-to-person communication. No commercial or
+            automated messages. Max 50 recipients. Blacklist not checked. |
+
+            | **2** | Alert/Notification | Alerts, proactive notifications,
+            service/content delivery. No commercial messages. Max 50 recipients.
+            Blacklist not checked. |
+
+            | **3** | Group (non-commercial) | Non-commercial group
+            communications. Global blacklist not checked, but private blacklist
+            is checked. |
+
+            | **4** | Commercial | Marketing/promotional messages. Blacklist
+            checked. Must include unsubscribe option. Restricted hours (8h-20h,
+            no Sundays/holidays). |
+          example: 4
+        origine:
+          type: string
+          maxLength: 11
+          description: >
+            Custom sender name or number (Expert mode only).
+
+
+            - Maximum 15 digits or 11 alphanumeric characters
+
+            - Must be pre-registered in your account's "Sender Management"
+            section
+
+            - If empty, uses your account's default sender
+          example: MyCompany
+        coding:
+          type: string
+          enum:
+            - default
+            - unicode
+            - auto
+          default: default
+          description: >
+            Character encoding:
+
+
+            | Value | Description | Characters per SMS | Concatenated |
+
+            |-------|-------------|-------------------|--------------|
+
+            | **default** | GSM 7-bit alphabet | 160 | 153 (UDH 6) or 152 (UDH
+            7) |
+
+            | **unicode** | Unicode 16-bit | 70 | 67 (UDH 6) or 66 (UDH 7) |
+
+            | **auto** | Automatic detection | Depends on content | - |
+
+
+            ℹ️ Some GSM characters count as double: ``[ \ ] ^ { | } ~ €``
+          example: default
+        charset:
+          type: string
+          enum:
+            - iso-8859-1
+            - iso-8859-15
+            - utf-8
+          default: iso-8859-1
+          description: |
+            Input encoding of your request parameters.
+
+            Required if your data is not encoded in ISO-8859-1 (Latin1).
+          example: utf-8
+        max_parts:
+          type: integer
+          minimum: 1
+          maximum: 8
+          default: 8
+          description: |
+            Maximum SMS parts for long messages.
+
+            If the message requires more parts, it will be truncated.
+
+            **Recommended:** Maximum 3 parts for best delivery rates.
+          example: 3
+        date:
+          type: string
+          pattern: ^\d{2}/\d{2}/\d{4}$
+          description: |
+            Scheduled send date in DD/MM/YYYY format.
+
+            - Uses Paris timezone (Europe/Paris)
+            - Must be used with ``heure`` parameter
+            - Maximum 2 years in advance
+            - Past dates result in immediate send
+          example: 25/12/2024
+        heure:
+          type: string
+          pattern: ^\d{2}:\d{2}$
+          description: |
+            Scheduled send time in HH:MM format (24h).
+
+            - Uses Paris timezone (Europe/Paris)
+            - If ``date`` is empty, uses current date
+            - Past times result in immediate send
+          example: '14:30'
+        id:
+          type: integer
+          enum:
+            - 0
+            - 1
+          default: 0
+          description: >
+            Request message reference in response.
+
+
+            When set to ``1``, the API returns "OK" followed by the numeric
+            reference(s).
+
+
+            Example response: ``OK 123456789012``
+          example: 1
+        callback:
+          type: integer
+          enum:
+            - 0
+            - 1
+          default: 0
+          description: >
+            Enable delivery report callbacks.
+
+
+            When set to ``1``, delivery receipts are sent to your configured
+            callback URL.
+          example: 1
+        cvar:
+          type: string
+          description: >
+            Custom variables to include in delivery report callbacks.
+
+
+            Used in conjunction with ``callback=1``. These custom parameters are
+            appended to your callback URL as GET parameters when delivery
+            receipts are sent.
+
+
+            **Example value (before encoding):**
+            ``mon_client=1+2=3&ma_campagne=456``
+
+
+            ℹ️ The value ``1+2=3`` must be URL-encoded to ``1%2B2%3D3``.
+
+
+            **Important:** URL-encode the entire cvar value before sending to
+            the API.
+
+
+            Final encoded parameter:
+            ``cvar=mon_client%3D1%252B2%253D3%26ma_campagne%3D456``
+          example: mon_client%3D1%252B2%253D3%26ma_campagne%3D456
+        udh:
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+          default: 1
+          description: |
+            User Data Header for message concatenation:
+
+            | Value | Description |
+            |-------|-------------|
+            | **0** | Disabled. Each part received separately. |
+            | **1** | 6-byte UDH (255 references). Default. |
+            | **2** | 7-byte UDH (255² references). |
+
+            ℹ️ Concatenation reduces available characters per SMS.
+          example: 1
+        allow_vocal:
+          type: integer
+          enum:
+            - 0
+            - 1
+          default: 0
+          description: |
+            Enable voice synthesis for landline numbers.
+
+            When set to ``1``, messages to French landlines (+33) are vocalized.
+
+            ℹ️ Only available in Standard and Expert modes.
+          example: 0
+        validity:
+          type: integer
+          minimum: 5
+          maximum: 1440
+          description: >
+            Message validity period in minutes.
+
+
+            After this period, if the message hasn't been delivered, the
+            operator stops trying.
+
+
+            Default varies by operator (48-72 hours).
+
+
+            ⚠️ Some operators may ignore this value.
+          example: 720
+        uniq_period:
+          type: integer
+          minimum: 1
+          maximum: 24
+          description: >
+            Duplicate prevention period in hours.
+
+
+            Prevents sending identical messages (same content + recipient)
+            within the specified period.
+
+
+            ⚠️ API returns "ERROR" for duplicate content.
+          example: 24
+        day_min:
+          type: integer
+          minimum: 1
+          maximum: 7
+          description: |
+            First allowed day of week for sending (1=Monday to 7=Sunday).
+
+            Must be used with ``day_max``.
+
+            ℹ️ Ignored for scheduled sends.
+          example: 1
+        day_max:
+          type: integer
+          minimum: 1
+          maximum: 7
+          description: |
+            Last allowed day of week for sending (1=Monday to 7=Sunday).
+
+            Must be used with ``day_min``.
+          example: 5
+        hour_min:
+          type: integer
+          minimum: 0
+          maximum: 23
+          description: |
+            First allowed hour for sending (0-23, Paris timezone).
+
+            Must be used with ``hour_max``.
+
+            ℹ️ Ignored for scheduled sends.
+          example: 8
+        hour_max:
+          type: integer
+          minimum: 0
+          maximum: 23
+          description: |
+            Last allowed hour for sending (0-23, Paris timezone).
+
+            Must be used with ``hour_min``.
+          example: 20
+      required:
+        - msg
+        - mode
+    SendSMS:
+      allOf:
+        - type: object
+          properties:
+            dest:
+              type: string
+              description: >
+                Recipient phone number(s) in international format.
+
+
+                - No need to prefix with "+" or "00"
+
+                - National format (starting with "0") will use your account's
+                default country prefix
+
+                - For bulk sends, separate numbers with commas (max 5000
+                recommended)
+
+                - For personalized sends, use format:
+                ``number;var1;var2,number;var1;var2``
+
+
+                ℹ️ Immediate sends with more than 500 grouped recipients or 100
+                personalized recipients will be processed asynchronously.
+              example: '33600123456'
+            personnalise:
+              type: integer
+              enum:
+                - 0
+                - 1
+              default: 0
+              description: >
+                Enable personalized messages per recipient.
+
+
+                When set to ``1``, use variables in your message (``msg``
+                parameter) that will be replaced for each recipient.
+
+
+                **Variable substitution:**
+
+                - ``%0%`` = recipient number (international format, e.g.
+                33600123456)
+
+                - ``%1%`` to ``%9%`` = custom variables (up to 10 variables
+                total)
+
+
+                **Format for ``dest`` parameter:**
+
+                ```
+
+                number;var1;var2,number;var1;var2
+
+                ```
+
+
+                **Example request:**
+
+                ```
+
+                dest=33600000000;Jean;vehicule,33600123456;Paul;scooter
+
+                msg=Bonjour %1%, votre %2% est pret.
+
+                personnalise=1
+
+                ```
+
+
+                **Result:**
+
+                - To +33600000000: "Bonjour Jean, votre vehicule est pret."
+
+                - To +33600123456: "Bonjour Paul, votre scooter est pret."
+
+
+                **Special characters in variables:**
+
+                - ``,`` (comma) → ``%d44%``
+
+                - ``;`` (semicolon) → ``%d59%``
+
+
+                ℹ️ Maximum 500 recipients per request recommended.
+              example: 1
+          required:
+            - dest
+        - $ref: '#/components/schemas/SmsBaseOptions'
+    SendToGroup:
+      allOf:
+        - type: object
+          properties:
+            groupe:
+              type: integer
+              description: |
+                Group ID to send the message to.
+
+                Find the group ID in your account's contact group list.
+              example: 12345
+          required:
+            - groupe
+        - $ref: '#/components/schemas/SmsBaseOptions'
+    SetSender:
+      type: object
+      properties:
+        emetteur:
+          type: string
+          maxLength: 11
+          description: >
+            Sender ID to set as default.
+
+
+            Must be pre-registered in your account's "Sender Management"
+            section.
+
+
+            Maximum 15 digits or 11 alphanumeric characters.
+          example: MyCompany
+      required:
+        - emetteur
+    AddGroup:
+      type: object
+      properties:
+        nom:
+          type: string
+          description: |
+            Group name.
+          example: VIP Clients
+        num:
+          type: string
+          description: |
+            Phone numbers to add to the group, separated by commas.
+
+            Numbers must be in international format (without + or 00 prefix).
+          example: 33600123456,33600789012,33600111111
+      required:
+        - nom
+        - num
+    EditGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: |
+            Group ID to edit.
+          example: 123
+        nom:
+          type: string
+          description: |
+            New group name.
+          example: Premium Clients
+        num:
+          type: string
+          description: |
+            New phone numbers for the group (replaces existing numbers).
+
+            Numbers separated by commas in international format.
+          example: 33600123456,33600789012
+      required:
+        - id
+        - nom
+        - num
+    AddNumbersToGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: |
+            Group ID to add numbers to.
+          example: 123
+        num:
+          type: string
+          description: |
+            Phone numbers to add to the group, separated by commas.
+
+            Numbers must be in international format (without + or 00 prefix).
+          example: 33600222222,33600333333
+      required:
+        - id
+        - num
+    DeleteGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: |
+            Group ID to delete.
+          example: 123
+      required:
+        - id
+    ListHistory:
+      type: object
+      properties:
+        from:
+          type: integer
+          minimum: 0
+          description: |
+            Starting record index for extraction.
+
+            Default: 0 (most recent record).
+          example: 0
+        nb:
+          type: integer
+          minimum: 1
+          maximum: 5000
+          description: |
+            Number of records to retrieve.
+
+            Default: 10, Maximum: 5000.
+          example: 20
+        date_from:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}$
+          description: |
+            Start date for extraction (inclusive).
+
+            Format: YYYY-MM-DD.
+
+            Maximum 50000 records will be returned when using date filters.
+          example: '2024-01-01'
+        date_to:
+          type: string
+          pattern: ^\d{4}-\d{2}-\d{2}$
+          description: |
+            End date for extraction (inclusive).
+
+            Format: YYYY-MM-DD.
+
+            Defaults to current date if ``date_from`` is specified.
+          example: '2024-12-31'
+        id:
+          type: string
+          description: |
+            Message reference to retrieve.
+
+            Use this to get history for a specific message.
+          example: '123456789012'
+        msisdn:
+          type: string
+          description: |
+            Recipient phone number to filter by.
+
+            International format (without + or 00 prefix).
+          example: '33612345678'
+        showref:
+          type: integer
+          enum:
+            - 0
+            - 1
+          description: |
+            Include message reference in response.
+
+            Set to ``1`` to add the reference column to the output.
+          example: 1
+    ListScheduled:
+      type: object
+      properties:
+        from:
+          type: integer
+          minimum: 0
+          description: |
+            Starting record index for extraction.
+
+            Default: 0 (most recent record).
+          example: 0
+        nb:
+          type: integer
+          minimum: 1
+          maximum: 5000
+          description: |
+            Number of records to retrieve.
+
+            Default: 10, Maximum: 5000.
+          example: 20
+        showref:
+          type: integer
+          enum:
+            - 0
+            - 1
+          description: |
+            Include message reference in response.
+
+            Set to ``1`` to add the reference column to the output.
+          example: 1
+    DeleteScheduled:
+      type: object
+      properties:
+        ref:
+          type: string
+          description: >
+            Message reference of the scheduled message to delete.
+
+
+            You can retrieve this reference by adding ``id=1`` parameter when
+            sending the original SMS.
+          example: '123456789012'
+      required:
+        - ref
+    DeliveryReport:
+      type: object
+      description: >
+        Delivery report sent to your callback URL when using ``callback=1`` in
+        your send request.
+
+
+        Parameters are sent as **HTTP GET** query parameters to your configured
+        URL.
+
+
+        Example callback URL:
+
+        ```
+
+        https://your-callback-url.ext/your-script.php?numero=33600123456&reference=123456789&accuse=0&ts=1705326600
+
+        ```
+
+
+        Your script must return HTTP 200 with body ``OK``. If your system cannot
+        handle the request, return ``ERROR`` with a non-200 status code.
+        Callbacks are retried every 15 minutes for up to 12 hours.
+
+
+        ⚠️ HTTP codes 401, 403, and 404 are considered definitive and are not
+        retried.
+      properties:
+        numero:
+          type: string
+          description: |
+            Recipient's phone number in international format.
+          example: '33600123456'
+        reference:
+          type: string
+          description: |
+            Internal reference of the sent message.
+          example: '123456789'
+        accuse:
+          type: integer
+          description: >
+            Delivery receipt status code.
+
+
+            **SMS status codes:**
+
+
+            | Code | Status | Description |
+
+            |------|--------|-------------|
+
+            | -3 | Reimbursed | Delivery failed, credit refunded |
+
+            | -1 | Unknown | Unable to determine delivery status |
+
+            | 0 | Received | Message delivered to recipient |
+
+            | 1 | Failure | Delivery failed, reason unknown |
+
+            | 2 | Rejected | Content blocked, spam filtered, or parental lock |
+
+            | 3 | Inactive | Recipient phone is off or has no signal |
+
+            | 4 | Not responding | Operator network issues |
+
+            | 5 | Reception error | Recipient could not receive the message |
+
+            | 6 | Saturated | Recipient phone memory full |
+
+            | 7 | Unknown number | Invalid or blocked phone number |
+
+            | 8 | Non-routable | Unknown prefix or routing error |
+
+            | 9 | Transmitted | Accepted by operator, delivery in progress |
+
+            | 10 | Sent | Delivery status not available for this mode |
+
+
+            **Vocalized SMS status codes:**
+
+
+            | Code | Status | Description |
+
+            |------|--------|-------------|
+
+            | 30 | Call in progress | Calling recipient |
+
+            | 31 | Picked up | Line has been picked up and then hung up |
+
+            | 32 | Listening accepted | Message listening has been accepted by
+            pressing a key |
+
+            | 33 | Message listened | The message has been entirely listened |
+
+            | 34 | Listening confirmed | Message listening has been confirmed by
+            pressing a key |
+
+            | 35 | Listening refused | Message listening has been refused by
+            pressing a key |
+
+            | 36 | Not picked up | Line has not been picked up |
+
+            | 37 | No response | Maximum call time to press a key after picking
+            up has been reached |
+
+            | 38 | No dialling tone | Call failed |
+
+            | 39 | Waiting for retry | A new call will be made |
+          example: 0
+        ts:
+          type: integer
+          description: |
+            Unix (POSIX) timestamp of the status update (Paris time).
+          example: 1705326600
+      example:
+        numero: '33600123456'
+        reference: '123456789'
+        accuse: 0
+        ts: 1705326600
+    IncomingMessage:
+      type: object
+      description: >
+        Incoming SMS received on your keyword (shared number), dedicated number,
+        or in response to messages sent via Response mode.
+
+
+        Parameters are sent as **HTTP GET** query parameters to your configured
+        URL.
+
+
+        Example callback URL:
+
+        ```
+
+        https://your-callback-url.ext/your-script.php?modem=33XXXXXXXXX&numero=33600123456&reference=12345678&ts=1705326600&charset=ISO-8859-1&message=Hello+world
+
+        ```
+
+
+        Your script must return HTTP 200 with body ``OK``. If your system cannot
+        handle the request, return ``ERROR`` with a non-200 status code.
+        Callbacks are retried every 15 minutes for up to 12 hours.
+
+
+        ⚠️ HTTP codes 401, 403, and 404 are considered definitive and are not
+        retried.
+      properties:
+        modem:
+          type: string
+          description: >
+            Number that received the message from your correspondent. Blank if
+            not applicable.
+          example: '33123456789'
+        numero:
+          type: string
+          description: >
+            Phone number of the sender (your correspondent) in international
+            format.
+          example: '33600123456'
+        reference:
+          type: string
+          description: >
+            Internal reference of the received message.
+
+
+            ⚠️ This reference does not match the reference of the sent message
+            to which the recipient may have replied.
+          example: '12345678'
+        ts:
+          type: integer
+          description: |
+            Unix (POSIX) timestamp of message reception (Paris time).
+          example: 1705326600
+        charset:
+          type: string
+          description: |
+            Character set used for encoding the message content.
+          example: ISO-8859-1
+        keyword:
+          type: string
+          description: |
+            Keyword used for reception (shared numbers only).
+          example: INFO
+        message:
+          type: string
+          description: |
+            Content of the message received from your correspondent.
+          example: Hello, I would like more information.
+        link_reference:
+          type: string
+          description: >
+            Reference of the last message sent to this phone number from your
+            account.
+
+
+            **Warning:** This is not necessarily the message the person wanted
+            to reply to if you have sent them more than one.
+          example: '987654321'
+      example:
+        modem: '33123456789'
+        numero: '33600123456'
+        reference: '12345678'
+        ts: 1705326600
+        charset: ISO-8859-1
+        keyword: INFO
+        message: Hello, I would like more information.
+        link_reference: '987654321'
+x-tagGroups:
+  - name: SMS
+    tags:
+      - sms-send
+      - sms-sandbox
+      - sms-senders
+      - addressbook-groups
+      - messages-history
+      - messages-scheduled
+      - sms-webhooks

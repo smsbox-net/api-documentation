@@ -1,0 +1,504 @@
+openapi: 3.1.0
+info:
+  title: SMSBOX - Account API Documentation
+  version: 1.0.0
+  contact:
+    url: https://www.smsbox.net
+  x-logo:
+    url: ../logo-en.png
+    backgroundColor: '#FFFFFF'
+    altText: SMSBOX logo
+    href: https://www.smsbox.net
+  description: >
+
+    ### Changelog
+
+    | Version | Date |
+    Changes                                                                                               
+    |
+
+    | ------- | -----
+    |-------------------------------------------------------------------------------------------------------|
+
+    | 1.0.0 | 01/15/2026 | Initial Account API documentation (Credits and Users
+    management).             |
+servers:
+  - url: https://api.smsbox.pro
+tags:
+  - name: account-credit
+    x-displayName: Credit
+    description: |
+      Check your credit balance and manage credits for sub-accounts.
+  - name: account-users
+    x-displayName: Users
+    description: |
+      Create and manage sub-accounts.
+
+      **Limits:**
+      - Maximum 500 sub-accounts per main account
+      - Username (pseudo): maximum 50 characters
+      - Password (mdp): maximum 50 characters
+paths:
+  /1.1/api.php?action=credit:
+    get:
+      operationId: getCredit
+      tags:
+        - account-credit
+      security:
+        - ApiKey: []
+      summary: Check balance
+      description: >
+        Retrieve your current credit balance.
+
+
+        **Usage:** Add ``action=credit`` as a query parameter to the endpoint
+        URL.
+
+
+        ```
+
+        GET /1.1/api.php?action=credit
+
+        ```
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - credit
+          description: |
+            Action identifier. Must be set to ``credit``.
+      responses:
+        '200':
+          description: |
+            Returns the current credit balance.
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                success:
+                  summary: Credit balance
+                  value: CREDIT 22
+                error:
+                  summary: Error
+                  value: ERREUR
+      x-codeSamples:
+        - lang: cURL
+          source: |
+            curl -X POST "https://api.smsbox.pro/1.1/api.php?action=credit" \
+              -H "Authorization: App YOUR_API_KEY"
+        - lang: Python
+          source: |
+            import requests
+
+            response = requests.post(
+                "https://api.smsbox.pro/1.1/api.php",
+                params={"action": "credit"},
+                headers={"Authorization": "App YOUR_API_KEY"}
+            )
+            print(response.text)
+        - lang: JavaScript
+          source: |
+            const response = await fetch(
+              "https://api.smsbox.pro/1.1/api.php?action=credit",
+              {
+                method: "POST",
+                headers: {
+                  Authorization: "App YOUR_API_KEY",
+                },
+              }
+            );
+            console.log(await response.text());
+        - lang: PHP
+          source: >
+            <?php
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL,
+            "https://api.smsbox.pro/1.1/api.php?action=credit");
+
+            curl_setopt($ch, CURLOPT_POST, true);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: App
+            YOUR_API_KEY"]);
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+            echo $response;
+  /1.1/api.php?action=credit&do=manage:
+    post:
+      operationId: manageSubAccountCredit
+      tags:
+        - account-credit
+      security:
+        - ApiKey: []
+      summary: Manage sub-account credit
+      description: >
+        Add or remove credits from a sub-account.
+
+
+        Credits are transferred from your main account balance.
+
+
+        **Usage:** Add ``action=credit`` as a query parameter to the endpoint
+        URL.
+
+
+        ```
+
+        POST /1.1/api.php?action=credit
+
+        ```
+
+
+        **No-limit option:** Sub-accounts can be configured to use the main
+        account's balance directly without allocated credits. Enable this option
+        in "User Management" in your account dashboard.
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - credit
+          description: |
+            Action identifier. Must be set to ``credit``.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ManageCredit'
+      responses:
+        '200':
+          description: >
+            The API always returns HTTP 200. Check the response body for the
+            actual status.
+
+
+            <div style="background-color: #d4edda; border-left: 4px solid
+            #28a745; padding: 12px; margin: 10px 0;">
+
+            <strong>Success response:</strong><br>
+
+            • <code>OK</code> - Credits successfully transferred
+
+            </div>
+
+
+            <div style="background-color: #f8d7da; border-left: 4px solid
+            #dc3545; padding: 12px; margin: 10px 0; color: #721c24 !important;">
+
+            <strong>Error response:</strong><br>
+
+            • <code>ERREUR</code> - Operation failed (invalid sub-account,
+            insufficient balance, or other error)
+
+            </div>
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                success:
+                  summary: Success
+                  value: OK
+                error:
+                  summary: Error
+                  value: ERREUR
+      x-codeSamples:
+        - lang: cURL
+          source: |
+            curl -X POST "https://api.smsbox.pro/1.1/api.php?action=credit" \
+              -H "Authorization: App YOUR_API_KEY" \
+              -d "to=subaccount1&credit=100"
+        - lang: Python
+          source: |
+            import requests
+
+            response = requests.post(
+                "https://api.smsbox.pro/1.1/api.php",
+                params={"action": "credit"},
+                headers={"Authorization": "App YOUR_API_KEY"},
+                data={"to": "subaccount1", "credit": 100}
+            )
+            print(response.text)
+        - lang: JavaScript
+          source: |
+            const response = await fetch(
+              "https://api.smsbox.pro/1.1/api.php?action=credit",
+              {
+                method: "POST",
+                headers: {
+                  Authorization: "App YOUR_API_KEY",
+                  "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                  to: "subaccount1",
+                  credit: "100",
+                }),
+              }
+            );
+            console.log(await response.text());
+        - lang: PHP
+          source: >
+            <?php
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL,
+            "https://api.smsbox.pro/1.1/api.php?action=credit");
+
+            curl_setopt($ch, CURLOPT_POST, true);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: App
+            YOUR_API_KEY"]);
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+                "to" => "subaccount1",
+                "credit" => 100
+            ]));
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+            echo $response;
+  /1.1/api.php?action=utilisateur:
+    post:
+      operationId: createSubAccount
+      tags:
+        - account-users
+      security:
+        - ApiKey: []
+      summary: Create sub-account
+      description: >
+        Create a new sub-account under your main account.
+
+
+        **Usage:** Add ``action=utilisateur`` as a query parameter to the
+        endpoint URL.
+
+
+        ```
+
+        POST /1.1/api.php?action=utilisateur
+
+        ```
+
+
+        **Limits:**
+
+        - Maximum 500 sub-accounts per main account
+
+        - Username: maximum 50 characters
+
+        - Password: maximum 50 characters
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - utilisateur
+          description: |
+            Action identifier. Must be set to ``utilisateur``.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        '200':
+          description: >
+            The API always returns HTTP 200. Check the response body for the
+            actual status.
+
+
+            <div style="background-color: #d4edda; border-left: 4px solid
+            #28a745; padding: 12px; margin: 10px 0;">
+
+            <strong>Success response:</strong><br>
+
+            • <code>OK</code> - Sub-account created successfully
+
+            </div>
+
+
+            <div style="background-color: #f8d7da; border-left: 4px solid
+            #dc3545; padding: 12px; margin: 10px 0; color: #721c24 !important;">
+
+            <strong>Error response:</strong><br>
+
+            • <code>ERREUR</code> - Creation failed (duplicate username, limit
+            reached, or invalid parameters)
+
+            </div>
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                success:
+                  summary: Success
+                  value: OK
+                error:
+                  summary: Error
+                  value: ERREUR
+      x-codeSamples:
+        - lang: cURL
+          source: >
+            curl -X POST "https://api.smsbox.pro/1.1/api.php?action=utilisateur"
+            \
+              -H "Authorization: App YOUR_API_KEY" \
+              -d "do=add&pseudo=subaccount1&mdp=SecurePassword123&nolimit=yes"
+        - lang: Python
+          source: |
+            import requests
+
+            response = requests.post(
+                "https://api.smsbox.pro/1.1/api.php",
+                params={"action": "utilisateur"},
+                headers={"Authorization": "App YOUR_API_KEY"},
+                data={
+                    "do": "add",
+                    "pseudo": "subaccount1",
+                    "mdp": "SecurePassword123",
+                    "nolimit": "yes"
+                }
+            )
+            print(response.text)
+        - lang: JavaScript
+          source: |
+            const response = await fetch(
+              "https://api.smsbox.pro/1.1/api.php?action=utilisateur",
+              {
+                method: "POST",
+                headers: {
+                  Authorization: "App YOUR_API_KEY",
+                  "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                  do: "add",
+                  pseudo: "subaccount1",
+                  mdp: "SecurePassword123",
+                  nolimit: "yes",
+                }),
+              }
+            );
+            console.log(await response.text());
+        - lang: PHP
+          source: >
+            <?php
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL,
+            "https://api.smsbox.pro/1.1/api.php?action=utilisateur");
+
+            curl_setopt($ch, CURLOPT_POST, true);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: App
+            YOUR_API_KEY"]);
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+                "do" => "add",
+                "pseudo" => "subaccount1",
+                "mdp" => "SecurePassword123",
+                "nolimit" => "yes"
+            ]));
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+            echo $response;
+components:
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: |
+        Example: `Authorization: App YOUR_API_KEY`
+  schemas:
+    ManageCredit:
+      type: object
+      properties:
+        to:
+          type: string
+          description: |
+            Sub-account username to manage credits for.
+          example: subaccount1
+        credit:
+          type: integer
+          description: |
+            Number of SMS credits to add (positive) or remove (negative).
+
+            Credits are transferred from/to the main account balance.
+          example: 100
+      required:
+        - to
+        - credit
+    CreateUser:
+      type: object
+      properties:
+        do:
+          type: string
+          enum:
+            - add
+          description: |
+            Operation type. Must be set to ``add`` to create a sub-account.
+          example: add
+        pseudo:
+          type: string
+          maxLength: 50
+          description: |
+            Username for the new sub-account.
+
+            Maximum 50 characters.
+          example: subaccount1
+        mdp:
+          type: string
+          maxLength: 50
+          description: |
+            Password for the new sub-account.
+
+            Maximum 50 characters.
+          example: SecurePassword123
+        nolimit:
+          type: string
+          enum:
+            - 'yes'
+            - 'no'
+          description: >
+            Enable "No-limit" option.
+
+
+            When set to ``yes``, the sub-account can use credits from the main
+            account balance directly.
+          example: 'yes'
+      required:
+        - do
+        - pseudo
+        - mdp
+x-tagGroups:
+  - name: Account
+    tags:
+      - account-credit
+      - account-users

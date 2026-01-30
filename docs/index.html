@@ -1,178 +1,94 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <meta http-equiv="x-xss-protection" content="0" />
-  <meta http-equiv="content-security-policy" content="frame-ancestors 'none'; object-src 'none';" />
-  <meta http-equiv="x-content-type-options" content="nosniff" />
-  <meta http-equiv="strict-transport-security" content="max-age=31536000; includeSubDomains" />
-  <link rel="canonical" href="https://docs.smsbox.dev/" />
-  <link rel=stylesheet href="./index.css" />
-  <meta charset="utf8" />
-  <title>SMSBOX - API Documentation</title>
-  <!-- needed for adaptive design -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body {
-      padding: 0;
-      margin: 0;
-    }
-  </style>
-  <script src="https://cdn.redocly.com/redoc/v2.5.0/bundles/redoc.standalone.js"></script><style data-styled="true" data-styled-version="6.1.17">.hJuoxX{width:calc(100% - 40%);padding:0 40px;}/*!sc*/
-@media print,screen and (max-width: 75rem){.hJuoxX{width:100%;padding:40px 40px;}}/*!sc*/
-.tJLWz{width:calc(100% - 40%);padding:0 40px;}/*!sc*/
-@media print,screen and (max-width: 75rem){.tJLWz{width:100%;padding:0px 40px;}}/*!sc*/
-data-styled.g4[id="sc-fWnslK"]{content:"hJuoxX,tJLWz,"}/*!sc*/
-.bTqehu{padding:40px 0;}/*!sc*/
-.bTqehu:last-child{min-height:calc(100vh + 1px);}/*!sc*/
-.bTqehu>.bTqehu:last-child{min-height:initial;}/*!sc*/
-@media print,screen and (max-width: 75rem){.bTqehu{padding:0;}}/*!sc*/
-data-styled.g5[id="sc-dIMoHT"]{content:"bTqehu,"}/*!sc*/
-.ipybeG{display:flex;width:100%;padding:0;}/*!sc*/
-@media print,screen and (max-width: 75rem){.ipybeG{flex-direction:column;}}/*!sc*/
-data-styled.g8[id="sc-kpOvIu"]{content:"ipybeG,"}/*!sc*/
-.Xavsg{font-family:Montserrat,sans-serif;font-weight:400;font-size:1.85714em;line-height:1.6em;color:#333333;}/*!sc*/
-data-styled.g9[id="sc-icnseD"]{content:"Xavsg,"}/*!sc*/
-.ivNaNl{font-family:Montserrat,sans-serif;font-weight:400;font-size:1.57143em;line-height:1.6em;color:#333333;margin:0 0 20px;}/*!sc*/
-data-styled.g10[id="sc-jMsorb"]{content:"ivNaNl,"}/*!sc*/
-.jRyfmD{cursor:pointer;margin-left:-20px;padding:0;line-height:1;width:20px;display:inline-block;outline:0;}/*!sc*/
-.jRyfmD:before{content:'';width:15px;height:15px;background-size:contain;background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMCIgeT0iMCIgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1MTIgNTEyIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cGF0aCBmaWxsPSIjMDEwMTAxIiBkPSJNNDU5LjcgMjMzLjRsLTkwLjUgOTAuNWMtNTAgNTAtMTMxIDUwLTE4MSAwIC03LjktNy44LTE0LTE2LjctMTkuNC0yNS44bDQyLjEtNDIuMWMyLTIgNC41LTMuMiA2LjgtNC41IDIuOSA5LjkgOCAxOS4zIDE1LjggMjcuMiAyNSAyNSA2NS42IDI0LjkgOTAuNSAwbDkwLjUtOTAuNWMyNS0yNSAyNS02NS42IDAtOTAuNSAtMjQuOS0yNS02NS41LTI1LTkwLjUgMGwtMzIuMiAzMi4yYy0yNi4xLTEwLjItNTQuMi0xMi45LTgxLjYtOC45bDY4LjYtNjguNmM1MC01MCAxMzEtNTAgMTgxIDBDNTA5LjYgMTAyLjMgNTA5LjYgMTgzLjQgNDU5LjcgMjMzLjR6TTIyMC4zIDM4Mi4ybC0zMi4yIDMyLjJjLTI1IDI0LjktNjUuNiAyNC45LTkwLjUgMCAtMjUtMjUtMjUtNjUuNiAwLTkwLjVsOTAuNS05MC41YzI1LTI1IDY1LjUtMjUgOTAuNSAwIDcuOCA3LjggMTIuOSAxNy4yIDE1LjggMjcuMSAyLjQtMS40IDQuOC0yLjUgNi44LTQuNWw0Mi4xLTQyYy01LjQtOS4yLTExLjYtMTgtMTkuNC0yNS44IC01MC01MC0xMzEtNTAtMTgxIDBsLTkwLjUgOTAuNWMtNTAgNTAtNTAgMTMxIDAgMTgxIDUwIDUwIDEzMSA1MCAxODEgMGw2OC42LTY4LjZDMjc0LjYgMzk1LjEgMjQ2LjQgMzkyLjMgMjIwLjMgMzgyLjJ6Ii8+PC9zdmc+Cg==');opacity:0.5;visibility:hidden;display:inline-block;vertical-align:middle;}/*!sc*/
-h1:hover>.jRyfmD::before,h2:hover>.jRyfmD::before,.jRyfmD:hover::before{visibility:visible;}/*!sc*/
-data-styled.g14[id="sc-jScdur"]{content:"jRyfmD,"}/*!sc*/
-.gAHTYt code[class*='language-'],.gAHTYt pre[class*='language-']{text-shadow:0 -0.1em 0.2em black;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none;}/*!sc*/
-@media print{.gAHTYt code[class*='language-'],.gAHTYt pre[class*='language-']{text-shadow:none;}}/*!sc*/
-.gAHTYt pre[class*='language-']{padding:1em;margin:0.5em 0;overflow:auto;}/*!sc*/
-.gAHTYt .token.comment,.gAHTYt .token.prolog,.gAHTYt .token.doctype,.gAHTYt .token.cdata{color:hsl(30, 20%, 50%);}/*!sc*/
-.gAHTYt .token.punctuation{opacity:0.7;}/*!sc*/
-.gAHTYt .namespace{opacity:0.7;}/*!sc*/
-.gAHTYt .token.property,.gAHTYt .token.tag,.gAHTYt .token.number,.gAHTYt .token.constant,.gAHTYt .token.symbol{color:#4a8bb3;}/*!sc*/
-.gAHTYt .token.boolean{color:#e64441;}/*!sc*/
-.gAHTYt .token.selector,.gAHTYt .token.attr-name,.gAHTYt .token.string,.gAHTYt .token.char,.gAHTYt .token.builtin,.gAHTYt .token.inserted{color:#a0fbaa;}/*!sc*/
-.gAHTYt .token.selector+a,.gAHTYt .token.attr-name+a,.gAHTYt .token.string+a,.gAHTYt .token.char+a,.gAHTYt .token.builtin+a,.gAHTYt .token.inserted+a,.gAHTYt .token.selector+a:visited,.gAHTYt .token.attr-name+a:visited,.gAHTYt .token.string+a:visited,.gAHTYt .token.char+a:visited,.gAHTYt .token.builtin+a:visited,.gAHTYt .token.inserted+a:visited{color:#4ed2ba;text-decoration:underline;}/*!sc*/
-.gAHTYt .token.property.string{color:white;}/*!sc*/
-.gAHTYt .token.operator,.gAHTYt .token.entity,.gAHTYt .token.url,.gAHTYt .token.variable{color:hsl(40, 90%, 60%);}/*!sc*/
-.gAHTYt .token.atrule,.gAHTYt .token.attr-value,.gAHTYt .token.keyword{color:hsl(350, 40%, 70%);}/*!sc*/
-.gAHTYt .token.regex,.gAHTYt .token.important{color:#e90;}/*!sc*/
-.gAHTYt .token.important,.gAHTYt .token.bold{font-weight:bold;}/*!sc*/
-.gAHTYt .token.italic{font-style:italic;}/*!sc*/
-.gAHTYt .token.entity{cursor:help;}/*!sc*/
-.gAHTYt .token.deleted{color:red;}/*!sc*/
-data-styled.g32[id="sc-dTUlgT"]{content:"gAHTYt,"}/*!sc*/
-.plAcM{position:relative;}/*!sc*/
-data-styled.g37[id="sc-dZEakj"]{content:"plAcM,"}/*!sc*/
-.fFuPkY{font-family:Roboto,sans-serif;font-weight:400;line-height:1.5em;}/*!sc*/
-.fFuPkY p:last-child{margin-bottom:0;}/*!sc*/
-.fFuPkY h1{font-family:Montserrat,sans-serif;font-weight:400;font-size:1.85714em;line-height:1.6em;color:#7b3b95;margin-top:0;}/*!sc*/
-.fFuPkY h2{font-family:Montserrat,sans-serif;font-weight:400;font-size:1.57143em;line-height:1.6em;color:#333333;}/*!sc*/
-.fFuPkY code{color:#e53935;background-color:rgba(38, 50, 56, 0.05);font-family:Courier,monospace;border-radius:2px;border:1px solid rgba(38, 50, 56, 0.1);padding:0 5px;font-size:13px;font-weight:400;word-break:break-word;}/*!sc*/
-.fFuPkY pre{font-family:Courier,monospace;white-space:pre;background-color:#11171a;color:white;padding:20px;overflow-x:auto;line-height:normal;border-radius:0;border:1px solid rgba(38, 50, 56, 0.1);}/*!sc*/
-.fFuPkY pre code{background-color:transparent;color:white;padding:0;}/*!sc*/
-.fFuPkY pre code:before,.fFuPkY pre code:after{content:none;}/*!sc*/
-.fFuPkY blockquote{margin:0;margin-bottom:1em;padding:0 15px;color:#777;border-left:4px solid #ddd;}/*!sc*/
-.fFuPkY img{max-width:100%;box-sizing:content-box;}/*!sc*/
-.fFuPkY ul,.fFuPkY ol{padding-left:2em;margin:0;margin-bottom:1em;}/*!sc*/
-.fFuPkY ul ul,.fFuPkY ol ul,.fFuPkY ul ol,.fFuPkY ol ol{margin-bottom:0;margin-top:0;}/*!sc*/
-.fFuPkY table{display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all;border-collapse:collapse;border-spacing:0;margin-top:1.5em;margin-bottom:1.5em;}/*!sc*/
-.fFuPkY table tr{background-color:#fff;border-top:1px solid #ccc;}/*!sc*/
-.fFuPkY table tr:nth-child(2n){background-color:#fafafa;}/*!sc*/
-.fFuPkY table th,.fFuPkY table td{padding:6px 13px;border:1px solid #ddd;}/*!sc*/
-.fFuPkY table th{text-align:left;font-weight:bold;}/*!sc*/
-.fFuPkY .share-link{cursor:pointer;margin-left:-20px;padding:0;line-height:1;width:20px;display:inline-block;outline:0;}/*!sc*/
-.fFuPkY .share-link:before{content:'';width:15px;height:15px;background-size:contain;background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMCIgeT0iMCIgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1MTIgNTEyIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cGF0aCBmaWxsPSIjMDEwMTAxIiBkPSJNNDU5LjcgMjMzLjRsLTkwLjUgOTAuNWMtNTAgNTAtMTMxIDUwLTE4MSAwIC03LjktNy44LTE0LTE2LjctMTkuNC0yNS44bDQyLjEtNDIuMWMyLTIgNC41LTMuMiA2LjgtNC41IDIuOSA5LjkgOCAxOS4zIDE1LjggMjcuMiAyNSAyNSA2NS42IDI0LjkgOTAuNSAwbDkwLjUtOTAuNWMyNS0yNSAyNS02NS42IDAtOTAuNSAtMjQuOS0yNS02NS41LTI1LTkwLjUgMGwtMzIuMiAzMi4yYy0yNi4xLTEwLjItNTQuMi0xMi45LTgxLjYtOC45bDY4LjYtNjguNmM1MC01MCAxMzEtNTAgMTgxIDBDNTA5LjYgMTAyLjMgNTA5LjYgMTgzLjQgNDU5LjcgMjMzLjR6TTIyMC4zIDM4Mi4ybC0zMi4yIDMyLjJjLTI1IDI0LjktNjUuNiAyNC45LTkwLjUgMCAtMjUtMjUtMjUtNjUuNiAwLTkwLjVsOTAuNS05MC41YzI1LTI1IDY1LjUtMjUgOTAuNSAwIDcuOCA3LjggMTIuOSAxNy4yIDE1LjggMjcuMSAyLjQtMS40IDQuOC0yLjUgNi44LTQuNWw0Mi4xLTQyYy01LjQtOS4yLTExLjYtMTgtMTkuNC0yNS44IC01MC01MC0xMzEtNTAtMTgxIDBsLTkwLjUgOTAuNWMtNTAgNTAtNTAgMTMxIDAgMTgxIDUwIDUwIDEzMSA1MCAxODEgMGw2OC42LTY4LjZDMjc0LjYgMzk1LjEgMjQ2LjQgMzkyLjMgMjIwLjMgMzgyLjJ6Ii8+PC9zdmc+Cg==');opacity:0.5;visibility:hidden;display:inline-block;vertical-align:middle;}/*!sc*/
-.fFuPkY h1:hover>.share-link::before,.fFuPkY h2:hover>.share-link::before,.fFuPkY .share-link:hover::before{visibility:visible;}/*!sc*/
-.fFuPkY a{text-decoration:auto;color:#fe8264;}/*!sc*/
-.fFuPkY a:visited{color:#fe8264;}/*!sc*/
-.fFuPkY a:hover{color:#fe8264;text-decoration:auto;}/*!sc*/
-data-styled.g42[id="sc-fhPBcz"]{content:"fFuPkY,"}/*!sc*/
-.DDxJV{margin-top:0;margin-bottom:0.5em;}/*!sc*/
-data-styled.g92[id="sc-kiZvlW"]{content:"DDxJV,"}/*!sc*/
-.bmxErA::before{content:'|';display:inline-block;opacity:0.5;width:15px;text-align:center;}/*!sc*/
-.bmxErA:last-child::after{display:none;}/*!sc*/
-data-styled.g94[id="sc-kghAKo"]{content:"bmxErA,"}/*!sc*/
-.gnuaA-d{overflow:hidden;}/*!sc*/
-data-styled.g95[id="sc-fOFsAX"]{content:"gnuaA-d,"}/*!sc*/
-.eXggDo{display:flex;flex-wrap:wrap;margin-left:-15px;}/*!sc*/
-data-styled.g96[id="sc-koJkpm"]{content:"eXggDo,"}/*!sc*/
-.iljeoY{max-height:260px;max-width:260px;padding:2px;width:100%;display:block;}/*!sc*/
-data-styled.g97[id="sc-fLNxZp"]{content:"iljeoY,"}/*!sc*/
-.gzaKIy{text-align:center;}/*!sc*/
-data-styled.g98[id="sc-klRpNE"]{content:"gzaKIy,"}/*!sc*/
-.koHdYb{display:inline-block;}/*!sc*/
-data-styled.g99[id="sc-dWyRdj"]{content:"koHdYb,"}/*!sc*/
-.jyJesI{margin:0;padding:0;}/*!sc*/
-.jyJesI:first-child{padding-bottom:32px;}/*!sc*/
-.sc-kNNXoD .sc-kNNXoD{font-size:0.929em;}/*!sc*/
-data-styled.g101[id="sc-kNNXoD"]{content:"jyJesI,"}/*!sc*/
-.GjPJT{list-style:none inside none;overflow:hidden;text-overflow:ellipsis;padding:0;}/*!sc*/
-data-styled.g102[id="sc-bfkVnW"]{content:"GjPJT,"}/*!sc*/
-.fpmfBS{cursor:pointer;color:#7b3b95;margin:0;padding:12.5px 20px;display:flex;justify-content:space-between;font-family:Montserrat,sans-serif;font-size:0.929em;text-transform:none;background-color:#f8f8f8;}/*!sc*/
-.fpmfBS:hover{color:#616161;background-color:#dfdfdf;}/*!sc*/
-.fpmfBS .sc-dcKlJK{height:1.5em;width:1.5em;}/*!sc*/
-.fpmfBS .sc-dcKlJK polygon{fill:#7b3b95;}/*!sc*/
-data-styled.g103[id="sc-dSsMvJ"]{content:"fpmfBS,"}/*!sc*/
-.iqJPdR{display:inline-block;vertical-align:middle;width:calc(100% - 38px);overflow:hidden;text-overflow:ellipsis;}/*!sc*/
-data-styled.g104[id="sc-fzltTY"]{content:"iqJPdR,"}/*!sc*/
-.isVZqi{font-size:0.8em;margin-top:10px;text-align:center;position:fixed;width:260px;bottom:0;background:#f8f8f8;}/*!sc*/
-.isVZqi a,.isVZqi a:visited,.isVZqi a:hover{color:#7b3b95!important;padding:5px 0;border-top:1px solid #dfdfdf;text-decoration:none;display:flex;align-items:center;justify-content:center;}/*!sc*/
-.isVZqi img{width:15px;margin-right:5px;}/*!sc*/
-@media screen and (max-width: 50rem){.isVZqi{width:100%;}}/*!sc*/
-data-styled.g105[id="sc-kHrqIz"]{content:"isVZqi,"}/*!sc*/
-.bSLfNl{user-select:none;width:20px;height:20px;align-self:center;display:flex;flex-direction:column;color:#7b3b95;}/*!sc*/
-data-styled.g130[id="sc-djWYAM"]{content:"bSLfNl,"}/*!sc*/
-.bYWiBc{width:260px;background-color:#f8f8f8;overflow:hidden;display:flex;flex-direction:column;backface-visibility:hidden;height:100vh;position:sticky;position:-webkit-sticky;top:0;}/*!sc*/
-@media screen and (max-width: 50rem){.bYWiBc{position:fixed;z-index:20;width:100%;background:#f8f8f8;display:none;}}/*!sc*/
-@media print{.bYWiBc{display:none;}}/*!sc*/
-data-styled.g131[id="sc-dVElco"]{content:"bYWiBc,"}/*!sc*/
-.dcuijn{outline:none;user-select:none;background-color:#f2f2f2;color:#7b3b95;display:none;cursor:pointer;position:fixed;right:20px;z-index:100;border-radius:50%;box-shadow:0 0 20px rgba(0, 0, 0, 0.3);bottom:44px;width:60px;height:60px;padding:0 20px;}/*!sc*/
-@media screen and (max-width: 50rem){.dcuijn{display:flex;}}/*!sc*/
-.dcuijn svg{color:#0065FB;}/*!sc*/
-@media print{.dcuijn{display:none;}}/*!sc*/
-data-styled.g132[id="sc-irwjCN"]{content:"dcuijn,"}/*!sc*/
-.cJUmVI{font-family:Roboto,sans-serif;font-size:14px;font-weight:400;line-height:1.5em;color:#333333;display:flex;position:relative;text-align:left;-webkit-font-smoothing:antialiased;font-smoothing:antialiased;text-rendering:optimizeSpeed!important;tap-highlight-color:rgba(0, 0, 0, 0);text-size-adjust:100%;}/*!sc*/
-.cJUmVI *{box-sizing:border-box;-webkit-tap-highlight-color:rgba(255, 255, 255, 0);}/*!sc*/
-data-styled.g133[id="sc-ldfREC"]{content:"cJUmVI,"}/*!sc*/
-.eDQhjF{z-index:1;position:relative;overflow:hidden;width:calc(100% - 260px);contain:layout;}/*!sc*/
-@media print,screen and (max-width: 50rem){.eDQhjF{width:100%;}}/*!sc*/
-data-styled.g134[id="sc-ejCgGf"]{content:"eDQhjF,"}/*!sc*/
-.cCFEoS{background:#263238;position:absolute;top:0;bottom:0;right:0;width:calc((100% - 260px) * 0.4);}/*!sc*/
-@media print,screen and (max-width: 75rem){.cCFEoS{display:none;}}/*!sc*/
-data-styled.g135[id="sc-dPhEwk"]{content:"cCFEoS,"}/*!sc*/
-</style>
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="x-xss-protection" content="0">
+  <meta http-equiv="content-security-policy" content="frame-ancestors 'none'; object-src 'none';">
+  <meta http-equiv="x-content-type-options" content="nosniff">
+  <meta http-equiv="strict-transport-security" content="max-age=31536000; includeSubDomains">
+  <link rel="canonical" href="https://docs.smsbox.dev/">
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <title>SMSBOX API Documentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./index.css">
 </head>
-
 <body>
-  
-      <div id="redoc"><link rel="preload" as="image" href="logo-en.png"/><div class="sc-ldfREC cJUmVI redoc-wrap"><div class="sc-dVElco bYWiBc menu-content" style="top:0px;height:calc(100vh - 0px)"><div style="background-color:#FFFFFF" class="sc-klRpNE gzaKIy"><a href="https://www.smsbox.net" class="sc-dWyRdj koHdYb"><img src="logo-en.png" alt="SMSBOX logo" class="sc-fLNxZp iljeoY"/></a></div><div class="sc-dZEakj plAcM scrollbar-container undefined"><ul role="menu" class="sc-kNNXoD jyJesI"><li tabindex="0" depth="1" data-item-id="tag/rcs" role="menuitem" aria-label="RCS" aria-expanded="false" class="sc-bfkVnW GjPJT"><label class="sc-dSsMvJ fpmfBS -depth1"><span width="calc(100% - 38px)" title="RCS" class="sc-fzltTY iqJPdR">RCS</span></label></li><li tabindex="0" depth="1" data-item-id="tag/whatsapp" role="menuitem" aria-label="WhatsApp" aria-expanded="false" class="sc-bfkVnW GjPJT"><label class="sc-dSsMvJ fpmfBS -depth1"><span width="calc(100% - 38px)" title="WhatsApp" class="sc-fzltTY iqJPdR">WhatsApp</span></label></li></ul><div class="sc-kHrqIz isVZqi"><a target="_blank" rel="noopener noreferrer" href="https://redocly.com/redoc/">API docs by Redocly</a></div></div></div><div class="sc-irwjCN dcuijn"><div class="sc-djWYAM bSLfNl"><svg class="" style="transform:translate(2px, -4px) rotate(180deg);transition:transform 0.2s ease" viewBox="0 0 926.23699 573.74994" version="1.1" x="0px" y="0px" width="15" height="15"><g transform="translate(904.92214,-879.1482)"><path d="
-          m -673.67664,1221.6502 -231.2455,-231.24803 55.6165,
-          -55.627 c 30.5891,-30.59485 56.1806,-55.627 56.8701,-55.627 0.6894,
-          0 79.8637,78.60862 175.9427,174.68583 l 174.6892,174.6858 174.6892,
-          -174.6858 c 96.079,-96.07721 175.253196,-174.68583 175.942696,
-          -174.68583 0.6895,0 26.281,25.03215 56.8701,
-          55.627 l 55.6165,55.627 -231.245496,231.24803 c -127.185,127.1864
-          -231.5279,231.248 -231.873,231.248 -0.3451,0 -104.688,
-          -104.0616 -231.873,-231.248 z
-        " fill="currentColor"></path></g></svg><svg class="" style="transform:translate(2px, 4px);transition:transform 0.2s ease" viewBox="0 0 926.23699 573.74994" version="1.1" x="0px" y="0px" width="15" height="15"><g transform="translate(904.92214,-879.1482)"><path d="
-          m -673.67664,1221.6502 -231.2455,-231.24803 55.6165,
-          -55.627 c 30.5891,-30.59485 56.1806,-55.627 56.8701,-55.627 0.6894,
-          0 79.8637,78.60862 175.9427,174.68583 l 174.6892,174.6858 174.6892,
-          -174.6858 c 96.079,-96.07721 175.253196,-174.68583 175.942696,
-          -174.68583 0.6895,0 26.281,25.03215 56.8701,
-          55.627 l 55.6165,55.627 -231.245496,231.24803 c -127.185,127.1864
-          -231.5279,231.248 -231.873,231.248 -0.3451,0 -104.688,
-          -104.0616 -231.873,-231.248 z
-        " fill="currentColor"></path></g></svg></div></div><div class="sc-ejCgGf eDQhjF api-content"><div class="sc-dIMoHT bTqehu"><div class="sc-kpOvIu ipybeG"><div class="sc-fWnslK hJuoxX api-info"><h1 class="sc-icnseD sc-kiZvlW Xavsg DDxJV">SMSBOX - API Documentation<!-- --> </h1><div class="sc-dTUlgT sc-fhPBcz gAHTYt fFuPkY"><div class="sc-fOFsAX gnuaA-d"><div class="sc-koJkpm eXggDo"> <span class="sc-kghAKo bmxErA">URL: <a href="https://www.smsbox.net">https://www.smsbox.net</a></span> <!-- --> </div></div></div><div data-role="redoc-summary" html="" class="sc-dTUlgT sc-fhPBcz gAHTYt fFuPkY"></div><div data-role="redoc-description" html="" class="sc-dTUlgT sc-fhPBcz gAHTYt fFuPkY"></div></div></div></div><div id="tag/rcs" data-section-id="tag/rcs" class="sc-dIMoHT bTqehu"><div class="sc-kpOvIu ipybeG"><div class="sc-fWnslK hJuoxX"><h2 class="sc-jMsorb ivNaNl"><a class="sc-jScdur jRyfmD" href="#tag/rcs" aria-label="tag/rcs"></a>RCS</h2></div></div><div class="sc-fWnslK tJLWz"><div class="sc-dTUlgT sc-fhPBcz gAHTYt fFuPkY redoc-markdown " html="&lt;p&gt;&lt;a href=&quot;rcs/&quot;&gt;Consultez notre documentation RCS&lt;/a&gt;&lt;/p&gt;
-"><p><a href="rcs/">Consultez notre documentation RCS</a></p>
-</div></div></div><div id="tag/whatsapp" data-section-id="tag/whatsapp" class="sc-dIMoHT bTqehu"><div class="sc-kpOvIu ipybeG"><div class="sc-fWnslK hJuoxX"><h2 class="sc-jMsorb ivNaNl"><a class="sc-jScdur jRyfmD" href="#tag/whatsapp" aria-label="tag/whatsapp"></a>WhatsApp</h2></div></div><div class="sc-fWnslK tJLWz"><div class="sc-dTUlgT sc-fhPBcz gAHTYt fFuPkY redoc-markdown " html="&lt;p&gt;&lt;a href=&quot;whatsapp/&quot;&gt;Consultez notre documentation Whatsapp&lt;/a&gt;&lt;/p&gt;
-"><p><a href="whatsapp/">Consultez notre documentation Whatsapp</a></p>
-</div></div></div></div><div class="sc-dPhEwk cCFEoS"></div></div></div>
-      <script>
-      const __redoc_state = {"menu":{"activeItemIdx":-1},"spec":{"data":{"openapi":"3.1.0","info":{"title":"SMSBOX - API Documentation","contact":{"url":"https://www.smsbox.net"},"x-logo":{"url":"logo-en.png","backgroundColor":"#FFFFFF","altText":"SMSBOX logo","href":"https://www.smsbox.net"}},"servers":[{"url":"https://api.smsbox.pro"}],"tags":[{"name":"rcs","x-displayName":"RCS","description":"[Consultez notre documentation RCS](rcs/)\n"},{"name":"whatsapp","x-displayName":"WhatsApp","description":"[Consultez notre documentation Whatsapp](whatsapp/)\n"}],"components":{}}},"options":{"disableSearch":true,"hideDownloadButton":true,"pathInMiddlePanel":true,"theme":{"sidebar":{"backgroundColor":"#f8f8f8","textColor":"#7b3b95","activeBgColor":"#f8f8f8","activeTextColor":"#616161","fontSize":"14px"},"colors":{"primary":{"main":"#7b3b95","light":"#d367ff","dark":"#42244f","contrastText":"#fff"}},"typography":{"fontSize":"14px","lineHeight":"1.5em","fontWeightLight":"300","fontWeightRegular":"400","fontWeightBold":"600","fontFamily":"Roboto, sans-serif","smoothing":"antialiased","optimizeSpeed":true,"headings":{"fontFamily":"Montserrat, sans-serif","fontWeight":"400","lineHeight":"1.6em"},"links":{"color":"#fe8264","visited":"#fe8264","hover":"#fe8264"}}}}};
+  <a href="#main-content" class="skip-link">Aller au contenu</a>
 
-      var container = document.getElementById('redoc');
-      Redoc.hydrate(__redoc_state, container);
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-inner">
+        <header class="brand">
+          <a href="./" class="logo-link" title="Accueil documentation">
+            <img src="logo-en.png" alt="SMSBOX" class="logo">
+          </a>
+          <span class="brand-label">API Docs</span>
+        </header>
 
-      </script>
+        <div class="auth-block">
+          <h2>Auth</h2>
+          <p>All endpoints require an API key.</p>
+          <div class="code">
+            <span class="code-label">Header</span>
+            <code>Authorization: App <span class="code-key">YOUR_KEY</span></code>
+          </div>
+          <a href="https://client.smsbox.net/en/apikeys" target="_blank" rel="noopener" class="auth-link">
+            Get your API key
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+
+        <footer class="sidebar-footer">
+          <a href="https://www.smsbox.net" target="_blank" rel="noopener">smsbox.net</a>
+          <a href="https://www.smsbox.net/en/support" target="_blank" rel="noopener">Support</a>
+        </footer>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main" id="main-content">
+      <nav class="api-list">
+        <a href="sms/" class="api-item">
+          <div class="api-info">
+            <span class="api-tag">Channel</span>
+            <h2>SMS</h2>
+            <p>Send to recipients or groups, track delivery & more.</p>
+          </div>
+          <span class="api-arrow">&rarr;</span>
+        </a>
+
+        <a href="rcs/" class="api-item">
+          <div class="api-info">
+            <span class="api-tag">Channel</span>
+            <h2>RCS</h2>
+            <p>Rich media, interactive messages, capabilities check & more.</p>
+          </div>
+          <span class="api-arrow">&rarr;</span>
+        </a>
+
+        <a href="whatsapp/" class="api-item">
+          <div class="api-info">
+            <span class="api-tag">Channel</span>
+            <h2>WhatsApp</h2>
+            <p>Send messages, templates, interactive buttons & more.</p>
+          </div>
+          <span class="api-arrow">&rarr;</span>
+        </a>
+
+        <a href="account/" class="api-item api-item--secondary">
+          <div class="api-info">
+            <span class="api-tag">Platform</span>
+            <h2>Account</h2>
+            <p>Credit balance and sub-accounts management.</p>
+          </div>
+          <span class="api-arrow">&rarr;</span>
+        </a>
+      </nav>
+    </main>
+  </div>
 </body>
-
 </html>

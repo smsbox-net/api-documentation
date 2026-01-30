@@ -1,0 +1,1757 @@
+openapi: 3.1.0
+info:
+  title: SMSBOX - RCS API Documentation
+  version: 2.1.0
+  contact:
+    url: https://www.smsbox.net
+  x-logo:
+    url: ../logo-en.png
+    backgroundColor: '#FFFFFF'
+    altText: SMSBOX logo
+    href: https://www.smsbox.net
+  description: >
+
+    ### Changelog
+
+    | Version | Date |
+    Changes                                                                                                                   
+    |
+
+    | ------- | -----
+    |---------------------------------------------------------------------------------------------------------------------------|
+
+    | 2.2.0 | 05/16/2025 | 📶 The list of IP addresses sending the webhook is
+    now available in the webhook section description.                     
+    |                                 
+
+    | 2.1.0 | 01/24/2025 | ⚓ Change syntax for ``recipients`` parameter, add the
+    ``validity`` parameter and ``webhook`` documentation for RCS API. |
+
+    | 2.0.0 | 10/22/2024 | 📲 Add the SMSBOX Documentation for the ``RCS``
+    product.                                                                 
+    |                                 
+servers:
+  - url: https://api.rcsbox.net
+tags:
+  - name: rcs-message
+    x-displayName: Message
+    description: >-
+      Send rich text, media, and interactive messages via RCS Business
+      Messaging.
+  - name: rcs-revoke
+    x-displayName: Revoke
+    description: Revoke previously sent RCS messages before they are read.
+  - name: rcs-add-testers
+    x-displayName: Tester
+    description: Add phone numbers as testers for your RCS agent during development.
+  - name: rcs-capabilities
+    x-displayName: Capabilities
+    description: Check if a phone number supports RCS messaging capabilities.
+  - name: rcs-event
+    x-displayName: Event
+    description: Send read receipts and typing indicators to RCS conversations.
+  - name: rcs-webhooks
+    x-displayName: Webhooks
+    description: >
+      **Important:**<br><br>
+
+      You should pay close attention to the ``requestType`` properties in your
+      webhook payload.<br>
+
+      If you are using a firewall, make sure to allow this IPv4 address (**this
+      is the address that emits the webhooks**):
+       - 37.59.198.135
+       - 178.33.185.51
+       - 54.36.93.79
+       - 54.36.93.80
+       - 62.4.31.47
+       - 62.4.31.48
+paths:
+  /rcs/1.0/json/{agentId}/message:
+    description: Send RCS Text
+    post:
+      operationId: sendRcsMessage
+      tags:
+        - rcs-message
+      security:
+        - ApiKey: []
+      summary: Send text message
+      parameters:
+        - name: agentId
+          in: path
+          description: RBM Agent ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RCS'
+      responses:
+        '202':
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse202RCS'
+        '400':
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse400RCS'
+        '402':
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse402RCS'
+        '403':
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse403'
+        '404':
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse404RCS'
+        '405':
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse405'
+        '413':
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse413'
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse503RCS'
+      x-codeSamples:
+        - lang: cURL
+          source: "curl --request POST \\\n\t--url https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/message \\\n\t--header 'Authorization: App <APIKEY>' \\\n\t--header 'Content-Type: application/json' \\\n\t--data '{\n\t\"recipients\": [\n\t\t\"+336XXXXXXXX\"\n\t],\n\t\"contentMessage\": {\n\t    \"text\": \"example message\"\n\t}\n}'\n"
+        - lang: Python
+          source: >
+            import requests
+
+            import json
+
+
+            url = 'https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/message'
+
+            headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            }
+
+            data = {
+                "recipients": ["+336XXXXXXXX"],
+                "contentMessage": {
+                    "text": "example message"
+                }
+            }
+
+
+            response = requests.post(url, headers=headers,
+            data=json.dumps(data))
+
+
+            print(response.status_code)
+
+            print(response.json())
+        - lang: JavaScript
+          source: |-
+            const url = 'https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/message';
+            const headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            };
+            const data = {
+                recipients: ["+336XXXXXXXX"],
+                contentMessage: {
+                    text: "example message"
+                }
+            };
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        - lang: PHP
+          source: |
+            <?php
+
+            $url = 'https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/message';
+            $headers = [
+                'Authorization: App <APIKEY>',
+                'Content-Type: application/json'
+            ];
+
+            $data = [
+                "recipients" => ["+336XXXXXXXX"],
+                "contentMessage" => [
+                    "text" => "example message"
+                ]
+            ];
+
+
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+
+            echo $response;
+  /rcs/1.0/json/{agentId}/revoke:
+    description: Revoke a RCS Message
+    post:
+      operationId: revokeRcsMessage
+      tags:
+        - rcs-revoke
+      security:
+        - ApiKey: []
+      summary: Revoke a message
+      parameters:
+        - name: agentId
+          in: path
+          description: RBM Agent ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Revoke'
+      responses:
+        '202':
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse202RCS'
+        '400':
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse400RCS'
+        '403':
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse403'
+        '404':
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse404RCS'
+        '405':
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse405'
+        '413':
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse413'
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse503RCS'
+      x-codeSamples:
+        - lang: cURL
+          source: "curl --request POST \\\n\t--url https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/revoke \\\n\t--header 'Authorization: App <APIKEY>' \\\n\t--header 'Content-Type: application/json' \\\n\t--data '{\n\t\"recipients\": [\n\t\t\"+336XXXXXXXX\"\n\t],\n\t\"reference\": \"XXXXXXXXXXXX\"\n}'\n"
+        - lang: Python
+          source: >
+            import requests
+
+            import json
+
+
+            url = 'https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/revoke'
+
+            headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            }
+
+            data = {
+                "recipients": ["+336XXXXXXXX"],
+                "reference": "XXXXXXXXXXXX"
+            }
+
+
+            response = requests.post(url, headers=headers,
+            data=json.dumps(data))
+
+
+            print(response.status_code)
+
+            print(response.json())
+        - lang: JavaScript
+          source: |-
+            const url = 'https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/revoke>';
+            const headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            };
+            const data = {
+                recipients: ["+336XXXXXXXX"],
+                reference: "XXXXXXXXXXXX"
+            };
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        - lang: PHP
+          source: |
+            <?php
+
+            $url = 'https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/revoke';
+            $headers = [
+                'Authorization: App <APIKEY>',
+                'Content-Type: application/json'
+            ];
+
+            $data = [
+                "recipients" => ["+336XXXXXXXX"],
+                "reference" => "XXXXXXXXXXXX"
+            ];
+
+
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+
+            echo $response;
+  /rcs/1.0/json/{agentId}/add-testers:
+    description: Add RCS Tester
+    post:
+      operationId: addRcsTester
+      tags:
+        - rcs-add-testers
+      security:
+        - ApiKey: []
+      summary: Add Tester
+      parameters:
+        - name: agentId
+          in: path
+          description: RBM Agent ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/add-testers'
+      responses:
+        '200':
+          description: Request successfully processed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse200AddTesters'
+        '400':
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse400RCS'
+        '403':
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse403'
+        '404':
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse404RCS'
+        '405':
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse405'
+        '413':
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse413'
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse503RCS'
+      x-codeSamples:
+        - lang: cURL
+          source: "curl --request POST \\\n\t--url https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/add-testers \\\n\t--header 'Authorization: App <APIKEY>' \\\n\t--header 'Content-Type: application/json' \\\n\t--data '{ \"recipients\": \"+336XXXXXXXX\" }'\n"
+        - lang: Python
+          source: >
+            import requests
+
+            import json
+
+
+            url = 'https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/add-testers'
+
+            headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            }
+
+            data = {
+                "recipients": "+336XXXXXXXX",
+            }
+
+
+            response = requests.post(url, headers=headers,
+            data=json.dumps(data))
+
+
+            print(response.status_code)
+
+            print(response.json())
+        - lang: JavaScript
+          source: >-
+            const url =
+            'https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/add-testers';
+
+            const headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            };
+
+            const data = {
+                recipients: "+336XXXXXXXX",
+            };
+
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        - lang: PHP
+          source: |
+            <?php
+
+            $url = 'https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/add-testers';
+            $headers = [
+                'Authorization: App <APIKEY>',
+                'Content-Type: application/json'
+            ];
+
+            $data = [
+                "recipients" => "+336XXXXXXXX",
+            ];
+
+
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+
+            echo $response;
+  /rcs/1.0/json/{agentId}/capabilities:
+    description: Capabilities Test
+    post:
+      operationId: checkRcsCapabilities
+      tags:
+        - rcs-capabilities
+      security:
+        - ApiKey: []
+      summary: Perform a check
+      parameters:
+        - name: agentId
+          in: path
+          description: RBM Agent ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/capabilities'
+      responses:
+        '200':
+          description: Request successfully processed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse200Capabilities'
+        '400':
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse400RCS'
+        '403':
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse403'
+        '404':
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse404RCS'
+        '405':
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse405'
+        '413':
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse413'
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse503RCS'
+      x-codeSamples:
+        - lang: cURL
+          source: "curl --request POST \\\n\t--url https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/capabilities \\\n\t--header 'Authorization: App <APIKEY>' \\\n\t--header 'Content-Type: application/json' \\\n\t--data '{\n\t\"recipients\": [\n\t\t\"+336XXXXXXXX\"\n\t],\n}'\n"
+        - lang: Python
+          source: >
+            import requests
+
+            import json
+
+
+            url = 'https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/capabilities'
+
+            headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            }
+
+            data = {
+                "recipients": ["+336XXXXXXXX"],
+            }
+
+
+            response = requests.post(url, headers=headers,
+            data=json.dumps(data))
+
+
+            print(response.status_code)
+
+            print(response.json())
+        - lang: JavaScript
+          source: >-
+            const url =
+            'https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/capabilities';
+
+            const headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            };
+
+            const data = {
+                recipients: ["+336XXXXXXXX"]
+            };
+
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        - lang: PHP
+          source: |
+            <?php
+
+            $url = 'https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/capabilities';
+            $headers = [
+                'Authorization: App <APIKEY>',
+                'Content-Type: application/json'
+            ];
+
+            $data = [
+                "recipients" => ["+336XXXXXXXX"],
+            ];
+
+
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+
+            echo $response;
+  /rcs/1.0/json/{agentId}/event:
+    description: Send Event
+    post:
+      operationId: sendRcsEvent
+      tags:
+        - rcs-event
+      security:
+        - ApiKey: []
+      summary: Send read event
+      parameters:
+        - name: agentId
+          in: path
+          description: RBM Agent ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/event'
+      responses:
+        '202':
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse202RCS'
+        '400':
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse400RCS'
+        '404':
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse404RCS'
+        '405':
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse405'
+        '413':
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse413'
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse503RCS'
+      x-codeSamples:
+        - lang: cURL
+          source: "curl --request POST \\\n\t--url https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/event \\\n\t--header 'Authorization: App <APIKEY>' \\\n\t--header 'Content-Type: application/json' \\\n\t--data '{\n\t\"recipients\": [\n\t\t\"+336XXXXXXXX\"\n\t],\n\t\"event\": \"READ\"\n}'\n"
+        - lang: Python
+          source: >
+            import requests
+
+            import json
+
+
+            url = 'https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/event'
+
+            headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            }
+
+            data = {
+                "recipients": ["+336XXXXXXXX"],
+                "event": "READ"
+            }
+
+
+            response = requests.post(url, headers=headers,
+            data=json.dumps(data))
+
+
+            print(response.status_code)
+
+            print(response.json())
+        - lang: JavaScript
+          source: |-
+            const url = 'https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/event';
+            const headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            };
+            const data = {
+                recipients: ["+336XXXXXXXX"],
+                event: "READ"
+            };
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        - lang: PHP
+          source: |
+            <?php
+
+            $url = 'https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/event';
+            $headers = [
+                'Authorization: App <APIKEY>',
+                'Content-Type: application/json'
+            ];
+
+            $data = [
+                "recipients" => ["+336XXXXXXXX"],
+                "event" => "READ"
+            ];
+
+
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+
+            echo $response;
+webhooks:
+  WebhookText:
+    post:
+      operationId: webhookRcsText
+      summary: Incoming text message
+      tags:
+        - rcs-webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookText'
+      responses:
+        '200':
+          description: >-
+            Return an HTTP 200 status and the word "OK" only to indicate that
+            the data was received successfully.
+  WebhookEvent:
+    post:
+      operationId: webhookRcsEvent
+      summary: Incoming event notification
+      tags:
+        - rcs-webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookEvent'
+      responses:
+        '200':
+          description: >-
+            Return an HTTP 200 status and the word "OK" only to indicate that
+            the data was received successfully.
+  WebhookReply:
+    post:
+      operationId: webhookRcsReply
+      summary: Incoming reply message
+      tags:
+        - rcs-webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookReply'
+      responses:
+        '200':
+          description: >-
+            Return an HTTP 200 status and the word "OK" only to indicate that
+            the data was received successfully.
+  WebhookAction:
+    post:
+      operationId: webhookRcsAction
+      summary: Incoming action callback
+      tags:
+        - rcs-webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookAction'
+      responses:
+        '200':
+          description: >-
+            Return an HTTP 200 status and the word "OK" only to indicate that
+            the data was received successfully.
+  WebhooksStatusUpdate:
+    post:
+      operationId: webhookRcsStatusUpdate
+      summary: Message delivery status update
+      tags:
+        - rcs-webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookStatusUpdate'
+      responses:
+        '200':
+          description: >-
+            Return an HTTP 200 status and the word "OK" only to indicate that
+            the data was received successfully.
+  WebhookDocument:
+    post:
+      operationId: webhookRcsDocument
+      summary: Incoming document message
+      tags:
+        - rcs-webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookDocument'
+      responses:
+        '200':
+          description: >-
+            Return an HTTP 200 status and the word "OK" only to indicate that
+            the data was received successfully.
+  WebhooksLocation:
+    post:
+      operationId: webhookRcsLocation
+      summary: Incoming location message
+      tags:
+        - rcs-webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookLocation'
+      responses:
+        '200':
+          description: >-
+            Return an HTTP 200 status and the word "OK" only to indicate that
+            the data was received successfully.
+      x-codeSamples:
+        - lang: cURL
+          source: "curl --request POST \\\n\t--url https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/event \\\n\t--header 'Authorization: App <APIKEY>' \\\n\t--header 'Content-Type: application/json' \\\n\t--data '{\n\t\"recipients\": [\n\t\t\"+336XXXXXXXX\"\n\t],\n\t\"event\": \"READ\"\n}'\n"
+        - lang: Python
+          source: >
+            import requests
+
+            import json
+
+
+            url = 'https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/event'
+
+            headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            }
+
+            data = {
+                "recipients": ["+336XXXXXXXX"],
+                "event": "READ"
+            }
+
+
+            response = requests.post(url, headers=headers,
+            data=json.dumps(data))
+
+
+            print(response.status_code)
+
+            print(response.json())
+        - lang: JavaScript
+          source: |-
+            const url = 'https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/event';
+            const headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            };
+            const data = {
+                recipients: ["+336XXXXXXXX"],
+                event: "READ"
+            };
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        - lang: PHP
+          source: |
+            <?php
+
+            $url = 'https://api.rcsbox.net/rcs/1.0/json/<AGENTID>/event';
+            $headers = [
+                'Authorization: App <APIKEY>',
+                'Content-Type: application/json'
+            ];
+
+            $data = [
+                "recipients" => ["+336XXXXXXXX"],
+                "event" => "READ"
+            ];
+
+
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+
+            echo $response;
+components:
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: |
+        Example: `Authorization: App YOUR_API_KEY`
+  schemas:
+    RCS:
+      type: object
+      properties:
+        recipients:
+          type: array
+          items:
+            type: string
+            example: +336XXXXXXXX
+          maxItems: 5000
+        contentMessage:
+          type: object
+          description: >
+            [Here a documentation for build the contentMessage
+            object](https://developers.google.com/business-communications/rcs-business-messaging/reference/rest/v1/phones.agentMessages?hl=fr#AgentContentMessage)
+        validity:
+          type: integer
+          example: 720
+          description: |
+            Number of minutes you want your message to remain valid \
+            Max ``10080`` minutes (7 days), min: ``1`` minute
+      required:
+        - recipients
+        - contentMessage
+    MessageContentResponse202RCS:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            response_code:
+              type: string
+              example: '202'
+            response_desc:
+              type: string
+              example: Request successfully queued.
+        details:
+          type: string
+          example: Request accepted for processing.
+        reference:
+          type: string
+          example: XXXXXXXXXXXXXX
+        recipients:
+          type: array
+          items:
+            type: object
+            properties:
+              submitted:
+                type: string
+                example: +33xxxxxxxxx
+              rewrited:
+                type: string
+                example: 33xxxxxxxxx
+              state:
+                type: string
+                example: ACCEPTED
+              reason_code:
+                type: string
+                example: PROCESSING
+    MessageContentResponse400RCS:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            response_code:
+              type: string
+              example: '400'
+            response_desc:
+              type: string
+              example: Wrong query syntax or missing mandatory field.
+        error:
+          type: string
+          example: No valid recipient found.
+    MessageContentResponse402RCS:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            response_code:
+              type: string
+              example: '402'
+            response_desc:
+              type: string
+              example: Insufficient balance to process the request.
+        error:
+          type: string
+          example: No credit or insufficient.
+    MessageContentResponse403:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            response_code:
+              type: string
+              example: '403'
+            response_desc:
+              type: string
+              example: Access to the requested resource has been denied.
+        error:
+          type: string
+          example: API Key not allowed or account discontinued.
+    MessageContentResponse404RCS:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            response_code:
+              type: string
+              example: '404'
+            response_desc:
+              type: string
+              example: The requested resource was not found.
+        error:
+          type: string
+          example: Invalid RCSagentId value (not found).
+    MessageContentResponse405:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            response_code:
+              type: string
+              example: '405'
+            response_desc:
+              type: string
+              example: >-
+                The requested method is not supported for the requested
+                resource.
+        error:
+          type: string
+          example: Invalid HTTP method.
+    MessageContentResponse413:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            response_code:
+              type: string
+              example: '413'
+            response_desc:
+              type: string
+              example: The request payload exceeds the maximum allowed size.
+        error:
+          type: string
+          example: 'Too many recipients (max.: ....).'
+    MessageContentResponse503RCS:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            response_code:
+              type: string
+              example: '503'
+            response_desc:
+              type: string
+              example: Service temporarily unavailable.
+        error:
+          type: string
+          example: Request failed.
+    Revoke:
+      type: object
+      properties:
+        recipients:
+          type: array
+          items:
+            type: string
+          maxItems: 5000
+        reference:
+          type: string
+          const: XXXXXXXXXXXX
+      required:
+        - recipients
+        - reference
+    add-testers:
+      type: object
+      properties:
+        recipients:
+          type: array
+          items:
+            type: string
+          maxItems: 10
+      required:
+        - recipients
+    MessageContentResponse200AddTesters:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            response_code:
+              type: string
+              example: '200'
+            response_desc:
+              type: string
+              example: Request successfully processed.
+        details:
+          type: string
+          example: Request processed but no recipient to add.
+        recipients:
+          type: array
+          items:
+            type: object
+            properties:
+              submitted:
+                type: string
+                example: +33xxxxxxxxx
+              rewrited:
+                type: string
+                example: 33xxxxxxxxx
+              state:
+                type: string
+                example: DELETED
+              reason_code:
+                type: string
+                example: ALREADY_ADDED
+    capabilities:
+      type: object
+      properties:
+        recipients:
+          type: array
+          items:
+            type: string
+          maxItems: 500
+      required:
+        - recipients
+    MessageContentResponse200Capabilities:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            response_code:
+              type: string
+              example: '200'
+            response_desc:
+              type: string
+              example: Request successfully processed.
+        recipients:
+          type: array
+          items:
+            type: object
+            properties:
+              submitted:
+                type: string
+                example: +33xxxxxxxxx
+              rewrited:
+                type: string
+                example: 33xxxxxxxxx
+              state:
+                type: string
+                example: SUCCESS
+              reason_code:
+                type: string
+                example: REACHABLE
+              capabilities:
+                type: array
+                items:
+                  type: string
+                example:
+                  - chatBotCommunication
+                  - RICHCARD_STANDALONE
+    event:
+      type: object
+      properties:
+        recipients:
+          type: array
+          items:
+            type: string
+          maxItems: 1
+        event:
+          type: string
+          const: READ
+          description: >
+            [Here a documentation for build the event
+            propriety](https://developers.google.com/business-communications/rcs-business-messaging/reference/rest/v1/UserEvent.EventType?hl=en)
+      required:
+        - recipients
+        - event
+    WebhookText:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            type:
+              type: string
+              const: text
+              example: text
+            text:
+              type: string
+              description: Text content of the message
+              example: hello smsbox!
+            timestamp:
+              type: string
+              description: Unix timestamp of message receipt by RBM provider
+              example: '1719576000'
+        requestType:
+          type: string
+          description: Type of the request
+          example: incoming_message_text
+          const: incoming_message_text
+        agentId:
+          type: string
+          description: RBM Agent identifier
+          example: XXXXXXXXXXXXXX
+        agentName:
+          type: string
+          description: RBM Agent name
+          example: SMSBOX
+        clientId:
+          type: integer
+          description: SMSBOX user account id
+          example: 12123
+        msisdn:
+          type: string
+          description: User phone number
+          example: +336XXXXXXXX
+        requestProd:
+          type: string
+          description: Channel
+          const: RCS
+          example: RCS
+        requestSubProd:
+          type: string
+          description: Subchannel
+          enum:
+            - rcs
+            - rcslike
+          example: rcs
+        requestDate:
+          type: string
+          format: datetime
+          description: Datetime of the request
+          example: '2024-06-01T14:00:00+02:00'
+        requestUUID:
+          type: string
+          format: uuid
+          description: Unique ID of the request
+          example: XXXXXXXXX
+    WebhookEvent:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            type:
+              type: string
+              const: event
+              example: event
+            eventType:
+              type: string
+              enum:
+                - IS_TYPING
+              description: Type of the event
+              example: IS_TYPING
+            timestamp:
+              type: string
+              description: Unix timestamp of message receipt by RBM provider
+              example: '1719576000'
+        requestType:
+          type: string
+          description: Type of the request
+          example: incoming_event
+          const: incoming_event
+        agentId:
+          type: string
+          description: RBM Agent identifier
+          example: XXXXXXXXXXXXXX
+        agentName:
+          type: string
+          description: RBM Agent name
+          example: SMSBOX
+        clientId:
+          type: integer
+          description: SMSBOX user account id
+          example: 12123
+        msisdn:
+          type: string
+          description: User phone number
+          example: +336XXXXXXXX
+        requestProd:
+          type: string
+          description: Channel
+          const: RCS
+          example: RCS
+        requestSubProd:
+          type: string
+          description: Subchannel
+          enum:
+            - rcs
+            - rcslike
+          example: rcs
+        requestDate:
+          type: string
+          format: datetime
+          description: Datetime of the request
+          example: '2024-06-01T14:00:00+02:00'
+        requestUUID:
+          type: string
+          format: uuid
+          description: Unique ID of the request
+          example: XXXXXXXXX
+    WebhookReply:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            type:
+              type: string
+              const: reply
+              example: reply
+            text:
+              type: string
+              description: text of the chosen reply
+              example: See offer
+            postbackData:
+              type: string
+              description: postbackData of the chosen reply
+              example: example-of-posbackData
+            timestamp:
+              type: string
+              description: Unix timestamp of message receipt by RBM provider
+              example: '1719576000'
+        requestType:
+          type: string
+          description: Type of the request
+          example: incoming_message_reply
+          const: incoming_message_reply
+        agentId:
+          type: string
+          description: RBM Agent identifier
+          example: XXXXXXXXXXXXXX
+        agentName:
+          type: string
+          description: RBM Agent name
+          example: SMSBOX
+        clientId:
+          type: integer
+          description: SMSBOX user account id
+          example: 12123
+        msisdn:
+          type: string
+          description: User phone number
+          example: +336XXXXXXXX
+        requestProd:
+          type: string
+          description: Channel
+          const: RCS
+          example: RCS
+        requestSubProd:
+          type: string
+          description: Subchannel
+          enum:
+            - rcs
+            - rcslike
+          example: rcs
+        requestDate:
+          type: string
+          format: datetime
+          description: Datetime of the request
+          example: '2024-06-01T14:00:00+02:00'
+        requestUUID:
+          type: string
+          format: uuid
+          description: Unique ID of the request
+          example: XXXXXXXXX
+    WebhookAction:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            type:
+              type: string
+              const: action
+              example: action
+            text:
+              type: string
+              description: Text of the chosen action
+              example: open this url
+            postbackData:
+              type: string
+              description: postbackData of the chosen action
+              example: data_url_link-1
+            timestamp:
+              type: string
+              description: Unix timestamp of message receipt by RBM provider
+              example: '1719576000'
+        requestType:
+          type: string
+          description: Type of the request
+          example: incoming_message_action
+          const: incoming_message_action
+        agentId:
+          type: string
+          description: RBM Agent identifier
+          example: XXXXXXXXXXXXXX
+        agentName:
+          type: string
+          description: RBM Agent name
+          example: SMSBOX
+        clientId:
+          type: integer
+          description: SMSBOX user account id
+          example: 12123
+        msisdn:
+          type: string
+          description: User phone number
+          example: +336XXXXXXXX
+        requestProd:
+          type: string
+          description: Channel
+          const: RCS
+          example: RCS
+        requestSubProd:
+          type: string
+          description: Subchannel
+          enum:
+            - rcs
+            - rcslike
+          example: rcs
+        requestDate:
+          type: string
+          format: datetime
+          description: Datetime of the request
+          example: '2024-06-01T14:00:00+02:00'
+        requestUUID:
+          type: string
+          format: uuid
+          description: Unique ID of the request
+          example: XXXXXXXXX
+    WebhookStatusUpdate:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            type:
+              type: string
+              const: event
+              example: event
+            eventType:
+              type: string
+              enum:
+                - SENT
+                - DELIVERED
+                - READ
+                - REJECTED
+                - FAILED
+                - EXPIRED
+              description: >
+
+                * `SENT` - Delivery in progress. Device seems to be compatible
+                with this channel.
+
+                * `DELIVERED` - Delivered to recipient. Following ``SENT``
+                status.
+
+                * `READ` - Read by recipient. Following ``SENT`` or
+                ``DELIVERED`` status.
+
+                * `REJECTED` - Delivery rejected. Device may be not compatible
+                with this channel.
+
+                * `FAILED` - Unable to deliver. Device may be unreachable
+                through this channel.
+
+                * `EXPIRED` - The delivery attempt has expired.
+              example: READ
+            timestamp:
+              type: string
+              description: Unix timestamp of message receipt by RBM provider
+              example: '1719576000'
+        reference:
+          type: string
+          description: Message identifier
+          example: XXXXXXXXXXXX
+        requestType:
+          type: string
+          description: Type of the request
+          example: status_update
+          const: status_update
+        agentId:
+          type: string
+          description: RBM Agent identifier
+          example: XXXXXXXXXXXXXX
+        agentName:
+          type: string
+          description: RBM Agent name
+          example: SMSBOX
+        clientId:
+          type: integer
+          description: SMSBOX user account id
+          example: 12123
+        msisdn:
+          type: string
+          description: User phone number
+          example: +336XXXXXXXX
+        requestProd:
+          type: string
+          description: Channel
+          const: RCS
+          example: RCS
+        requestSubProd:
+          type: string
+          description: Subchannel
+          enum:
+            - rcs
+            - rcslike
+          example: rcs
+        requestDate:
+          type: string
+          format: datetime
+          description: Datetime of the request
+          example: '2024-06-01T14:00:00+02:00'
+        requestUUID:
+          type: string
+          format: uuid
+          description: Unique ID of the request
+          example: XXXXXXXXX
+    WebhookDocument:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            type:
+              type: string
+              const: file
+              example: file
+            payload:
+              type: object
+              description: File details
+              properties:
+                mimeType:
+                  type: string
+                  description: Mime type of the file
+                  example: image/jpeg
+                fileSizeBytes:
+                  type: integer
+                  description: Size of the file
+                  example: 205487
+                fileName:
+                  type: string
+                  description: Name of the file
+                  example: example.jpg
+                fileUri:
+                  type: string
+                  example: url_of_the_file
+            timestamp:
+              type: string
+              description: Unix timestamp of message receipt by RBM provider
+              example: '1719576000'
+        requestType:
+          type: string
+          description: Type of the request
+          example: incoming_message_file
+          const: incoming_message_file
+        agentId:
+          type: string
+          description: RBM Agent identifier
+          example: XXXXXXXXXXXXXX
+        agentName:
+          type: string
+          description: RBM Agent name
+          example: SMSBOX
+        clientId:
+          type: integer
+          description: SMSBOX user account id
+          example: 12123
+        msisdn:
+          type: string
+          description: User phone number
+          example: +336XXXXXXXX
+        requestProd:
+          type: string
+          description: Channel
+          const: RCS
+          example: RCS
+        requestSubProd:
+          type: string
+          description: Subchannel
+          enum:
+            - rcs
+            - rcslike
+          example: rcs
+        requestDate:
+          type: string
+          format: datetime
+          description: Datetime of the request
+          example: '2024-06-01T14:00:00+02:00'
+        requestUUID:
+          type: string
+          format: uuid
+          description: Unique ID of the request
+          example: XXXXXXXXX
+    WebhookLocation:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            type:
+              type: string
+              const: location
+              example: location
+            latitude:
+              type: number
+              description: Latitude coordinate
+              example: 42.08761
+            longitude:
+              type: number
+              description: Longitude coordinate
+              example: 6.0755356
+            timestamp:
+              type: string
+              description: Unix timestamp of message receipt by RBM provider
+              example: '1719576000'
+        requestType:
+          type: string
+          description: Type of the request
+          example: incoming_message_location
+          const: incoming_message_location
+        agentId:
+          type: string
+          description: RBM Agent identifier
+          example: XXXXXXXXXXXXXX
+        agentName:
+          type: string
+          description: RBM Agent name
+          example: SMSBOX
+        clientId:
+          type: integer
+          description: SMSBOX user account id
+          example: 12123
+        msisdn:
+          type: string
+          description: User phone number
+          example: +336XXXXXXXX
+        requestProd:
+          type: string
+          description: Channel
+          const: RCS
+          example: RCS
+        requestSubProd:
+          type: string
+          description: Subchannel
+          enum:
+            - rcs
+            - rcslike
+          example: rcs
+        requestDate:
+          type: string
+          format: datetime
+          description: Datetime of the request
+          example: '2024-06-01T14:00:00+02:00'
+        requestUUID:
+          type: string
+          format: uuid
+          description: Unique ID of the request
+          example: XXXXXXXXX
+x-tagGroups:
+  - name: RCS
+    tags:
+      - rcs-message
+      - rcs-revoke
+      - rcs-add-testers
+      - rcs-capabilities
+      - rcs-event
+      - rcs-webhooks

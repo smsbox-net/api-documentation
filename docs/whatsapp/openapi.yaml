@@ -1,0 +1,4741 @@
+openapi: 3.1.0
+info:
+  title: SMSBOX - WhatsApp API Documentation
+  version: 2.2.0
+  contact:
+    url: https://www.smsbox.net
+  x-logo:
+    url: ../logo-en.png
+    backgroundColor: '#FFFFFF'
+    altText: SMSBOX logo
+    href: https://www.smsbox.net
+  description: >
+
+    ### Changelog
+
+    | Version | Date |
+    Changes                                                                                                                   
+    |
+
+    | ------- | -----
+    |---------------------------------------------------------------------------------------------------------------------------|
+
+    | 2.3.0 | 05/16/2025 | 🆕 New Templates List resource and ``Error Incoming``
+    webhook added. You can now view IPs sending webhooks in the webhook
+    section.     |
+
+    | 2.2.0 | 01/31/2025 | 📌 Add ``reference`` and ``recipients`` attributes in
+    the response of the ``message`` resource and add URL versioning
+    (``waba/1.1/json``) |
+
+    | 2.1.0 | 10/03/2024 | 👩🏻‍💻 Add interactive list and interactive button
+    group for Whatsapp
+    API.                                                                |
+
+    | 2.0.0 | 06/28/2024 | 📞 Start of the SMSBOX Documentation on github with
+    our ``Whatsapp API documentation``.                                  |
+servers:
+  - url: https://api.wababox.net
+tags:
+  - name: whatsapp-outbound-messages
+    x-displayName: Message
+    description: >-
+      Send text, media, location, and reaction messages via WhatsApp Business
+      API.
+  - name: whatsapp-interactive
+    x-displayName: Interactive
+    description: Send interactive messages with buttons or lists for user engagement.
+  - name: whatsapp-templates-messages
+    x-displayName: Template
+    description: Manage and send pre-approved message templates.
+  - name: whatsapp-event-messages
+    x-displayName: Event
+    description: Send read receipts and typing indicators.
+  - name: whatsapp-file-messages
+    x-displayName: File
+    description: Upload and manage media files for WhatsApp messages.
+  - name: whatsapp-webhooks
+    x-displayName: Webhooks
+    description: >
+      **Important:**<br><br>
+
+      You should pay close attention to the ``requestType`` properties in your
+      webhook payload.<br>
+
+      If you are using a firewall, make sure to allow this IPv4 address (**this
+      is the address that emits the webhooks**):
+       - 37.59.198.135
+       - 178.33.185.51
+       - 54.36.93.79
+       - 54.36.93.80
+       - 62.4.31.47
+       - 62.4.31.48
+paths:
+  /waba/1.1/json/{wabaId}/message/{phoneID} (text message):
+    description: Send text message
+    post:
+      operationId: sendTextMessage
+      tags:
+        - whatsapp-outbound-messages
+      security:
+        - ApiKey: []
+      summary: Send text message
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneID
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipients:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 5000
+                  example:
+                    - +336XXXXXXXX
+                contentMessage:
+                  $ref: '#/components/schemas/Text'
+      responses:
+        '202':
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse202'
+        '400':
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse400'
+        '402':
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse402'
+        '403':
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse403'
+        '404':
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse404'
+        '405':
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse405'
+        '413':
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse413'
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse503'
+      x-codeSamples:
+        - lang: cURL
+          source: "curl --request POST \\\n    --url https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID> \\\n    --header 'Authorization: App <APIKEY>' \\\n    --header 'Content-Type: application/json' \\\n    --data '{\n\t\"recipients\": [\n\t\t\"+336XXXXXXXX\"\n\t],\n\t\"contentMessage\": {\n\t\t\"type\": \"text\",\n\t\t\"text\": {\n\t\t\t\"body\": \"Message sent via my WhatsApp Business agent.\"\n\t\t}\n\t}\n}'\n"
+        - lang: Python
+          source: "import requests\nimport json\n\nurl = 'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>'\nheaders = {\n    'Authorization': 'App <APIKEY>',\n    'Content-Type': 'application/json'\n}\ndata = {\n    \"recipients\": [\n        \"+336XXXXXXXX\"\n    ],\n    \"contentMessage\": {\n        \"type\": \"text\",\n\t\t\"text\": {\n\t\t\t\"body\": \"Message sent via my WhatsApp Business agent.\"\n\t\t}\n    }\n}\n\nresponse = requests.post(url, headers=headers, data=json.dumps(data))\n\nprint(response.status_code)\nprint(response.json())\n"
+        - lang: JavaScript
+          source: >
+            const url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
+
+            const headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            };
+
+            const data = {
+                recipients: [
+                    "+336XXXXXXXX"
+                ],
+                contentMessage: {
+                    type: "text",
+                    text: {
+                        body: "Message sent via my WhatsApp Business agent."
+                    }
+                }
+            };
+
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        - lang: PHP
+          source: >
+            <?php
+
+
+            $url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
+
+            $headers = [
+                'Authorization: App <APIKEY>',
+                'Content-Type: application/json'
+            ];
+
+            $data = [
+                'recipients' => [
+                    "+336XXXXXXXX"
+                ],
+                'contentMessage' => [
+                    'type' => 'text',
+                    'text' => [
+                        'body' => 'Message sent via my WhatsApp Business agent.'
+                    ]
+                ]
+            ];
+
+
+            $ch = curl_init($url);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+            curl_setopt($ch, CURLOPT_POST, 1);
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+
+            echo $response;
+  /waba/1.1/json/{wabaId}/message/{phoneID} (Audio message):
+    description: Send audio message
+    post:
+      operationId: sendAudioMessage
+      tags:
+        - whatsapp-outbound-messages
+      security:
+        - ApiKey: []
+      summary: Send audio message
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneID
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipients:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 5000
+                  example:
+                    - +336XXXXXXXX
+                contentMessage:
+                  $ref: '#/components/schemas/Audio'
+      responses:
+        '202':
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse202'
+        '400':
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse400'
+        '402':
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse402'
+        '403':
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse403'
+        '404':
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse404'
+        '405':
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse405'
+        '413':
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse413'
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse503'
+      x-codeSamples:
+        - lang: cURL
+          source: |
+            curl --request POST \
+                --url https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID> \
+                --header 'Authorization: App <APIKEY>' \
+                --header 'Content-Type: application/json' \
+                --data '{
+                "recipients": [
+                    "+336XXXXXXXX"
+                ],
+                "contentMessage": {
+                    "type": "audio",
+                    "audio": {
+                        "link": "https://www.example.com/fr/file.mp3",
+                        "filename": "file.mp3"
+                    }
+                }
+            }'
+        - lang: Python
+          source: >
+            import requests
+
+            import json
+
+
+            url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>'
+
+            headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            }
+
+            data = {
+                'recipients': [
+                    "+336XXXXXXXX"
+                ],
+                'contentMessage': {
+                    'type': 'audio',
+                    'audio': {
+                        'link': 'https://www.example.com/fr/file.mp3',
+                        'filename': 'file.mp3'
+                    }
+                }
+            }
+
+
+            response = requests.post(url, headers=headers,
+            data=json.dumps(data))
+
+
+            print(response.status_code)
+
+            print(response.json())
+        - lang: JavaScript
+          source: >
+            const url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
+
+            const headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            };
+
+            const data = {
+                recipients: [
+                    "+336XXXXXXXX"
+                ],
+                contentMessage: {
+                    type: 'audio',
+                    audio: {
+                        link: 'https://www.example.com/fr/file.mp3',
+                        filename: 'file.mp3'
+                    }
+                }
+            };
+
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        - lang: PHP
+          source: >
+            <?php
+
+
+            $url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
+
+            $headers = [
+                'Authorization: App <APIKEY>',
+                'Content-Type: application/json'
+            ];
+
+            $data = [
+                'recipients' => [
+                    "+336XXXXXXXX"
+                ],
+                'contentMessage' => [
+                    'type' => 'audio',
+                    'audio' => [
+                        'link' => 'https://www.example.com/fr/file.mp3',
+                        'filename' => 'file.mp3'
+                    ]
+                ]
+            ];
+
+
+            $ch = curl_init($url);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+            curl_setopt($ch, CURLOPT_POST, 1);
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+
+            echo $response;
+  /waba/1.1/json/{wabaId}/message/{phoneID} (Document message):
+    description: Send document message
+    post:
+      operationId: sendDocumentMessage
+      tags:
+        - whatsapp-outbound-messages
+      security:
+        - ApiKey: []
+      summary: Send document message
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneID
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipients:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 5000
+                  example:
+                    - +336XXXXXXXX
+                contentMessage:
+                  $ref: '#/components/schemas/Document'
+      responses:
+        '202':
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse202'
+        '400':
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse400'
+        '402':
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse402'
+        '403':
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse403'
+        '404':
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse404'
+        '405':
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse405'
+        '413':
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse413'
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse503'
+      x-codeSamples:
+        - lang: cURL
+          source: |
+            curl --request POST \
+                --url https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID> \
+                --header 'Authorization: App <APIKEY>' \
+                --header 'Content-Type: application/json' \
+                --data '{
+                "recipients": [
+                    "+336XXXXXXXX"
+                ],
+                "contentMessage": {
+                    "type": "document",
+                    "document": {
+                        "link": "https://www.example.com/fr/file.pdf",
+                        "filename": "file.pdf"
+                    }
+                }
+            }'
+        - lang: Python
+          source: >
+            import requests
+
+            import json
+
+
+            url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>'
+
+            headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            }
+
+            data = {
+                'recipients': [
+                    "+336XXXXXXXX"
+                ],
+                'contentMessage': {
+                    'type': 'document',
+                    'document': {
+                        'link': 'https://www.example.com/fr/file.pdf',
+                        'filename': 'file.pdf'
+                    }
+                }
+            }
+
+
+            response = requests.post(url, headers=headers,
+            data=json.dumps(data))
+
+
+            print(response.status_code)
+
+            print(response.json())
+        - lang: JavaScript
+          source: >
+            const url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
+
+            const headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            };
+
+            const data = {
+                recipients: [
+                    "+336XXXXXXXX"
+                ],
+                contentMessage: {
+                    type: 'document',
+                    document: {
+                        link: 'https://www.example.com/fr/file.pdf',
+                        filename: 'file.pdf'
+                    }
+                }
+            };
+
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        - lang: PHP
+          source: >
+            <?php
+
+
+            $url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
+
+            $headers = [
+                'Authorization: App <APIKEY>',
+                'Content-Type: application/json'
+            ];
+
+            $data = [
+                'recipients' => [
+                    "+336XXXXXXXX"
+                ],
+                'contentMessage' => [
+                    'type' => 'document',
+                    'document' => [
+                        'link' => 'https://www.example.com/fr/file.pdf',
+                        'filename' => 'file.pdf'
+                    ]
+                ]
+            ];
+
+
+            $ch = curl_init($url);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+            curl_setopt($ch, CURLOPT_POST, 1);
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+
+            echo $response;
+  /waba/1.1/json/{wabaId}/message/{phoneID} (Image message):
+    description: Send image message
+    post:
+      operationId: sendImageMessage
+      tags:
+        - whatsapp-outbound-messages
+      security:
+        - ApiKey: []
+      summary: Send image message
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneID
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipients:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 5000
+                  example:
+                    - +336XXXXXXXX
+                contentMessage:
+                  $ref: '#/components/schemas/Image'
+      responses:
+        '202':
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse202'
+        '400':
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse400'
+        '402':
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse402'
+        '403':
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse403'
+        '404':
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse404'
+        '405':
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse405'
+        '413':
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse413'
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse503'
+      x-codeSamples:
+        - lang: cURL
+          source: |
+            curl --request POST \
+                --url https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID> \
+                --header 'Authorization: App <APIKEY>' \
+                --header 'Content-Type: application/json' \
+                --data '{
+                "recipients": [
+                    "+336XXXXXXXX"
+                ],
+                "contentMessage": {
+                    "type": "image",
+                    "image": {
+                        "link": "https://www.example.com/fr/file.jpeg",
+                        "filename": "file.jpeg"
+                    }
+                }
+            }'
+        - lang: Python
+          source: >
+            import requests
+
+            import json
+
+
+            url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>'
+
+            headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            }
+
+            data = {
+                'recipients': [
+                    "+336XXXXXXXX"
+                ],
+                'contentMessage': {
+                    'type': 'image',
+                    'image': {
+                        'link': 'https://www.example.com/fr/file.jpeg',
+                        'filename': 'file.jpeg'
+                    }
+                }
+            }
+
+
+            response = requests.post(url, headers=headers,
+            data=json.dumps(data))
+
+
+            print(response.status_code)
+
+            print(response.json())
+        - lang: JavaScript
+          source: >
+            const url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
+
+            const headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            };
+
+            const data = {
+                recipients: [
+                    "+336XXXXXXXX"
+                ],
+                contentMessage: {
+                    type: 'image',
+                    image: {
+                        link: 'https://www.example.com/fr/file.jpeg',
+                        filename: 'file.jpeg'
+                    }
+                }
+            };
+
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        - lang: PHP
+          source: >
+            <?php
+
+
+            $url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
+
+            $headers = [
+                'Authorization: App <APIKEY>',
+                'Content-Type: application/json'
+            ];
+
+            $data = [
+                'recipients' => [
+                    "+336XXXXXXXX"
+                ],
+                'contentMessage' => [
+                    'type' => 'image',
+                    'image' => [
+                        'link' => 'https://www.example.com/fr/file.jpeg',
+                        'filename' => 'file.jpeg'
+                    ]
+                ]
+            ];
+
+
+            $ch = curl_init($url);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+            curl_setopt($ch, CURLOPT_POST, 1);
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+
+            echo $response;
+  /waba/1.1/json/{wabaId}/message/{phoneID} (Sticker message):
+    description: Send sticker message
+    post:
+      operationId: sendStickerMessage
+      tags:
+        - whatsapp-outbound-messages
+      security:
+        - ApiKey: []
+      summary: Send sticker message
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneID
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipients:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 5000
+                  example:
+                    - +336XXXXXXXX
+                contentMessage:
+                  $ref: '#/components/schemas/Sticker'
+      responses:
+        '202':
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse202'
+        '400':
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse400'
+        '402':
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse402'
+        '403':
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse403'
+        '404':
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse404'
+        '405':
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse405'
+        '413':
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse413'
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse503'
+      x-codeSamples:
+        - lang: cURL
+          source: |
+            curl --request POST \
+                --url https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID> \
+                --header 'Authorization: App <APIKEY>' \
+                --header 'Content-Type: application/json' \
+                --data '{
+                "recipients": [
+                    "+336XXXXXXXX"
+                ],
+                "contentMessage": {
+                    "type": "sticker",
+                    "sticker": {
+                        "link": "https://www.example.com/fr/file.webp",
+                        "filename": "file.webp"
+                    }
+                }
+            }'
+        - lang: Python
+          source: >
+            import requests
+
+            import json
+
+
+            url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>'
+
+            headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            }
+
+            data = {
+                'recipients': [
+                    "+336XXXXXXXX"
+                ],
+                'contentMessage': {
+                    'type': 'sticker',
+                    'sticker': {
+                        'link': 'https://www.example.com/fr/file.webp',
+                        'filename': 'file.webp'
+                    }
+                }
+            }
+
+
+            response = requests.post(url, headers=headers,
+            data=json.dumps(data))
+
+
+            print(response.status_code)
+
+            print(response.json())
+        - lang: JavaScript
+          source: >
+            const url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
+
+            const headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            };
+
+            const data = {
+                recipients: [
+                    "+336XXXXXXXX"
+                ],
+                contentMessage: {
+                    type: 'sticker',
+                    sticker: {
+                        link: 'https://www.example.com/fr/file.webp',
+                        filename: 'file.webp'
+                    }
+                }
+            };
+
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        - lang: PHP
+          source: >
+            <?php
+
+
+            $url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
+
+            $headers = [
+                'Authorization: App <APIKEY>',
+                'Content-Type: application/json'
+            ];
+
+            $data = [
+                'recipients' => [
+                    "+336XXXXXXXX"
+                ],
+                'contentMessage' => [
+                    'type' => 'sticker',
+                    'sticker' => [
+                        'link' => 'https://www.example.com/fr/file.webp',
+                        'filename' => 'file.webp'
+                    ]
+                ]
+            ];
+
+
+            $ch = curl_init($url);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+            curl_setopt($ch, CURLOPT_POST, 1);
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+
+            echo $response;
+  /waba/1.1/json/{wabaId}/message/{phoneID} (Video message):
+    description: Send video message
+    post:
+      operationId: sendVideoMessage
+      tags:
+        - whatsapp-outbound-messages
+      security:
+        - ApiKey: []
+      summary: Send video message
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneID
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipients:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 5000
+                  example:
+                    - +336XXXXXXXX
+                contentMessage:
+                  $ref: '#/components/schemas/Video'
+      responses:
+        '202':
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse202'
+        '400':
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse400'
+        '402':
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse402'
+        '403':
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse403'
+        '404':
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse404'
+        '405':
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse405'
+        '413':
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse413'
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse503'
+      x-codeSamples:
+        - lang: cURL
+          source: |
+            curl --request POST \
+                --url https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID> \
+                --header 'Authorization: App <APIKEY>' \
+                --header 'Content-Type: application/json' \
+                --data '{
+                "recipients": [
+                    "+336XXXXXXXX"
+                ],
+                "contentMessage": {
+                    "type": "video",
+                    "video": {
+                        "link": "https://www.example.com/fr/file.mp4",
+                        "filename": "file.mp4"
+                    }
+                }
+            }'
+        - lang: Python
+          source: >
+            import requests
+
+            import json
+
+
+            url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>'
+
+            headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            }
+
+            data = {
+                'recipients': [
+                    "+336XXXXXXXX"
+                ],
+                'contentMessage': {
+                    'type': 'video',
+                    'video': {
+                        'link': 'https://www.example.com/fr/file.mp4',
+                        'filename': 'file.mp4'
+                    }
+                }
+            }
+
+
+            response = requests.post(url, headers=headers,
+            data=json.dumps(data))
+
+
+            print(response.status_code)
+
+            print(response.json())
+        - lang: JavaScript
+          source: >
+            const url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
+
+            const headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            };
+
+            const data = {
+                recipients: [
+                    "+336XXXXXXXX"
+                ],
+                contentMessage: {
+                    type: 'video',
+                    video: {
+                        link: 'https://www.example.com/fr/file.mp4',
+                        filename: 'file.mp4'
+                    }
+                }
+            };
+
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        - lang: PHP
+          source: >
+            <?php
+
+
+            $url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
+
+            $headers = [
+                'Authorization: App <APIKEY>',
+                'Content-Type: application/json'
+            ];
+
+            $data = [
+                'recipients' => [
+                    "+336XXXXXXXX"
+                ],
+                'contentMessage' => [
+                    'type' => 'video',
+                    'video' => [
+                        'link' => 'https://www.example.com/fr/file.mp4',
+                        'filename' => 'file.mp4'
+                    ]
+                ]
+            ];
+
+
+            $ch = curl_init($url);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+            curl_setopt($ch, CURLOPT_POST, 1);
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+
+            echo $response;
+  /waba/1.1/json/{wabaId}/message/{phoneID} (location message):
+    description: Send location message
+    post:
+      operationId: sendLocationMessage
+      tags:
+        - whatsapp-outbound-messages
+      security:
+        - ApiKey: []
+      summary: Send location message
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneID
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipients:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 5000
+                  example:
+                    - +336XXXXXXXX
+                contentMessage:
+                  $ref: '#/components/schemas/Location'
+      responses:
+        '202':
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse202'
+        '400':
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse400'
+        '402':
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse402'
+        '403':
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse403'
+        '404':
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse404'
+        '405':
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse405'
+        '413':
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse413'
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse503'
+      x-codeSamples:
+        - lang: cURL
+          source: |
+            curl --request POST \
+                --url https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID> \
+                --header 'Authorization: App <APIKEY>' \
+                --header 'Content-Type: application/json' \
+                --data '{
+                "recipients": [
+                    "+336XXXXXXXX"
+                ],
+                "contentMessage": {
+                    "type": "location",
+                    "location": {
+                        "longitude": 6.075501230687077,
+                        "latitude": 43.08811078662267,
+                        "name": "SMSBOX",
+                        "address": "20 Av. Élie Gautier, 83320 Carqueiranne"
+                    }
+                }
+            }'
+        - lang: Python
+          source: >
+            import requests
+
+            import json
+
+
+            url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>'
+
+            headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            }
+
+            data = {
+                'recipients': [
+                    "+336XXXXXXXX"
+                ],
+                'contentMessage': {
+                    'type': 'location', 
+                    'location': {
+                        'longitude': 6.075501230687077,
+                        'latitude': 43.08811078662267,
+                        'name': 'SMSBOX',
+                        'address': '20 Av. Élie Gautier, 83320 Carqueiranne'
+                    }
+                }
+            }
+
+
+            response = requests.post(url, headers=headers,
+            data=json.dumps(data))
+
+
+            print(response.status_code)
+
+            print(response.json())
+        - lang: JavaScript
+          source: >
+            const url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
+
+            const headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            };
+
+
+            const data = {
+                recipients: [
+                    "+336XXXXXXXX"
+                ],
+                contentMessage: {
+                    type: 'location',
+                    location: {
+                        longitude: 6.075501230687077,
+                        latitude: 43.08811078662267,
+                        name: 'SMSBOX',
+                        address: '20 Av. Élie Gautier, 83320 Carqueiranne'
+                    }
+                }
+            };
+
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        - lang: PHP
+          source: >
+            <?php
+
+
+            $url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
+
+            $headers = [
+                'Authorization: App <APIKEY>',
+                'Content-Type: application/json'
+            ];
+
+            $data = [
+                'recipients' => [
+                    "+336XXXXXXXX"
+                ],
+                'contentMessage' => [
+                    'type' => 'location', 
+                    'location' => [
+                        'longitude' => 6.075501230687077,
+                        'latitude' => 43.08811078662267,
+                        'name' => 'SMSBOX',
+                        'address' => '20 Av. Élie Gautier, 83320 Carqueiranne' 
+                    ]
+                ]
+            ];
+
+            $ch = curl_init($url);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+            curl_setopt($ch, CURLOPT_POST, 1);
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+
+            echo $response;
+  /waba/1.1/json/{wabaId}/message/{phoneID} (ReplyText message):
+    description: Send reply Text message
+    post:
+      operationId: sendReplyTextMessage
+      tags:
+        - whatsapp-outbound-messages
+      security:
+        - ApiKey: []
+      summary: Send reply text message
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneID
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipients:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 5000
+                  example:
+                    - +336XXXXXXXX
+                contentMessage:
+                  $ref: '#/components/schemas/ReplyText'
+      responses:
+        '202':
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse202'
+        '400':
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse400'
+        '402':
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse402'
+        '403':
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse403'
+        '404':
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse404'
+        '405':
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse405'
+        '413':
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse413'
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse503'
+      x-codeSamples:
+        - lang: cURL
+          source: |
+            curl --request POST \
+                --url https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID> \
+                --header 'Authorization: App <APIKEY>' \
+                --header 'Content-Type: application/json' \
+                --data '{
+                "recipients": [
+                  "+336XXXXXXXX"
+                ],
+                "contentMessage": {
+                  "type": "text",
+                  "context": {
+                    "message_id": "wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                  },
+                  "text": {
+                    "body": "Reply to the previous message."
+                  }
+                }
+              }'
+        - lang: Python
+          source: >
+            import requests
+
+            import json
+
+
+            url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>'
+
+            headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            }
+
+            data = {
+                "recipients": [
+                    "+336XXXXXXXX"
+                ],
+                "contentMessage": {
+                    "type": "text",
+                    "context": {
+                        "message_id": "wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                    },
+                    "text": {
+                        "body": "Reply to the previous message."
+                    }
+                }
+            }
+
+
+            response = requests.post(url, headers=headers,
+            data=json.dumps(data))
+
+
+            print(response.status_code)
+
+            print(response.json())
+        - lang: JavaScript
+          source: >
+            const url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
+
+            const headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            };
+
+            const data = {
+                recipients: [
+                    "+336XXXXXXXX"
+                ],
+                contentMessage: {
+                    type: "text",
+                    context: {
+                        message_id: "wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                    },
+                    text: {
+                        body: "Reply to the previous message."
+                    }
+                }
+            };
+
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        - lang: PHP
+          source: >
+            <?php
+
+
+            $url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
+
+            $headers = [
+                'Authorization: App <APIKEY>',
+                'Content-Type: application/json'
+            ];
+
+            $data = [
+                'recipients' => [
+                    "+336XXXXXXXX"
+                ],
+                'contentMessage' => [
+                    'type' => 'text',
+                    'context' => [
+                        'message_id' => 'wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+                    ],
+                    'text' => [
+                        'body' => 'Reply to the previous message.'
+                    ]
+                ]
+            ];
+
+
+            $ch = curl_init($url);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+            curl_setopt($ch, CURLOPT_POST, 1);
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+
+            echo $response;
+  /waba/1.1/json/{wabaId}/message/{phoneID} (reaction message):
+    description: Send reaction message
+    post:
+      operationId: sendReactionMessage
+      tags:
+        - whatsapp-outbound-messages
+      security:
+        - ApiKey: []
+      summary: Send reaction message
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneID
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipients:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 5000
+                  example:
+                    - +336XXXXXXXX
+                contentMessage:
+                  $ref: '#/components/schemas/ReplyReaction'
+      responses:
+        '202':
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse202'
+        '400':
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse400'
+        '402':
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse402'
+        '403':
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse403'
+        '404':
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse404'
+        '405':
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse405'
+        '413':
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse413'
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse503'
+      x-codeSamples:
+        - lang: cURL
+          source: "curl --request POST \\\n    --url https://api.wababox.net/waba/1.1/json/<WABAID>/reaction/<PHONEID> \\\n    --header 'Authorization: App <APIKEY>' \\\n    --header 'Content-Type: application/json' \\\n    --data '{\n\t\"recipients\": [\n\t\t\"+336XXXXXXXX\"\n\t],\n\t\"contentMessage\": {\n\t\t\"type\": \"reaction\",\n\t\t\"reaction\": {\n\t\t\t\"message_id\": 'wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx',\n\t\t\t\"emoji\": \"😀\"\n\t\t}\n\t}\n}'\n"
+        - lang: Python
+          source: "curl --request POST \\\n    --url https://api.wababox.net/waba/1.1/json/<WABAID>/reaction/<PHONEID> \\\n    --header 'Authorization: App <APIKEY>' \\\n    --header 'Content-Type: application/json' \\\n    --data '{\n\t\"recipients\": [\n\t\t\"+336XXXXXXXX\"\n\t],\n\t\"contentMessage\": {\n\t\t\"type\": \"reaction\",\n\t\t\"reaction\": {\n\t\t\t\"message_id\": 'wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx',\n\t\t\t\"emoji\": \"😀\"\n\t\t}\n\t}\n}'\n"
+        - lang: JavaScript
+          source: >
+            const url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
+
+            const headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            };
+
+            const data = {
+                recipients: [
+                    "+336XXXXXXXX"
+                ],
+                contentMessage: {
+                    type: "reaction",
+                    reaction: {
+                        message_id: 'wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+                        emoji: "😀"
+                    }
+                }
+            };
+
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        - lang: PHP
+          source: >
+            <?php
+
+
+            $url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/reaction/<PHONEID>';
+
+            $headers = [
+                'Authorization: App <APIKEY>',
+                'Content-Type: application/json'
+            ];
+
+            $data = [
+                'recipients' => [
+                    "+336XXXXXXXX"
+                ],
+                "contentMessage" => [
+                    "type" => "reaction",
+                    "reaction" => [
+                        "message_id" => 'wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+                        "emoji" => "😀"
+                    ]
+                ]
+            ];
+
+
+            $ch = curl_init($url);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+            curl_setopt($ch, CURLOPT_POST, 1);
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+
+            echo $response;
+  /waba/1.1/json/{wabaId}/message/{phoneID} (interactive button message):
+    description: Send interactive button message
+    post:
+      operationId: sendInteractiveButtonMessage
+      tags:
+        - whatsapp-interactive
+      security:
+        - ApiKey: []
+      summary: Send interactive button message
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneID
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InteractiveButtonContentMessage'
+      responses:
+        '202':
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse202'
+        '400':
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse400'
+        '402':
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse402'
+        '403':
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse403'
+        '404':
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse404'
+        '405':
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse405'
+        '413':
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse413'
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse503'
+      x-codeSamples:
+        - lang: cURL
+          source: |
+            curl --request POST \
+                --url https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID> \
+                --header 'Authorization: App <APIKEY>' \
+                --header 'Content-Type: application/json' \
+                --data '{
+              "recipients": [
+                "+336XXXXXXXX"
+              ],
+              "contentMessage": {
+                "type": "interactive",
+                "interactive": {
+                  "type": "button",
+                  "header": {
+                    "type": "text",
+                    "text": "Welcome!"
+                  },
+                  "body": {
+                    "type": "text",
+                    "text": "Choose an option:"
+                  },
+                  "footer": {
+                    "type": "text",
+                    "text": "Thank you for your visit."
+                  },
+                  "action": {
+                    "buttons": [
+                      {
+                        "type": "reply",
+                        "reply": {
+                          "id": "button1",
+                          "title": "Option 1"
+                        }
+                      },
+                      {
+                        "type": "reply",
+                        "reply": {
+                          "id": "button2",
+                          "title": "Option 2"
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }'
+        - lang: Python
+          source: >
+            import requests
+
+            import json
+
+
+            url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>'
+
+            headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            }
+
+            data = {
+                'recipients': [
+                    "+336XXXXXXXX"
+                ],
+                'contentMessage': {
+                    'type': 'interactive',
+                    'interactive': {
+                        'type': 'button',
+                        'header': {
+                            'type': 'text',
+                            'text': 'Welcome!'
+                        },
+                        'body': {
+                            'type': 'text',
+                            'text': 'Choose an option:'
+                        },
+                        'footer': {
+                            'type': 'text',
+                            'text': 'Thank you for your visit.'
+                        },
+                        'action': {
+                            'buttons': [
+                                {
+                                    'type': 'reply',
+                                    'reply': {
+                                        'id': 'button1',
+                                        'title': 'Option 1'
+                                    }
+                                },
+                                {
+                                    'type': 'reply',
+                                    'reply': {
+                                        'id': 'button2',
+                                        'title': 'Option 2'
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+
+
+            response = requests.post(url, headers=headers,
+            data=json.dumps(data))
+
+
+            print(response.status_code)
+
+            print(response.json())
+        - lang: JavaScript
+          source: >
+            const url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
+
+            const headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            };
+
+            const data = {
+                recipients: [
+                    "+336XXXXXXXX"
+                ],
+                contentMessage: {
+                    type: 'interactive',
+                    interactive: {
+                        type: 'button',
+                        header: {
+                            type: 'text',
+                            text: 'Welcome!'
+                        },
+                        body: {
+                            type: 'text',
+                            text: 'Choose an option:'
+                        },
+                        footer: {
+                            type: 'text',
+                            text: 'Thank you for your visit.'
+                        },
+                        action: {
+                            buttons: [
+                                {
+                                    type: 'reply',
+                                    reply: {
+                                        id: 'button1',
+                                        title: 'Option 1'
+                                    }
+                                },
+                                {
+                                    type: 'reply',
+                                    reply: {
+                                        id: 'button2',
+                                        title: 'Option 2'
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            };
+
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        - lang: PHP
+          source: >
+            <?php
+
+
+            $url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
+
+            $headers = [
+                'Authorization: App <APIKEY>',
+                'Content-Type: application/json'
+            ];
+
+            $data = [
+                'recipients' => [
+                    "+336XXXXXXXX"
+                ],
+                'contentMessage' => [
+                    'type' => 'interactive',
+                    'interactive' => [
+                        'type' => 'button',
+                        'header' => [
+                            'type' => 'text',
+                            'text' => 'Welcome!'
+                        ],
+                        'body' => [
+                            'type' => 'text',
+                            'text' => 'Choose an option:'
+                        ],
+                        'footer' => [
+                            'type' => 'text',
+                            'text' => 'Thank you for your visit.'
+                        ],
+                        'action' => [
+                            'buttons' => [
+                                [
+                                    'type' => 'reply',
+                                    'reply' => [
+                                        'id' => 'button1',
+                                        'title' => 'Option 1'
+                                    ]
+                                ],
+                                [
+                                    'type' => 'reply',
+                                    'reply' => [
+                                        'id' => 'button2',
+                                        'title' => 'Option 2'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ];
+
+
+            $ch = curl_init($url);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+            curl_setopt($ch, CURLOPT_POST, 1);
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+
+            echo $response;
+  /waba/1.1/json/{wabaId}/message/{phoneID} (interactive list message):
+    description: Send interactive list message
+    post:
+      operationId: sendInteractiveListMessage
+      tags:
+        - whatsapp-interactive
+      security:
+        - ApiKey: []
+      summary: Send interactive list message
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneID
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InteractiveListContentMessage'
+      responses:
+        '202':
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse202'
+        '400':
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse400'
+        '402':
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse402'
+        '403':
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse403'
+        '404':
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse404'
+        '405':
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse405'
+        '413':
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse413'
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse503'
+      x-codeSamples:
+        - lang: cURL
+          source: |
+            curl --request POST \
+                --url https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID> \
+                --header 'Authorization: App <APIKEY>' \
+                --header 'Content-Type: application/json' \
+                --data '{
+              "recipients": [
+                "+336XXXXXXXX"
+              ],
+             "contentMessage": {
+                    "type": "interactive",
+                    "interactive": {
+                        "type": "list",
+                        "header": {
+                            "type": "text",
+                            "text": "Welcome!"
+                        },
+                        "body": {
+                            "text": "Choose an option:"
+                        },
+                        "footer": {
+                            "text": "Thank you for your visit."
+                        },
+                        "action": {
+                            "button": "View options",
+                            "sections": [
+                                {
+                                    "title": "Catégorie 1",
+                                    "rows": [
+                                        {
+                                            "id": "option1",
+                                            "title": "Option 1",
+                                            "description": "Option description 1"
+                                        },
+                                        {
+                                            "id": "option2",
+                                            "title": "Option 2",
+                                            "description": "Option description 2"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            }'
+        - lang: Python
+          source: >
+            import requests
+
+            import json
+
+
+            url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>'
+
+            headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            }
+
+            data = {
+                'recipients': [
+                    "+336XXXXXXXX"
+                ],
+                'contentMessage': {
+                    'type': 'interactive',
+                    'interactive': {
+                        'type': 'list',
+                        'header': {
+                            'type': 'text',
+                            'text': 'Welcome!'
+                        },
+                        'body': {
+                            'text': 'Choose an option:'
+                        },
+                        'footer': {
+                            'text': 'Thank you for your visit.'
+                        },
+                        'action': {
+                            'button': 'View options',
+                            'sections': [
+                                {
+                                    'title': 'Catégorie 1',
+                                    'rows': [
+                                        {
+                                            'id': 'option1',
+                                            'title': 'Option 1',
+                                            'description': 'Option description 1'
+                                        },
+                                        {
+                                            'id': 'option2',
+                                            'title': 'Option 2',
+                                            'description': 'Option description 2'
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+
+
+            response = requests.post(url, headers=headers,
+            data=json.dumps(data))
+
+
+            print(response.status_code)
+
+            print(response.json())
+        - lang: JavaScript
+          source: >
+            const url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
+
+            const headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            };
+
+            const data = {
+                recipients: [
+                    "+336XXXXXXXX"
+                ],
+                contentMessage: {
+                    type: 'interactive',
+                    interactive: {
+                        type: 'list',
+                        header: {
+                            type: 'text',
+                            text: 'Welcome!'
+                        },
+                        body: {
+                            text: 'Choose an option:'
+                        },
+                        footer: {
+                            text: 'Thank you for your visit.'
+                        },
+                        action: {
+                            button: 'View options',
+                            sections: [
+                                {
+                                    title: 'Catégorie 1',
+                                    rows: [
+                                        {
+                                            id: 'option1',
+                                            title: 'Option 1',
+                                            description: 'Option description 1'
+                                        },
+                                        {
+                                            id: 'option2',
+                                            title: 'Option 2',
+                                            description: 'Option description 2'
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            };
+
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        - lang: PHP
+          source: >
+            <?php
+
+
+            $url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
+
+            $headers = [
+                'Authorization: App <APIKEY>',
+                'Content-Type: application/json'
+            ];
+
+            $data = [
+                'recipients' => [
+                    "+336XXXXXXXX"
+                ],
+                'contentMessage' => [
+                    'type' => 'interactive',
+                    'interactive' => [
+                        'type' => 'list',
+                        'header' => [
+                            'type' => 'text',
+                            'text' => 'Welcome!'
+                        ],
+                        'body' => [
+                            'text' => 'Choose an option:'
+                        ],
+                        'footer' => [
+                            'text' => 'Thank you for your visit.'
+                        ],
+                        'action' => [
+                            'button' => 'View options',
+                            'sections' => [
+                                [
+                                    'title' => 'Catégorie 1',
+                                    'rows' => [
+                                        [
+                                            'id' => 'option1',
+                                            'title' => 'Option 1',
+                                            'description' => 'Option description 1'
+                                        ],
+                                        [
+                                            'id' => 'option2',
+                                            'title' => 'Option 2',
+                                            'description' => 'Option description 2'
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ];
+
+
+            $ch = curl_init($url);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+            curl_setopt($ch, CURLOPT_POST, 1);
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+
+            echo $response;
+  /waba/1.1/json/{wabaId}/template/{phoneId}:
+    get:
+      operationId: getTemplates
+      tags:
+        - whatsapp-templates-messages
+      security:
+        - ApiKey: []
+      summary: Get all templates
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneId
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Request successfully processed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse200Template'
+        '400':
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse400'
+        '403':
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse403'
+        '404':
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse404'
+        '405':
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse405'
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse503'
+      x-codeSamples:
+        - lang: cURL
+          source: "curl --request GET \\\n\t--url https://api.wababox.net/waba/1.1/json/<WABAID>/template/<PHONEID> \\\n\t--header 'Authorization: App <APIKEY>' \\\n\t--header 'Content-Type: application/json'\n"
+        - lang: Python
+          source: >
+            import requests
+
+            import json
+
+
+            url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/template/<PHONEID>'
+
+            headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            }
+
+
+            response = requests.get(url, headers=headers)
+
+
+            print(response.status_code)
+
+            print(response.json())
+        - lang: JavaScript
+          source: "const url = 'https://api.wababox.net/waba/1.1/json/<WABAID>/template/<PHONEID>';\nconst headers = {\n\t'Authorization': 'App <APIKEY>',\n\t'Content-Type': 'application/json'\n};\n\nfetch(url, {\n\tmethod: 'GET',\n\theaders: headers\n})\n\t.then(response => response.json())\n\t.then(data => console.log(data))\n\t.catch(error => console.error('Error:', error));"
+        - lang: PHP
+          source: >
+            <?php
+
+
+            $url     =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/template/<PHONEID>';
+
+            $headers = [
+                'Authorization: App <APIKEY>',
+                'Content-Type: application/json'
+            ];
+
+
+            $ch = curl_init($url);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+
+            echo $response;
+  /waba/1.1/json/{wabaId}/message/{phoneID} (otp template message):
+    post:
+      operationId: sendOtpTemplateMessage
+      tags:
+        - whatsapp-templates-messages
+      security:
+        - ApiKey: []
+      summary: Send OTP message
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneID
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipients:
+                  type: array
+                  items:
+                    type: string
+                  maxItems: 5000
+                  example:
+                    - +336XXXXXXXX
+                contentMessage:
+                  $ref: '#/components/schemas/OTPTemplateMessage'
+      responses:
+        '202':
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse202'
+        '400':
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse400'
+        '402':
+          description: Insufficient balance to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse402'
+        '403':
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse403'
+        '404':
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse404'
+        '405':
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse405'
+        '413':
+          description: The request payload exceeds the maximum allowed size.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse413'
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse503'
+      x-codeSamples:
+        - lang: cURL
+          source: "curl --request POST \\\n\t--url https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID> \\\n\t--header 'Authorization: App <APIKEY>' \\\n\t--header 'Content-Type: application/json' \\\n\t--data '{\n\t\"recipients\": [\n\t\t\"+336XXXXXXXX\"\n\t],\n\t\"contentMessage\": {\n\t\t\"type\": \"template\",\n\t\t\"template\": {\n\t\t\t\"name\": \"otp\",\n\t\t\t\"language\": {\n\t\t\t\t\"code\": \"fr\"\n\t\t\t},\n\t\t\t\"components\": [\n\t\t\t\t{\n\t\t\t\t\t\"type\": \"body\",\n\t\t\t\t\t\"parameters\": [\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\"type\": \"text\",\n\t\t\t\t\t\t\t\"text\": \"123456\"\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\"type\": \"button\",\n\t\t\t\t\t\"sub_type\": \"url\",\n\t\t\t\t\t\"index\": \"0\",\n\t\t\t\t\t\"parameters\": [\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\"type\": \"text\",\n\t\t\t\t\t\t\t\"text\": \"123456\"\n\t\t\t\t\t\t}\n\t\t\t\t\t]\n\t\t\t\t}\n\t\t\t]\n\t\t}\n\t}\n}'\n"
+        - lang: Python
+          source: >
+            import requests
+
+            import json
+
+
+            url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>'
+
+            headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            }
+
+            data = {
+                "recipients": ["+336XXXXXXXX"],
+                "contentMessage": {
+                    "type": "template",
+                    "template": {
+                        "name": "otp",
+                        "language": {
+                            "code": "fr"
+                        },
+                        "components": [
+                            {
+                                "type": "body",
+                                "parameters": [
+                                    {
+                                        "type": "text",
+                                        "text": "123456"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "button",
+                                "sub_type": "url",
+                                "index": "0",
+                                "parameters": [
+                                    {
+                                        "type": "text",
+                                        "text": "123456"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+
+
+            response = requests.post(url, headers=headers,
+            data=json.dumps(data))
+
+
+            print(response.status_code)
+
+            print(response.json())
+        - lang: JavaScript
+          source: >-
+            const url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
+
+            const headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            };
+
+            const data = {
+                recipients: ["+336XXXXXXXX"],
+                contentMessage: {
+                    type: "template",
+                    template: {
+                        name: "otp",
+                        language: {
+                            code: "fr"
+                        },
+                        components: [
+                            {
+                                type: "body",
+                                parameters: [
+                                    {
+                                        type: "text",
+                                        text: "123456"
+                                    }
+                                ]
+                            },
+                            {
+                                type: "button",
+                                sub_type: "url",
+                                index: "0",
+                                parameters: [
+                                    {
+                                        type: "text",
+                                        text: "123456"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            };
+
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        - lang: PHP
+          source: >
+            <?php
+
+
+            $url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
+
+            $headers = [
+                'Authorization: App <APIKEY>',
+                'Content-Type: application/json'
+            ];
+
+
+            $data = [
+                "recipients" => ["+336XXXXXXXX"],
+                "contentMessage" => [
+                    "type" => "template",
+                    "template" => [
+                        "name" => "otp",
+                        "language" => [
+                            "code" => "fr"
+                        ],
+                        "components" => [
+                            [
+                                "type" => "body",
+                                "parameters" => [
+                                    [
+                                        "type" => "text",
+                                        "text" => "123456"
+                                    ]
+                                ]
+                            ],
+                            [
+                                "type" => "button",
+                                "sub_type" => "url",
+                                "index" => "0",
+                                "parameters" => [
+                                    [
+                                        "type" => "text",
+                                        "text" => "123456"
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ];
+
+
+
+            $ch = curl_init($url);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+            curl_setopt($ch, CURLOPT_POST, 1);
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+
+            echo $response;
+  /waba/1.1/json/{wabaId}/event/{phoneID}:
+    post:
+      operationId: sendEventStatus
+      tags:
+        - whatsapp-event-messages
+      security:
+        - ApiKey: []
+      summary: Send read message status
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneID
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message_id:
+                  type: string
+                  description: Received message ID
+                  example: wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                status:
+                  type: string
+                  const: read
+      responses:
+        '202':
+          description: Request successfully queued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse202'
+        '400':
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse400'
+        '403':
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse403'
+        '404':
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse404'
+        '405':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse405'
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse503'
+      x-codeSamples:
+        - lang: cURL
+          source: "curl --request POST \\\n    --url https://api.wababox.net/waba/1.1/json/<WABAID>/event/<PHONEID> \\\n    --header 'Authorization: App <APIKEY>' \\\n    --header 'Content-Type: application/json' \\\n    --data '{\n\t\t\"message_id\": \"wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\n\t\t\"status\": \"read\"\n\t}\n}'\n"
+        - lang: Python
+          source: >
+            import requests
+
+            import json
+
+
+            url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/event/<PHONEID>'
+
+            headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            }
+
+            data = {
+                'message_id': 'wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+                'status': 'read'
+            }
+
+
+            response = requests.post(url, headers=headers,
+            data=json.dumps(data))
+
+
+            print(response.status_code)
+
+            print(response.json())
+        - lang: JavaScript
+          source: >
+            const url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/event/<PHONEID>';
+
+            const headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            };
+
+            const data = {
+                message_id: 'wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+                status: 'read'
+            };
+
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        - lang: PHP
+          source: >
+            <?php
+
+
+            $url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/event/<PHONEID>';
+
+            $headers = [
+                'Authorization: App <APIKEY>',
+                'Content-Type: application/json'
+            ];
+
+            $data = [
+                'message_id' => "wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+                'status' => 'read'
+            ];
+
+
+            $ch = curl_init($url);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+            curl_setopt($ch, CURLOPT_POST, 1);
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+
+            echo $response;
+  /waba/1.1/json/{wabaId}/file/{phoneID}:
+    post:
+      operationId: retrieveFile
+      tags:
+        - whatsapp-file-messages
+      security:
+        - ApiKey: []
+      summary: Retrieve file received in a message
+      parameters:
+        - name: wabaId
+          in: path
+          description: WhatsApp Business Agent ID
+          required: true
+          schema:
+            type: string
+        - name: phoneID
+          in: path
+          description: WhatsApp Business Agent's Phone Number ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                file_id:
+                  type: string
+                  description: File ID received via webhook
+                  example: '1234567890'
+              required:
+                - file_id
+      responses:
+        '200':
+          description: Request successfully processed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      response_code:
+                        type: string
+                        example: '200'
+                      response_desc:
+                        type: string
+                        example: Request successfully processed.
+                  details:
+                    type: string
+                    example: Done.
+                  data:
+                    type: object
+                    properties:
+                      mime_type:
+                        type: string
+                        description: Mime type of the document file
+                        example: application/pdf
+                      sha256:
+                        type: string
+                        description: SHA-256 file hash
+                      file_size:
+                        type: integer
+                        description: Size in bytes
+                        example: 1048576
+                      raw:
+                        type: string
+                        description: Base64 encoded file content
+                        example: data:application/pdf;base64,xxxxxxxxxxxxxxxxxx
+        '400':
+          description: Wrong query syntax or missing mandatory field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse400'
+        '403':
+          description: Access to the requested resource has been denied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse403'
+        '404':
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse404'
+        '405':
+          description: The requested method is not supported for the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse405'
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageContentResponse503'
+      x-codeSamples:
+        - lang: cURL
+          source: "curl --request POST \\\n    --url https://api.wababox.net/waba/1.1/json/<WABAID>/file/<PHONEID> \\\n    --header 'Authorization: App <APIKEY>' \\\n    --header 'Content-Type: application/json' \\\n    --data '{\n\t\t\"file_id\": \"1234567890\"\n\t}\n}'\n"
+        - lang: Python
+          source: >
+            import requests
+
+            import json
+
+
+            url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/file/<PHONEID>'
+
+            headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            }
+
+            data = {
+                'file_id': '1234567890'
+            }
+
+
+            response = requests.post(url, headers=headers,
+            data=json.dumps(data))
+
+
+            print(response.status_code)
+
+            print(response.json())
+        - lang: JavaScript
+          source: >
+            const url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/file/<PHONEID>';
+
+            const headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            };
+
+            const data = {
+                file_id: '1234567890',
+            };
+
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        - lang: PHP
+          source: >
+            <?php
+
+
+            $url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/file/<PHONEID>';
+
+            $headers = [
+                'Authorization: App <APIKEY>',
+                'Content-Type: application/json'
+            ];
+
+            $data = [
+                'file_id' => "1234567890"
+            ];
+
+
+            $ch = curl_init($url);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+            curl_setopt($ch, CURLOPT_POST, 1);
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+
+            $response = curl_exec($ch);
+
+            curl_close($ch);
+
+
+            echo $response;
+webhooks:
+  Text:
+    post:
+      operationId: webhookText
+      summary: Incoming text message
+      tags:
+        - whatsapp-webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/webhook_Text'
+      responses:
+        '200':
+          description: >-
+            Return an HTTP 200 status and the word "OK" only to indicate that
+            the data was received successfully.
+  Document:
+    post:
+      operationId: webhookDocument
+      summary: Incoming document message
+      tags:
+        - whatsapp-webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/webhook_Document'
+      responses:
+        '200':
+          description: >-
+            Return an HTTP 200 status and the word "OK" only to indicate that
+            the data was received successfully.
+  Image:
+    post:
+      operationId: webhookImage
+      summary: Incoming image message
+      tags:
+        - whatsapp-webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/webhook_Image'
+      responses:
+        '200':
+          description: >-
+            Return an HTTP 200 status and the word "OK" only to indicate that
+            the data was received successfully.
+  Video:
+    post:
+      operationId: webhookVideo
+      summary: Incoming video message
+      tags:
+        - whatsapp-webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/webhook_Video'
+      responses:
+        '200':
+          description: >-
+            Return an HTTP 200 status and the word "OK" only to indicate that
+            the data was received successfully.
+  Reaction:
+    post:
+      operationId: webhookReaction
+      summary: Incoming reaction
+      tags:
+        - whatsapp-webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reaction'
+      responses:
+        '200':
+          description: >-
+            Return an HTTP 200 status and the word "OK" only to indicate that
+            the data was received successfully.
+  Location:
+    post:
+      operationId: webhookLocation
+      summary: Incoming location message
+      tags:
+        - whatsapp-webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/webhook_Location'
+      responses:
+        '200':
+          description: >-
+            Return an HTTP 200 status and the word "OK" only to indicate that
+            the data was received successfully.
+  MessageStatus:
+    post:
+      operationId: webhookMessageStatus
+      summary: Message status update
+      description: Message status
+      tags:
+        - whatsapp-webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageStatus'
+      responses:
+        '200':
+          description: >-
+            Return an HTTP 200 status and the word "OK" only to indicate that
+            the data was received successfully
+  Error:
+    post:
+      operationId: webhookError
+      summary: Incoming error
+      description: >-
+        This webhook will be present if an error occurs when a user submits a
+        document, image, or other file. In this case, a Error incoming type
+        webhook will be triggered, and the `errors` property will contain a JSON
+        object with the error details.
+      tags:
+        - whatsapp-webhooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncomingError'
+      responses:
+        '200':
+          description: >-
+            Return an HTTP 200 status and the word "OK" only to indicate that
+            the data was received successfully
+components:
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: |
+        Example: `Authorization: App YOUR_API_KEY`
+  schemas:
+    Text:
+      type: object
+      properties:
+        type:
+          type: string
+          const: text
+        text:
+          type: object
+          properties:
+            body:
+              type: string
+              maxLength: 4096
+            preview_url:
+              type: boolean
+          required:
+            - body
+      required:
+        - type
+        - text
+      example:
+        type: text
+        text:
+          body: Message sent via my WhatsApp Business agent.
+    MessageContentResponse202:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            response_code:
+              type: string
+              example: '202'
+            response_desc:
+              type: string
+              example: Request successfully queued.
+        details:
+          type: string
+          example: Request accepted for processing.
+        reference:
+          type: string
+          example: XXXXXXXXXXXXXX
+        recipients:
+          type: array
+          items:
+            type: object
+            properties:
+              submitted:
+                type: string
+                example: +33xxxxxxxxx
+              rewrited:
+                type: string
+                example: 33xxxxxxxxx
+              state:
+                type: string
+                example: ACCEPTED
+              reason_code:
+                type: string
+                example: PROCESSING
+    MessageContentResponse400:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            response_code:
+              type: string
+              example: '400'
+            response_desc:
+              type: string
+              example: Wrong query syntax or missing mandatory field.
+        error:
+          type: string
+          example: Missing mandatory phone ID.
+    MessageContentResponse402:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            response_code:
+              type: string
+              example: '402'
+            response_desc:
+              type: string
+              example: Insufficient balance to process the request.
+        error:
+          type: string
+          example: No credit or insufficient.
+    MessageContentResponse403:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            response_code:
+              type: string
+              example: '403'
+            response_desc:
+              type: string
+              example: Access to the requested resource has been denied.
+        error:
+          type: string
+          example: API Key not allowed or account discontinued.
+    MessageContentResponse404:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            response_code:
+              type: string
+              example: '404'
+            response_desc:
+              type: string
+              example: The requested resource was not found.
+        error:
+          type: string
+          example: Invalid wabaId value (not found).
+    MessageContentResponse405:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            response_code:
+              type: string
+              example: '405'
+            response_desc:
+              type: string
+              example: >-
+                The requested method is not supported for the requested
+                resource.
+        error:
+          type: string
+          example: Invalid HTTP method.
+    MessageContentResponse413:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            response_code:
+              type: string
+              example: '413'
+            response_desc:
+              type: string
+              example: The request payload exceeds the maximum allowed size.
+        error:
+          type: string
+          example: 'Too many recipients (max.: ....).'
+    MessageContentResponse503:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            response_code:
+              type: string
+              example: '503'
+            response_desc:
+              type: string
+              example: Service temporarily unavailable.
+        error:
+          type: string
+          example: Authentication failed for unknown reason.
+    Media:
+      type: object
+      properties:
+        link:
+          type: string
+          format: uri
+        filename:
+          type: string
+      required:
+        - link
+        - filename
+    Audio:
+      properties:
+        type:
+          type: string
+          description: |
+            "Supported MIME types : 
+              - Audio : audio/aac - audio/amr - audio/mpeg - audio/mp4 - audio/ogg (OPUS codecs only; base audio/ogg not supported.) `max size : 16MB`
+          const: audio
+        audio:
+          $ref: '#/components/schemas/Media'
+      required:
+        - type
+      example:
+        type: audio
+        audio:
+          link: https://www.example.com/fr/file.mp3
+          filename: file.mp3
+    Document:
+      properties:
+        type:
+          type: string
+          description: |
+            "Supported MIME types : 
+              - Document : text/plain - application/vnd.ms-excel - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet - application/msword - application/vnd - openxmlformats-officedocument.wordprocessingml.document - application/vnd.ms-powerpoint - application/vnd.openxmlformats-officedocument.presentationml.presentation - application/pdf `max size : 100MB`
+          const: document
+        document:
+          $ref: '#/components/schemas/Media'
+      required:
+        - type
+      example:
+        type: document
+        document:
+          link: https://www.example.com/fr/file.pdf
+          filename: file.pdf
+    Image:
+      properties:
+        type:
+          type: string
+          description: |
+            "Supported MIME types : 
+              - Image : image/jpeg - image/png  `max size : 5MB`
+          const: image
+        image:
+          $ref: '#/components/schemas/Media'
+      required:
+        - type
+      example:
+        type: image
+        image:
+          link: https://www.example.com/fr/file.jpeg
+          filename: file.jpeg
+    Sticker:
+      properties:
+        type:
+          type: string
+          description: |
+            "Supported MIME types : 
+              - Sticker : image/webp - image/webp  `max size : 500KB`
+          const: sticker
+        sticker:
+          $ref: '#/components/schemas/Media'
+      required:
+        - type
+      example:
+        type: sticker
+        sticker:
+          link: https://www.example.com/fr/file.webp
+          filename: file.webp
+    Video:
+      properties:
+        type:
+          type: string
+          description: |
+            "Supported MIME types : 
+              - Video : video/3gp - video/mp4"  `max size : 16MB`
+          const: video
+        video:
+          $ref: '#/components/schemas/Media'
+      required:
+        - type
+      example:
+        type: video
+        video:
+          link: https://www.example.com/fr/file.mp4
+          filename: file.mp4
+    Location:
+      type: object
+      properties:
+        type:
+          type: string
+          const: location
+        location:
+          type: object
+          properties:
+            longitude:
+              type: number
+            latitude:
+              type: number
+            name:
+              type: string
+            address:
+              type: string
+          required:
+            - longitude
+            - latitude
+      required:
+        - type
+        - location
+      example:
+        type: location
+        location:
+          longitude: 6.075501230687077
+          latitude: 43.08811078662267
+          name: SMSBOX
+          address: 20 Av. Élie Gautier, 83320 Carqueiranne
+    ReplyText:
+      type: object
+      properties:
+        type:
+          type: string
+          const: text
+        context:
+          type: object
+          properties:
+            message_id:
+              type: string
+              description: Received message ID
+              example: wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        text:
+          type: object
+          properties:
+            body:
+              type: string
+              maxLength: 4096
+            preview_url:
+              type: boolean
+          required:
+            - body
+      required:
+        - type
+        - text
+      example:
+        type: text
+        context:
+          message_id: wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        text:
+          body: Reply to a previous message.
+    ReplyReaction:
+      properties:
+        type:
+          type: string
+          const: reaction
+        reaction:
+          type: object
+          properties:
+            message_id:
+              type: string
+              description: Received message ID
+              example: wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            emoji:
+              type: string
+              const: 😀
+          required:
+            - message_id
+            - emoji
+      required:
+        - type
+        - reaction
+      example:
+        type: reaction
+        reaction:
+          message_id: wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+          emoji: 😀
+    InteractiveButtonContentMessage:
+      properties:
+        type:
+          type: string
+          const: interactive
+        interactive:
+          type: object
+          properties:
+            type:
+              type: string
+              const: button
+            header:
+              oneOf:
+                - $ref: '#/components/schemas/Text'
+                - $ref: '#/components/schemas/Document'
+                - $ref: '#/components/schemas/Image'
+                - $ref: '#/components/schemas/Video'
+            body:
+              type: object
+              properties:
+                text:
+                  type: string
+                  maxLength: 1024
+              required:
+                - text
+            footer:
+              type: object
+              properties:
+                text:
+                  type: string
+                  maxLength: 60
+            action:
+              type: object
+              properties:
+                buttons:
+                  type: array
+                  minItems: 1
+                  maxItems: 3
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        const: reply
+                      reply:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            maxLength: 256
+                          title:
+                            type: string
+                            maxLength: 20
+                        required:
+                          - id
+                          - title
+                    required:
+                      - reply
+                      - type
+              required:
+                - buttons
+          required:
+            - type
+            - header
+            - body
+            - action
+      required:
+        - type
+        - interactive
+    InteractiveListContentMessage:
+      type: object
+      properties:
+        type:
+          type: string
+          const: interactive
+        interactive:
+          type: object
+          properties:
+            type:
+              type: string
+              const: list
+            header:
+              type: object
+              properties:
+                type:
+                  description: >-
+                    If you use it, you must set the type to text and add a text
+                    field with the desired content.
+                  type: string
+                  maxLength: 60
+                  enum:
+                    - text
+                text:
+                  type: string
+              required:
+                - text
+            body:
+              type: object
+              properties:
+                text:
+                  type: string
+                  maxLength: 1024
+            footer:
+              type: object
+              properties:
+                text:
+                  type: string
+                  maxLength: 60
+            action:
+              type: object
+              properties:
+                button:
+                  type: string
+                  maxLength: 20
+                sections:
+                  type: array
+                  minItems: 1
+                  maxItems: 10
+                  items:
+                    type: object
+                    properties:
+                      title:
+                        type: string
+                        maxLength: 24
+                        description: Required if the message has more than one section.
+                      rows:
+                        type: array
+                        minItems: 1
+                        maxItems: 10
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              maxLength: 200
+                            title:
+                              type: string
+                              maxLength: 24
+                            description:
+                              type: string
+                              maxLength: 72
+                          required:
+                            - id
+                            - title
+                    required:
+                      - rows
+              required:
+                - button
+                - sections
+          required:
+            - action
+            - body
+      required:
+        - type
+        - interactive
+    MessageContentResponse200Template:
+      type: object
+      properties:
+        response:
+          type: object
+          properties:
+            response_code:
+              type: string
+              example: '200'
+            response_desc:
+              type: string
+              example: Request successfully processed.
+        details:
+          type: string
+          example: List of the agent's templates
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                example: myTemplate
+              language:
+                type: string
+                example: en_US
+              components:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      example: BODY
+                    parameters:
+                      type:
+                        - array
+                        - 'null'
+                      example: null
+              status:
+                type: string
+                example: APPROUVED
+              category:
+                type: string
+                example: UTILITY
+              id:
+                type: string
+                example: xxxxxxxxxxxxxxxx
+    OTPTemplateMessage:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - template
+        template:
+          type: object
+          properties:
+            name:
+              type: string
+              example: otp
+            language:
+              type: object
+              properties:
+                code:
+                  type: string
+                  example: en-US
+              required:
+                - code
+            components:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum:
+                      - body
+                      - button
+                  sub_type:
+                    type: string
+                    enum:
+                      - url
+                  index:
+                    type: string
+                    enum:
+                      - '0'
+                  parameters:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - text
+                        text:
+                          type: string
+                          example: 123456
+                      required:
+                        - type
+                        - text
+                required:
+                  - type
+                  - parameters
+          required:
+            - name
+            - language
+            - components
+      required:
+        - type
+        - template
+      example:
+        type: template
+        template:
+          name: otp
+          language:
+            code: en
+          components:
+            - type: body
+              parameters:
+                - type: text
+                  text: '123456'
+            - type: button
+              sub_type: url
+              index: '0'
+              parameters:
+                - type: text
+                  text: '123456'
+    webhook_Text:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            from:
+              type: string
+              description: Customer's phone number
+              example: 33XXXXXXXXX
+            id:
+              type: string
+              description: ID message
+              example: wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            timestamp:
+              type: string
+              description: Unix timestamp of message receipt by WhatsApp server
+              example: '1719576000'
+            text:
+              type: object
+              properties:
+                body:
+                  type: string
+                  description: Text message
+                  example: Hello 🙂
+            type:
+              type: string
+              const: text
+        wabaId:
+          type: string
+          description: WhatsApp Business Agent ID
+          example: xxxxxx
+        phoneId:
+          type: string
+          description: WhatsApp Business Agent's Phone Number ID
+          example: xxxxxx
+        phoneNumber:
+          type: string
+          description: WhatsApp Business Agent's Phone Number
+          example: xxxxxx
+        clientId:
+          type: integer
+          description: SMSBOX user account ID
+          example: 123456
+        requestProd:
+          type: string
+          description: Channel
+          const: WABA
+          example: WABA
+        requestDate:
+          type: string
+          description: Datetime of the sent message
+          format: date-time
+          example: '2024-06-01T14:00:00+02:00'
+        requestUUID:
+          type: string
+          format: uuid
+          example: xxxxxx
+        requestType:
+          type: string
+          const: incoming_message
+    webhook_Document:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            from:
+              type: string
+              description: Customer's phone number
+              example: 33XXXXXXXXX
+            id:
+              type: string
+              description: ID message
+              example: wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            timestamp:
+              type: string
+              description: Unix timestamp of message receipt by WhatsApp server
+              example: '1719576000'
+            type:
+              type: string
+              const: document
+            document:
+              type: object
+              properties:
+                filename:
+                  type: string
+                  example: filename.pdf
+                mime_type:
+                  type: string
+                  description: >
+                    text/plain - application/vnd.ms-excel -
+                    application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+                    - application/msword - application/vnd -
+                    openxmlformats-officedocument.wordprocessingml.document -
+                    application/vnd.ms-powerpoint -
+                    application/vnd.openxmlformats-officedocument.presentationml.presentation
+                    - application/pdf <br>`max size : 100MB`
+                  example: application/pdf
+                sha256:
+                  type: string
+                  description: SHA-256 file hash
+                id:
+                  type: string
+                  description: ID of the file
+                  example: '1234567890'
+                caption:
+                  type: string
+        wabaId:
+          type: string
+          description: WhatsApp Business Agent ID
+          example: xxxxxx
+        phoneId:
+          type: string
+          description: WhatsApp Business Agent's Phone Number ID
+          example: xxxxxx
+        phoneNumber:
+          type: string
+          description: WhatsApp Business Agent's Phone Number
+          example: xxxxxx
+        clientId:
+          type: integer
+          description: SMSBOX user account ID
+          example: 123456
+        requestProd:
+          type: string
+          description: Channel
+          const: WABA
+          example: WABA
+        requestDate:
+          type: string
+          description: Datetime of the sent message
+          format: date-time
+          example: '2024-06-01T14:00:00+02:00'
+        requestUUID:
+          type: string
+          format: uuid
+          example: xxxxxx
+        requestType:
+          type: string
+          const: incoming_message
+    webhook_Image:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            from:
+              type: string
+              description: Customer's phone number
+              example: 33XXXXXXXXX
+            id:
+              type: string
+              description: ID message
+              example: wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            timestamp:
+              type: string
+              description: Unix timestamp of message receipt by WhatsApp server
+              example: '1719576000'
+            type:
+              type: string
+              const: image
+            image:
+              type: object
+              properties:
+                mime_type:
+                  type: string
+                  description: |
+                    image/jpeg - image/png <br>`max size : 5MB`
+                  example: image/jpeg
+                sha256:
+                  type: string
+                  description: SHA-256 file hash
+                id:
+                  type: string
+                  description: ID of the file
+                  example: '1234567890'
+                caption:
+                  type: string
+        wabaId:
+          type: string
+          description: WhatsApp Business Agent ID
+          example: xxxxxx
+        phoneId:
+          type: string
+          description: WhatsApp Business Agent's Phone Number ID
+          example: xxxxxx
+        phoneNumber:
+          type: string
+          description: WhatsApp Business Agent's Phone Number
+          example: xxxxxx
+        clientId:
+          type: integer
+          description: SMSBOX user account ID
+          example: 123456
+        requestProd:
+          type: string
+          description: Channel
+          const: WABA
+          example: WABA
+        requestDate:
+          type: string
+          description: Datetime of the sent message
+          format: date-time
+          example: '2024-06-01T14:00:00+02:00'
+        requestUUID:
+          type: string
+          format: uuid
+          example: xxxxxx
+        requestType:
+          type: string
+          const: incoming_message
+    webhook_Video:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            from:
+              type: string
+              description: Customer's phone number
+              example: 33XXXXXXXXX
+            id:
+              type: string
+              description: ID message
+              example: wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            timestamp:
+              type: string
+              description: Unix timestamp of message receipt by WhatsApp server
+              example: '1719576000'
+            type:
+              type: string
+              const: video
+            video:
+              type: object
+              properties:
+                caption:
+                  type: string
+                mime_type:
+                  type: string
+                  description: |
+                    video/3gp - video/mp4"<br>`max size : 16MB`
+                  example: video/mp4
+                sha256:
+                  type: string
+                  description: SHA-256 file hash
+                id:
+                  type: string
+                  description: ID of the file
+                  example: '1234567890'
+        wabaId:
+          type: string
+          description: WhatsApp Business Agent ID
+          example: xxxxxx
+        phoneId:
+          type: string
+          description: WhatsApp Business Agent's Phone Number ID
+          example: xxxxxx
+        phoneNumber:
+          type: string
+          description: WhatsApp Business Agent's Phone Number
+          example: xxxxxx
+        clientId:
+          type: integer
+          description: SMSBOX user account ID
+          example: 123456
+        requestProd:
+          type: string
+          description: Channel
+          const: WABA
+          example: WABA
+        requestDate:
+          type: string
+          description: Datetime of the sent message
+          format: date-time
+          example: '2024-06-01T14:00:00+02:00'
+        requestUUID:
+          type: string
+          format: uuid
+          example: xxxxxx
+        requestType:
+          type: string
+          const: incoming_message
+    Reaction:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            from:
+              type: string
+              description: Customer's phone number
+              example: 33XXXXXXXXX
+            id:
+              type: string
+              description: ID message
+              example: wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            timestamp:
+              type: string
+              description: Unix timestamp of message receipt by WhatsApp server
+              example: '1719576000'
+            type:
+              type: string
+              const: reaction
+            reaction:
+              type: object
+              properties:
+                message_id:
+                  type: string
+                  description: ID of the message sent and to which the client reacted
+                  example: wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                emoji:
+                  type: string
+                  example: 👍
+        wabaId:
+          type: string
+          description: WhatsApp Business Agent ID
+          example: xxxxxx
+        phoneId:
+          type: string
+          description: WhatsApp Business Agent's Phone Number ID
+          example: xxxxxx
+        phoneNumber:
+          type: string
+          description: WhatsApp Business Agent's Phone Number
+          example: xxxxxx
+        clientId:
+          type: integer
+          description: SMSBOX user account ID
+          example: 123456
+        requestProd:
+          type: string
+          description: Channel
+          const: WABA
+          example: WABA
+        requestDate:
+          type: string
+          description: Datetime of the sent message
+          format: date-time
+          example: '2024-06-01T14:00:00+02:00'
+        requestUUID:
+          type: string
+          format: uuid
+          example: xxxxxx
+        requestType:
+          type: string
+          const: incoming_message
+    webhook_Location:
+      description: >-
+        WhatsApp use Facebook Places, Google Maps, and Foursquare for map and
+        location data
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            from:
+              type: string
+              description: Customer's phone number
+              example: 33XXXXXXXXX
+            id:
+              type: string
+              example: wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            timestamp:
+              type: string
+              description: Unix timestamp of message receipt by WhatsApp server
+              example: '1719576000'
+            type:
+              type: string
+              const: location
+            location:
+              type: object
+              properties:
+                address:
+                  type: string
+                  example: 20 Av. Élie Gautier, 83320 Carqueiranne
+                latitude:
+                  type: number
+                  format: float
+                  example: 43.0875153
+                longitude:
+                  type: number
+                  format: float
+                  example: 6.0754154
+                name:
+                  type: string
+                  example: SMSBOX
+                url:
+                  type: string
+                  description: >-
+                    If a URL corresponding to the location is identified, this
+                    property will be populated
+                  example: https://foursquare.com/xxxxx
+        wabaId:
+          type: string
+          description: WhatsApp Business Agent ID
+          example: xxxxxx
+        phoneId:
+          type: string
+          description: WhatsApp Business Agent's Phone Number ID
+          example: xxxxxx
+        phoneNumber:
+          type: string
+          description: WhatsApp Business Agent's Phone Number
+          example: xxxxxx
+        clientId:
+          type: integer
+          description: SMSBOX user account ID
+          example: 123456
+        requestProd:
+          type: string
+          description: Channel
+          const: WABA
+          example: WABA
+        requestDate:
+          type: string
+          description: Datetime of the sent message
+          format: date-time
+          example: '2024-06-01T14:00:00+02:00'
+        requestUUID:
+          type: string
+          format: uuid
+          example: xxxxxx
+        requestType:
+          type: string
+          const: incoming_message
+    MessageStatus:
+      required:
+        - data
+        - wabaId
+        - phoneId
+        - phoneNumber
+        - clientId
+        - reference
+        - requestProd
+        - requestDate
+        - requestUUID
+        - requestType
+        - id
+      type: object
+      properties:
+        data:
+          required:
+            - id
+            - status
+            - timestamp
+            - recipient_id
+          type: object
+          properties:
+            id:
+              type: string
+              example: wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            status:
+              type: string
+              enum:
+                - failed
+                - ack
+                - sent
+                - delivered
+                - read
+              description: >
+
+                * `ack` - Request forwarded to Meta API.
+
+                * `sent` - Delivery in progress. Following ``ack`` status.
+
+                * `delivered` - Delivered to recipient. Following ``sent``
+                status. May not be supplied when ``read`` status happen quickly.
+
+                * `read` - Read by recipient. Following ``sent`` or
+                ``delivered`` status. May not be supplied according to privacy
+                settings from end-user.
+
+                * `failed` - Unable to deliver, see ``errors`` parameter for
+                description. Following ``ack`` status.
+            timestamp:
+              type: string
+              description: Unix timestamp of message receipt by WhatsApp server
+              example: '1719576000'
+            recipient_id:
+              type: string
+              description: Customer's phone number
+              example: 33XXXXXXXXX
+            errors:
+              type: array
+              description: Data of the error. Only present if the status is ``failed``
+              items:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 131047
+                    description: Error code.
+                  title:
+                    type: string
+                    example: Title of the error.
+                    description: Title of the error.
+                  message:
+                    type: string
+                    example: Error message.
+                    description: Error message.
+                  error_data:
+                    type: object
+                    properties:
+                      details:
+                        type: string
+                        description: Details of the error.
+                        example: Detaiils of the error.
+                      href:
+                        type: string
+                        description: Link to Whatsapp error-codes documentation
+                        example: >-
+                          https://developers.facebook.com/docs/whatsapp/cloud-api/support/error-codes/
+        wabaId:
+          type: string
+          description: WhatsApp Business Agent ID
+          example: xxxxxx
+        phoneId:
+          type: string
+          description: WhatsApp Business Agent's Phone Number ID
+          example: xxxxxx
+        phoneNumber:
+          type: string
+          description: WhatsApp Business Agent's Phone Number
+          example: xxxxxx
+        clientId:
+          type: integer
+          description: SMSBOX user account ID
+          example: 123456
+        reference:
+          type: integer
+          description: Internal ID of the sent message
+          example: 1234567890
+        requestProd:
+          type: string
+          description: Channel
+          example: WABA
+        requestDate:
+          type: string
+          description: Datetime of the sent message
+          format: date-time
+          example: '2024-06-01T14:00:00+02:00'
+        requestUUID:
+          type: string
+          format: uuid
+          example: xxxxxx
+        requestType:
+          type: string
+          const: status_update
+    IncomingError:
+      type: object
+      properties:
+        wabaId:
+          type: string
+          description: WhatsApp Business Agent ID
+          example: xxxxxx
+        phoneId:
+          type: string
+          description: WhatsApp Business Agent's Phone Number ID
+          example: xxxxxx
+        phoneNumber:
+          type: string
+          description: WhatsApp Business Agent's Phone Number
+          example: xxxxxx
+        clientId:
+          type: integer
+          description: SMSBOX user account ID
+          example: 123456
+        requestProd:
+          type: string
+          description: Channel
+          const: WABA
+          example: WABA
+        requestDate:
+          type: string
+          description: Datetime of the sent message
+          format: date-time
+          example: '2024-06-01T14:00:00+02:00'
+        requestUUID:
+          type: string
+          format: uuid
+          example: xxxxxx
+        requestType:
+          type: string
+          const: incoming_error
+        data:
+          type: object
+          properties:
+            from:
+              type: string
+              description: Customer's phone number
+              example: 33XXXXXXXXX
+            id:
+              type: string
+              description: ID message
+              example: wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            timestamp:
+              type: string
+              description: Unix timestamp of message receipt by WhatsApp server
+              example: '1719576000'
+            errors:
+              type: array
+              items:
+                type: object
+                properties:
+                  code:
+                    type: number
+                    description: Meta api error code
+                    example: 123456
+                  title:
+                    type: string
+                    description: Title of the error
+                    example: Message type unknown
+                  message:
+                    type: string
+                    description: Message of the error
+                    example: Message type unknown
+                  error_data:
+                    type: object
+                    properties:
+                      details:
+                        type: string
+                        description: Details of the error
+                        example: Message type is currently not supported.
+x-tagGroups:
+  - name: Whatsapp
+    tags:
+      - whatsapp-outbound-messages
+      - whatsapp-interactive
+      - whatsapp-templates-messages
+      - whatsapp-event-messages
+      - whatsapp-file-messages
+      - whatsapp-webhooks
