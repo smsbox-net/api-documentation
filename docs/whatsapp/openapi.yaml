@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: SMSBOX - WhatsApp API Documentation
-  version: 2.2.0
+  version: 2.4.0
   contact:
     url: https://www.smsbox.net
   x-logo:
@@ -19,6 +19,12 @@ info:
 
     | ------- | -----
     |---------------------------------------------------------------------------------------------------------------------------|
+
+    | 2.4.0 | 07/03/2026 | 🆕 BSUID support: ``from_user_id`` added to inbound
+    webhooks to identify contacts when the phone number is unavailable (sending
+    to a BSUID is not supported). 🛠️ Fix: ``filename`` is now optional and
+    limited to the ``document`` media (removed from ``audio``, ``image``,
+    ``video``). Sticker sending removed. |
 
     | 2.3.0 | 05/16/2025 | 🆕 New Templates List resource and ``Error Incoming``
     webhook added. You can now view IPs sending webhooks in the webhook
@@ -102,6 +108,11 @@ paths:
               properties:
                 recipients:
                   type: array
+                  description: >-
+                    Recipients' phone numbers in international format.
+                    Business-Scoped User IDs (BSUID) are not accepted as
+                    recipients yet: a contact whose phone number is unavailable
+                    cannot be messaged.
                   items:
                     type: string
                   maxItems: 5000
@@ -268,6 +279,11 @@ paths:
               properties:
                 recipients:
                   type: array
+                  description: >-
+                    Recipients' phone numbers in international format.
+                    Business-Scoped User IDs (BSUID) are not accepted as
+                    recipients yet: a contact whose phone number is unavailable
+                    cannot be messaged.
                   items:
                     type: string
                   maxItems: 5000
@@ -338,8 +354,7 @@ paths:
                 "contentMessage": {
                     "type": "audio",
                     "audio": {
-                        "link": "https://www.example.com/fr/file.mp3",
-                        "filename": "file.mp3"
+                        "link": "https://www.example.com/fr/file.aac"
                     }
                 }
             }'
@@ -365,8 +380,7 @@ paths:
                 'contentMessage': {
                     'type': 'audio',
                     'audio': {
-                        'link': 'https://www.example.com/fr/file.mp3',
-                        'filename': 'file.mp3'
+                        'link': 'https://www.example.com/fr/file.aac'
                     }
                 }
             }
@@ -396,8 +410,7 @@ paths:
                 contentMessage: {
                     type: 'audio',
                     audio: {
-                        link: 'https://www.example.com/fr/file.mp3',
-                        filename: 'file.mp3'
+                        link: 'https://www.example.com/fr/file.aac'
                     }
                 }
             };
@@ -431,8 +444,7 @@ paths:
                 'contentMessage' => [
                     'type' => 'audio',
                     'audio' => [
-                        'link' => 'https://www.example.com/fr/file.mp3',
-                        'filename' => 'file.mp3'
+                        'link' => 'https://www.example.com/fr/file.aac'
                     ]
                 ]
             ];
@@ -486,6 +498,11 @@ paths:
               properties:
                 recipients:
                   type: array
+                  description: >-
+                    Recipients' phone numbers in international format.
+                    Business-Scoped User IDs (BSUID) are not accepted as
+                    recipients yet: a contact whose phone number is unavailable
+                    cannot be messaged.
                   items:
                     type: string
                   maxItems: 5000
@@ -556,8 +573,7 @@ paths:
                 "contentMessage": {
                     "type": "document",
                     "document": {
-                        "link": "https://www.example.com/fr/file.pdf",
-                        "filename": "file.pdf"
+                        "link": "https://www.example.com/fr/file.pdf"
                     }
                 }
             }'
@@ -583,8 +599,7 @@ paths:
                 'contentMessage': {
                     'type': 'document',
                     'document': {
-                        'link': 'https://www.example.com/fr/file.pdf',
-                        'filename': 'file.pdf'
+                        'link': 'https://www.example.com/fr/file.pdf'
                     }
                 }
             }
@@ -614,8 +629,7 @@ paths:
                 contentMessage: {
                     type: 'document',
                     document: {
-                        link: 'https://www.example.com/fr/file.pdf',
-                        filename: 'file.pdf'
+                        link: 'https://www.example.com/fr/file.pdf'
                     }
                 }
             };
@@ -649,8 +663,7 @@ paths:
                 'contentMessage' => [
                     'type' => 'document',
                     'document' => [
-                        'link' => 'https://www.example.com/fr/file.pdf',
-                        'filename' => 'file.pdf'
+                        'link' => 'https://www.example.com/fr/file.pdf'
                     ]
                 ]
             ];
@@ -704,6 +717,11 @@ paths:
               properties:
                 recipients:
                   type: array
+                  description: >-
+                    Recipients' phone numbers in international format.
+                    Business-Scoped User IDs (BSUID) are not accepted as
+                    recipients yet: a contact whose phone number is unavailable
+                    cannot be messaged.
                   items:
                     type: string
                   maxItems: 5000
@@ -774,8 +792,7 @@ paths:
                 "contentMessage": {
                     "type": "image",
                     "image": {
-                        "link": "https://www.example.com/fr/file.jpeg",
-                        "filename": "file.jpeg"
+                        "link": "https://www.example.com/fr/file.jpeg"
                     }
                 }
             }'
@@ -801,8 +818,7 @@ paths:
                 'contentMessage': {
                     'type': 'image',
                     'image': {
-                        'link': 'https://www.example.com/fr/file.jpeg',
-                        'filename': 'file.jpeg'
+                        'link': 'https://www.example.com/fr/file.jpeg'
                     }
                 }
             }
@@ -832,8 +848,7 @@ paths:
                 contentMessage: {
                     type: 'image',
                     image: {
-                        link: 'https://www.example.com/fr/file.jpeg',
-                        filename: 'file.jpeg'
+                        link: 'https://www.example.com/fr/file.jpeg'
                     }
                 }
             };
@@ -867,226 +882,7 @@ paths:
                 'contentMessage' => [
                     'type' => 'image',
                     'image' => [
-                        'link' => 'https://www.example.com/fr/file.jpeg',
-                        'filename' => 'file.jpeg'
-                    ]
-                ]
-            ];
-
-
-            $ch = curl_init($url);
-
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-            curl_setopt($ch, CURLOPT_POST, 1);
-
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-
-            $response = curl_exec($ch);
-
-            curl_close($ch);
-
-
-            echo $response;
-  /waba/1.1/json/{wabaId}/message/{phoneID} (Sticker message):
-    description: Send sticker message
-    post:
-      operationId: sendStickerMessage
-      tags:
-        - whatsapp-outbound-messages
-      security:
-        - ApiKey: []
-      summary: Send sticker message
-      parameters:
-        - name: wabaId
-          in: path
-          description: WhatsApp Business Agent ID
-          required: true
-          schema:
-            type: string
-        - name: phoneID
-          in: path
-          description: WhatsApp Business Agent's Phone Number ID
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                recipients:
-                  type: array
-                  items:
-                    type: string
-                  maxItems: 5000
-                  example:
-                    - +336XXXXXXXX
-                contentMessage:
-                  $ref: '#/components/schemas/Sticker'
-      responses:
-        '202':
-          description: Request successfully queued.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageContentResponse202'
-        '400':
-          description: Wrong query syntax or missing mandatory field.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageContentResponse400'
-        '402':
-          description: Insufficient balance to process the request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageContentResponse402'
-        '403':
-          description: Access to the requested resource has been denied.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageContentResponse403'
-        '404':
-          description: The requested resource was not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageContentResponse404'
-        '405':
-          description: The requested method is not supported for the requested resource.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageContentResponse405'
-        '413':
-          description: The request payload exceeds the maximum allowed size.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageContentResponse413'
-        '503':
-          description: Service temporarily unavailable.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessageContentResponse503'
-      x-codeSamples:
-        - lang: cURL
-          source: |
-            curl --request POST \
-                --url https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID> \
-                --header 'Authorization: App <APIKEY>' \
-                --header 'Content-Type: application/json' \
-                --data '{
-                "recipients": [
-                    "+336XXXXXXXX"
-                ],
-                "contentMessage": {
-                    "type": "sticker",
-                    "sticker": {
-                        "link": "https://www.example.com/fr/file.webp",
-                        "filename": "file.webp"
-                    }
-                }
-            }'
-        - lang: Python
-          source: >
-            import requests
-
-            import json
-
-
-            url =
-            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>'
-
-            headers = {
-                'Authorization': 'App <APIKEY>',
-                'Content-Type': 'application/json'
-            }
-
-            data = {
-                'recipients': [
-                    "+336XXXXXXXX"
-                ],
-                'contentMessage': {
-                    'type': 'sticker',
-                    'sticker': {
-                        'link': 'https://www.example.com/fr/file.webp',
-                        'filename': 'file.webp'
-                    }
-                }
-            }
-
-
-            response = requests.post(url, headers=headers,
-            data=json.dumps(data))
-
-
-            print(response.status_code)
-
-            print(response.json())
-        - lang: JavaScript
-          source: >
-            const url =
-            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
-
-            const headers = {
-                'Authorization': 'App <APIKEY>',
-                'Content-Type': 'application/json'
-            };
-
-            const data = {
-                recipients: [
-                    "+336XXXXXXXX"
-                ],
-                contentMessage: {
-                    type: 'sticker',
-                    sticker: {
-                        link: 'https://www.example.com/fr/file.webp',
-                        filename: 'file.webp'
-                    }
-                }
-            };
-
-
-            fetch(url, {
-                method: 'POST',
-                headers: headers,
-                body: JSON.stringify(data)
-            })
-                .then(response => response.json())
-                .then(data => console.log(data))
-                .catch(error => console.error('Error:', error));
-        - lang: PHP
-          source: >
-            <?php
-
-
-            $url =
-            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
-
-            $headers = [
-                'Authorization: App <APIKEY>',
-                'Content-Type: application/json'
-            ];
-
-            $data = [
-                'recipients' => [
-                    "+336XXXXXXXX"
-                ],
-                'contentMessage' => [
-                    'type' => 'sticker',
-                    'sticker' => [
-                        'link' => 'https://www.example.com/fr/file.webp',
-                        'filename' => 'file.webp'
+                        'link' => 'https://www.example.com/fr/file.jpeg'
                     ]
                 ]
             ];
@@ -1140,6 +936,11 @@ paths:
               properties:
                 recipients:
                   type: array
+                  description: >-
+                    Recipients' phone numbers in international format.
+                    Business-Scoped User IDs (BSUID) are not accepted as
+                    recipients yet: a contact whose phone number is unavailable
+                    cannot be messaged.
                   items:
                     type: string
                   maxItems: 5000
@@ -1210,8 +1011,7 @@ paths:
                 "contentMessage": {
                     "type": "video",
                     "video": {
-                        "link": "https://www.example.com/fr/file.mp4",
-                        "filename": "file.mp4"
+                        "link": "https://www.example.com/fr/file.mp4"
                     }
                 }
             }'
@@ -1237,8 +1037,7 @@ paths:
                 'contentMessage': {
                     'type': 'video',
                     'video': {
-                        'link': 'https://www.example.com/fr/file.mp4',
-                        'filename': 'file.mp4'
+                        'link': 'https://www.example.com/fr/file.mp4'
                     }
                 }
             }
@@ -1268,8 +1067,7 @@ paths:
                 contentMessage: {
                     type: 'video',
                     video: {
-                        link: 'https://www.example.com/fr/file.mp4',
-                        filename: 'file.mp4'
+                        link: 'https://www.example.com/fr/file.mp4'
                     }
                 }
             };
@@ -1303,8 +1101,7 @@ paths:
                 'contentMessage' => [
                     'type' => 'video',
                     'video' => [
-                        'link' => 'https://www.example.com/fr/file.mp4',
-                        'filename' => 'file.mp4'
+                        'link' => 'https://www.example.com/fr/file.mp4'
                     ]
                 ]
             ];
@@ -1358,6 +1155,11 @@ paths:
               properties:
                 recipients:
                   type: array
+                  description: >-
+                    Recipients' phone numbers in international format.
+                    Business-Scoped User IDs (BSUID) are not accepted as
+                    recipients yet: a contact whose phone number is unavailable
+                    cannot be messaged.
                   items:
                     type: string
                   maxItems: 5000
@@ -1584,6 +1386,11 @@ paths:
               properties:
                 recipients:
                   type: array
+                  description: >-
+                    Recipients' phone numbers in international format.
+                    Business-Scoped User IDs (BSUID) are not accepted as
+                    recipients yet: a contact whose phone number is unavailable
+                    cannot be messaged.
                   items:
                     type: string
                   maxItems: 5000
@@ -1810,6 +1617,11 @@ paths:
               properties:
                 recipients:
                   type: array
+                  description: >-
+                    Recipients' phone numbers in international format.
+                    Business-Scoped User IDs (BSUID) are not accepted as
+                    recipients yet: a contact whose phone number is unavailable
+                    cannot be messaged.
                   items:
                     type: string
                   maxItems: 5000
@@ -1868,9 +1680,43 @@ paths:
                 $ref: '#/components/schemas/MessageContentResponse503'
       x-codeSamples:
         - lang: cURL
-          source: "curl --request POST \\\n    --url https://api.wababox.net/waba/1.1/json/<WABAID>/reaction/<PHONEID> \\\n    --header 'Authorization: App <APIKEY>' \\\n    --header 'Content-Type: application/json' \\\n    --data '{\n\t\"recipients\": [\n\t\t\"+336XXXXXXXX\"\n\t],\n\t\"contentMessage\": {\n\t\t\"type\": \"reaction\",\n\t\t\"reaction\": {\n\t\t\t\"message_id\": 'wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx',\n\t\t\t\"emoji\": \"😀\"\n\t\t}\n\t}\n}'\n"
+          source: "curl --request POST \\\n    --url https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID> \\\n    --header 'Authorization: App <APIKEY>' \\\n    --header 'Content-Type: application/json' \\\n    --data '{\n\t\"recipients\": [\n\t\t\"+336XXXXXXXX\"\n\t],\n\t\"contentMessage\": {\n\t\t\"type\": \"reaction\",\n\t\t\"reaction\": {\n\t\t\t\"message_id\": \"wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\n\t\t\t\"emoji\": \"😀\"\n\t\t}\n\t}\n}'\n"
         - lang: Python
-          source: "curl --request POST \\\n    --url https://api.wababox.net/waba/1.1/json/<WABAID>/reaction/<PHONEID> \\\n    --header 'Authorization: App <APIKEY>' \\\n    --header 'Content-Type: application/json' \\\n    --data '{\n\t\"recipients\": [\n\t\t\"+336XXXXXXXX\"\n\t],\n\t\"contentMessage\": {\n\t\t\"type\": \"reaction\",\n\t\t\"reaction\": {\n\t\t\t\"message_id\": 'wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx',\n\t\t\t\"emoji\": \"😀\"\n\t\t}\n\t}\n}'\n"
+          source: >
+            import requests
+
+            import json
+
+
+            url =
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>'
+
+            headers = {
+                'Authorization': 'App <APIKEY>',
+                'Content-Type': 'application/json'
+            }
+
+            data = {
+                'recipients': [
+                    "+336XXXXXXXX"
+                ],
+                'contentMessage': {
+                    'type': 'reaction',
+                    'reaction': {
+                        'message_id': 'wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+                        'emoji': '😀'
+                    }
+                }
+            }
+
+
+            response = requests.post(url, headers=headers,
+            data=json.dumps(data))
+
+
+            print(response.status_code)
+
+            print(response.json())
         - lang: JavaScript
           source: >
             const url =
@@ -1909,7 +1755,7 @@ paths:
 
 
             $url =
-            'https://api.wababox.net/waba/1.1/json/<WABAID>/reaction/<PHONEID>';
+            'https://api.wababox.net/waba/1.1/json/<WABAID>/message/<PHONEID>';
 
             $headers = [
                 'Authorization: App <APIKEY>',
@@ -2737,6 +2583,11 @@ paths:
               properties:
                 recipients:
                   type: array
+                  description: >-
+                    Recipients' phone numbers in international format.
+                    Business-Scoped User IDs (BSUID) are not accepted as
+                    recipients yet: a contact whose phone number is unavailable
+                    cannot be messaged.
                   items:
                     type: string
                   maxItems: 5000
@@ -3002,15 +2853,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                message_id:
-                  type: string
-                  description: Received message ID
-                  example: wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-                status:
-                  type: string
-                  const: read
+              $ref: '#/components/schemas/ReadEventMessage'
       responses:
         '202':
           description: Request successfully queued.
@@ -3050,7 +2893,7 @@ paths:
                 $ref: '#/components/schemas/MessageContentResponse503'
       x-codeSamples:
         - lang: cURL
-          source: "curl --request POST \\\n    --url https://api.wababox.net/waba/1.1/json/<WABAID>/event/<PHONEID> \\\n    --header 'Authorization: App <APIKEY>' \\\n    --header 'Content-Type: application/json' \\\n    --data '{\n\t\t\"message_id\": \"wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\n\t\t\"status\": \"read\"\n\t}\n}'\n"
+          source: "curl --request POST \\\n    --url https://api.wababox.net/waba/1.1/json/<WABAID>/event/<PHONEID> \\\n    --header 'Authorization: App <APIKEY>' \\\n    --header 'Content-Type: application/json' \\\n    --data '{\n\t\t\"message_id\": \"wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\n\t\t\"status\": \"read\"\n\t}'\n"
         - lang: Python
           source: >
             import requests
@@ -3243,7 +3086,7 @@ paths:
                 $ref: '#/components/schemas/MessageContentResponse503'
       x-codeSamples:
         - lang: cURL
-          source: "curl --request POST \\\n    --url https://api.wababox.net/waba/1.1/json/<WABAID>/file/<PHONEID> \\\n    --header 'Authorization: App <APIKEY>' \\\n    --header 'Content-Type: application/json' \\\n    --data '{\n\t\t\"file_id\": \"1234567890\"\n\t}\n}'\n"
+          source: "curl --request POST \\\n    --url https://api.wababox.net/waba/1.1/json/<WABAID>/file/<PHONEID> \\\n    --header 'Authorization: App <APIKEY>' \\\n    --header 'Content-Type: application/json' \\\n    --data '{\n\t\t\"file_id\": \"1234567890\"\n\t}'\n"
         - lang: Python
           source: >
             import requests
@@ -3644,11 +3487,8 @@ components:
         link:
           type: string
           format: uri
-        filename:
-          type: string
       required:
         - link
-        - filename
     Audio:
       properties:
         type:
@@ -3664,8 +3504,20 @@ components:
       example:
         type: audio
         audio:
-          link: https://www.example.com/fr/file.mp3
-          filename: file.mp3
+          link: https://www.example.com/fr/file.aac
+    DocumentMedia:
+      type: object
+      properties:
+        link:
+          type: string
+          format: uri
+        filename:
+          type: string
+          description: >-
+            Document filename, with extension. The WhatsApp client uses an
+            appropriate file type icon based on the extension.
+      required:
+        - link
     Document:
       properties:
         type:
@@ -3675,7 +3527,7 @@ components:
               - Document : text/plain - application/vnd.ms-excel - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet - application/msword - application/vnd - openxmlformats-officedocument.wordprocessingml.document - application/vnd.ms-powerpoint - application/vnd.openxmlformats-officedocument.presentationml.presentation - application/pdf `max size : 100MB`
           const: document
         document:
-          $ref: '#/components/schemas/Media'
+          $ref: '#/components/schemas/DocumentMedia'
       required:
         - type
       example:
@@ -3699,24 +3551,6 @@ components:
         type: image
         image:
           link: https://www.example.com/fr/file.jpeg
-          filename: file.jpeg
-    Sticker:
-      properties:
-        type:
-          type: string
-          description: |
-            "Supported MIME types : 
-              - Sticker : image/webp - image/webp  `max size : 500KB`
-          const: sticker
-        sticker:
-          $ref: '#/components/schemas/Media'
-      required:
-        - type
-      example:
-        type: sticker
-        sticker:
-          link: https://www.example.com/fr/file.webp
-          filename: file.webp
     Video:
       properties:
         type:
@@ -3733,7 +3567,6 @@ components:
         type: video
         video:
           link: https://www.example.com/fr/file.mp4
-          filename: file.mp4
     Location:
       type: object
       properties:
@@ -3810,7 +3643,7 @@ components:
               example: wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
             emoji:
               type: string
-              const: 😀
+              example: 😀
           required:
             - message_id
             - emoji
@@ -3835,7 +3668,17 @@ components:
               const: button
             header:
               oneOf:
-                - $ref: '#/components/schemas/Text'
+                - type: object
+                  properties:
+                    type:
+                      type: string
+                      const: text
+                    text:
+                      type: string
+                      maxLength: 60
+                  required:
+                    - type
+                    - text
                 - $ref: '#/components/schemas/Document'
                 - $ref: '#/components/schemas/Image'
                 - $ref: '#/components/schemas/Video'
@@ -4106,6 +3949,22 @@ components:
               parameters:
                 - type: text
                   text: '123456'
+    ReadEventMessage:
+      type: object
+      properties:
+        message_id:
+          type: string
+          description: Received message ID
+          example: wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        status:
+          type: string
+          const: read
+      required:
+        - message_id
+        - status
+      example:
+        message_id: wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        status: read
     webhook_Text:
       type: object
       properties:
@@ -4114,8 +3973,26 @@ components:
           properties:
             from:
               type: string
-              description: Customer's phone number
+              description: >-
+                Customer's phone number. May be absent if the contact has
+                enabled a WhatsApp profile name, no interaction (message or
+                call) occurred in the last 30 days, and the contact is not in
+                your contact book. In that case, use `from_user_id` to identify
+                the contact. Note: replying still requires a phone number;
+                sending to a BSUID is not yet supported.
               example: 33XXXXXXXXX
+            from_user_id:
+              type: string
+              description: >-
+                Business-Scoped User ID (BSUID) of the contact, prefixed with
+                the ISO 3166 alpha-2 country code. Scoped to the Meta business
+                portfolio (formerly Business Manager) that owns the WhatsApp
+                number: the same user has a different BSUID in each portfolio,
+                and it is regenerated if the user changes their phone number.
+                Lets you identify the contact even when the phone number
+                (`from`) is not provided. Note: it cannot yet be used as a
+                recipient for sending.
+              example: FR.XXXXXXXXXXXXXXX
             id:
               type: string
               description: ID message
@@ -4175,8 +4052,26 @@ components:
           properties:
             from:
               type: string
-              description: Customer's phone number
+              description: >-
+                Customer's phone number. May be absent if the contact has
+                enabled a WhatsApp profile name, no interaction (message or
+                call) occurred in the last 30 days, and the contact is not in
+                your contact book. In that case, use `from_user_id` to identify
+                the contact. Note: replying still requires a phone number;
+                sending to a BSUID is not yet supported.
               example: 33XXXXXXXXX
+            from_user_id:
+              type: string
+              description: >-
+                Business-Scoped User ID (BSUID) of the contact, prefixed with
+                the ISO 3166 alpha-2 country code. Scoped to the Meta business
+                portfolio (formerly Business Manager) that owns the WhatsApp
+                number: the same user has a different BSUID in each portfolio,
+                and it is regenerated if the user changes their phone number.
+                Lets you identify the contact even when the phone number
+                (`from`) is not provided. Note: it cannot yet be used as a
+                recipient for sending.
+              example: FR.XXXXXXXXXXXXXXX
             id:
               type: string
               description: ID message
@@ -4255,8 +4150,26 @@ components:
           properties:
             from:
               type: string
-              description: Customer's phone number
+              description: >-
+                Customer's phone number. May be absent if the contact has
+                enabled a WhatsApp profile name, no interaction (message or
+                call) occurred in the last 30 days, and the contact is not in
+                your contact book. In that case, use `from_user_id` to identify
+                the contact. Note: replying still requires a phone number;
+                sending to a BSUID is not yet supported.
               example: 33XXXXXXXXX
+            from_user_id:
+              type: string
+              description: >-
+                Business-Scoped User ID (BSUID) of the contact, prefixed with
+                the ISO 3166 alpha-2 country code. Scoped to the Meta business
+                portfolio (formerly Business Manager) that owns the WhatsApp
+                number: the same user has a different BSUID in each portfolio,
+                and it is regenerated if the user changes their phone number.
+                Lets you identify the contact even when the phone number
+                (`from`) is not provided. Note: it cannot yet be used as a
+                recipient for sending.
+              example: FR.XXXXXXXXXXXXXXX
             id:
               type: string
               description: ID message
@@ -4326,8 +4239,26 @@ components:
           properties:
             from:
               type: string
-              description: Customer's phone number
+              description: >-
+                Customer's phone number. May be absent if the contact has
+                enabled a WhatsApp profile name, no interaction (message or
+                call) occurred in the last 30 days, and the contact is not in
+                your contact book. In that case, use `from_user_id` to identify
+                the contact. Note: replying still requires a phone number;
+                sending to a BSUID is not yet supported.
               example: 33XXXXXXXXX
+            from_user_id:
+              type: string
+              description: >-
+                Business-Scoped User ID (BSUID) of the contact, prefixed with
+                the ISO 3166 alpha-2 country code. Scoped to the Meta business
+                portfolio (formerly Business Manager) that owns the WhatsApp
+                number: the same user has a different BSUID in each portfolio,
+                and it is regenerated if the user changes their phone number.
+                Lets you identify the contact even when the phone number
+                (`from`) is not provided. Note: it cannot yet be used as a
+                recipient for sending.
+              example: FR.XXXXXXXXXXXXXXX
             id:
               type: string
               description: ID message
@@ -4397,8 +4328,26 @@ components:
           properties:
             from:
               type: string
-              description: Customer's phone number
+              description: >-
+                Customer's phone number. May be absent if the contact has
+                enabled a WhatsApp profile name, no interaction (message or
+                call) occurred in the last 30 days, and the contact is not in
+                your contact book. In that case, use `from_user_id` to identify
+                the contact. Note: replying still requires a phone number;
+                sending to a BSUID is not yet supported.
               example: 33XXXXXXXXX
+            from_user_id:
+              type: string
+              description: >-
+                Business-Scoped User ID (BSUID) of the contact, prefixed with
+                the ISO 3166 alpha-2 country code. Scoped to the Meta business
+                portfolio (formerly Business Manager) that owns the WhatsApp
+                number: the same user has a different BSUID in each portfolio,
+                and it is regenerated if the user changes their phone number.
+                Lets you identify the contact even when the phone number
+                (`from`) is not provided. Note: it cannot yet be used as a
+                recipient for sending.
+              example: FR.XXXXXXXXXXXXXXX
             id:
               type: string
               description: ID message
@@ -4464,8 +4413,26 @@ components:
           properties:
             from:
               type: string
-              description: Customer's phone number
+              description: >-
+                Customer's phone number. May be absent if the contact has
+                enabled a WhatsApp profile name, no interaction (message or
+                call) occurred in the last 30 days, and the contact is not in
+                your contact book. In that case, use `from_user_id` to identify
+                the contact. Note: replying still requires a phone number;
+                sending to a BSUID is not yet supported.
               example: 33XXXXXXXXX
+            from_user_id:
+              type: string
+              description: >-
+                Business-Scoped User ID (BSUID) of the contact, prefixed with
+                the ISO 3166 alpha-2 country code. Scoped to the Meta business
+                portfolio (formerly Business Manager) that owns the WhatsApp
+                number: the same user has a different BSUID in each portfolio,
+                and it is regenerated if the user changes their phone number.
+                Lets you identify the contact even when the phone number
+                (`from`) is not provided. Note: it cannot yet be used as a
+                recipient for sending.
+              example: FR.XXXXXXXXXXXXXXX
             id:
               type: string
               example: wamid.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -4552,7 +4519,6 @@ components:
             - id
             - status
             - timestamp
-            - recipient_id
           type: object
           properties:
             id:
@@ -4587,8 +4553,26 @@ components:
               example: '1719576000'
             recipient_id:
               type: string
-              description: Customer's phone number
+              description: >-
+                Recipient's phone number. May be absent if the contact has
+                enabled a WhatsApp profile name, no interaction (message or
+                call) occurred in the last 30 days, and the contact is not in
+                your contact book. In that case, use `recipient_user_id` to
+                correlate the status to a contact.
               example: 33XXXXXXXXX
+            recipient_user_id:
+              type: string
+              description: >-
+                Business-Scoped User ID (BSUID) of the recipient, prefixed with
+                the ISO 3166 alpha-2 country code. Scoped to the Meta business
+                portfolio (formerly Business Manager) that owns the WhatsApp
+                number: the same user has a different BSUID in each portfolio,
+                and it is regenerated if the user changes their phone number.
+                Lets you correlate the status to a contact even when the phone
+                number (`recipient_id`) is not provided. May itself be absent
+                for a `failed` status when the message was sent to a phone
+                number.
+              example: FR.XXXXXXXXXXXXXXX
             errors:
               type: array
               description: Data of the error. Only present if the status is ``failed``
@@ -4696,8 +4680,26 @@ components:
           properties:
             from:
               type: string
-              description: Customer's phone number
+              description: >-
+                Customer's phone number. May be absent if the contact has
+                enabled a WhatsApp profile name, no interaction (message or
+                call) occurred in the last 30 days, and the contact is not in
+                your contact book. In that case, use `from_user_id` to identify
+                the contact. Note: replying still requires a phone number;
+                sending to a BSUID is not yet supported.
               example: 33XXXXXXXXX
+            from_user_id:
+              type: string
+              description: >-
+                Business-Scoped User ID (BSUID) of the contact, prefixed with
+                the ISO 3166 alpha-2 country code. Scoped to the Meta business
+                portfolio (formerly Business Manager) that owns the WhatsApp
+                number: the same user has a different BSUID in each portfolio,
+                and it is regenerated if the user changes their phone number.
+                Lets you identify the contact even when the phone number
+                (`from`) is not provided. Note: it cannot yet be used as a
+                recipient for sending.
+              example: FR.XXXXXXXXXXXXXXX
             id:
               type: string
               description: ID message
